@@ -43,6 +43,13 @@ const SOURCE_ALIASES = {
 const state = {
   tab: "dashboard",
   data: null,
+  dashboard: {
+    metrics: [],
+    topMethods: [],
+    title: "",
+    subtitle: "",
+    interpretation: "",
+  },
   methods: [],
   protocols: [],
   safetyNotes: [],
@@ -108,19 +115,60 @@ function bindShell() {
 
 function hydrateState(payload) {
   const sheets = payload.sheets || {};
+  const dashboardSheet = sheets.Dashboard || firstSheetByName(sheets, "dashboard");
   const methodsSheet = sheets["Methods Database"] || firstSheetByName(sheets, "methods");
   const protocolsSheet = sheets.Protocols || firstSheetByName(sheets, "protocol");
   const safetySheet = sheets["Safety Notes"] || firstSheetByName(sheets, "safety");
   const sourcesSheet = sheets.Sources || firstSheetByName(sheets, "source");
 
+  state.dashboard = mapDashboard(dashboardSheet);
   state.sources = (sourcesSheet?.rows || []).map(mapSource).filter((source) => source.id || source.url);
   state.methods = (methodsSheet?.rows || []).map((row, index) => mapMethod(row, index)).filter((method) => method.name);
+  applyDashboardRanks();
   state.protocols = (protocolsSheet?.rows || []).map(mapProtocol).filter((protocol) => protocol.name);
   state.safetyNotes = (safetySheet?.rows || []).map(mapSafetyNote).filter((note) => note.topic || note.guidance);
 
   if (!hasAnyField(methodsSheet?.headers, FIELD_ALIASES.tags)) {
     warnMissing("Optional column missing: Tags. Tag filter and tag chips are hidden.");
   }
+}
+
+function applyDashboardRanks() {
+  const rankMap = new Map(state.dashboard.topMethods.map((entry) => [normalizeKey(entry.method), entry.rank]));
+  state.methods.forEach((method) => {
+    method.dashboardRank = rankMap.get(normalizeKey(method.name)) || null;
+  });
+}
+
+function mapDashboard(sheet) {
+  const raw = sheet?.raw || [];
+  const rows = sheet?.rows || [];
+  const metrics = rows
+    .filter((row) => text(row.Metric) && text(row.Value))
+    .map((row) => ({
+      metric: text(row.Metric),
+      value: row.Value,
+      definition: text(row.Definition),
+    }));
+  const topMethods = rows
+    .filter((row) => text(row.Method) && toNumber(row.Rank) !== null)
+    .map((row) => ({
+      rank: toNumber(row.Rank),
+      method: text(row.Method),
+      category: text(row.Category),
+      why: text(row["Why it ranks high"]),
+      priorityScore: toNumber(row["Priority score"]),
+    }))
+    .sort((a, b) => (a.rank || 999) - (b.rank || 999));
+  const interpretation = rows.find((row) => text(row.Metric).startsWith("Interpretation:"))?.Metric || "";
+
+  return {
+    metrics,
+    topMethods,
+    title: text(raw[0]?.[0]),
+    subtitle: text(raw[1]?.[0]),
+    interpretation: text(interpretation),
+  };
 }
 
 function firstSheetByName(sheets, needle) {
@@ -283,18 +331,21 @@ function setTab(tab) {
 }
 
 function renderDashboard() {
-  const topByScore = sortedMethods("rank").slice(0, 10);
+  const dashboardTop = dashboardTopMethods();
+  const topByScore = dashboardTop.length ? dashboardTop : sortedMethods("rank").slice(0, 10);
   const topMethod = topByScore[0];
-  const bestEvidence = [...state.methods]
-    .filter((method) => method.evidenceScore !== null)
-    .sort((a, b) => compareNumber(b.evidenceScore, a.evidenceScore) || compareNumber(b.priorityScore, a.priorityScore))[0];
-  const fastest = [...state.methods]
-    .filter((method) => method.speedScore >= 5)
-    .sort((a, b) => compareNumber(b.priorityScore, a.priorityScore))[0];
-  const lowRisk = state.methods.filter((method) => method.safetyScore >= 5);
-  const evidenceDistribution = distribution(state.methods, (method) => method.evidenceGrade);
-  const safetyDistribution = distribution(state.methods, (method) => method.safetyLevel);
-  const useCaseDistribution = distribution(state.methods, (method) => method.category || "Unspecified");
+  const bestEvidence = topMethodsBy("evidenceScore");
+  const lowestRisk = topMethodsBy("safetyScore");
+  const fastestAcute = topMethodsBy("speedScore");
+  const mostPractical = topMethodsBy("easeScore");
+  const evidenceDistribution = distribution(state.methods, (method) => method.evidenceGrade, { omitUnspecified: true });
+  const safetyDistribution = distribution(state.methods, (method) => method.safetyLevel, { omitUnspecified: true });
+  const useCaseDistribution = distribution(state.methods, (method) => method.useCase, { omitUnspecified: true });
+  const difficultyDistribution = distribution(state.methods, (method) => method.difficulty, { omitUnspecified: true });
+  const totalMethods = dashboardMetric("Total methods")?.value || state.methods.length;
+  const highEvidence = dashboardMetric("High evidence methods")?.value || state.methods.filter((method) => method.evidenceScore >= 5).length;
+  const immediateUse = dashboardMetric("Immediate-use methods")?.value || state.methods.filter((method) => method.speedScore >= 5).length;
+  const cautionRows = dashboardMetric("Safety-sensitive / caution rows")?.value || state.methods.filter((method) => method.safetyScore <= 2).length;
 
   app.innerHTML = `
     <section class="hero">
@@ -316,19 +367,26 @@ function renderDashboard() {
     </section>
 
     <section class="grid metrics-grid" aria-label="Dashboard metrics">
-      ${metricCard("Total methods", state.methods.length, "Rows in the Methods Database sheet.")}
+      ${metricCard("Total methods", totalMethods, dashboardMetric("Total methods")?.definition || "Rows in the Methods Database sheet.")}
       ${metricCard("Highest-ranked", topMethod?.name || "Unavailable", scoreText(topMethod?.priorityScore))}
-      ${metricCard("Best evidence-supported", bestEvidence?.name || "Unavailable", `${bestEvidence?.evidenceGrade || ""} evidence`)}
-      ${metricCard("Fastest acute methods", state.methods.filter((method) => method.speedScore >= 5).length, "Immediate time horizon.")}
-      ${metricCard("Lowest-risk methods", lowRisk.length, "Safety score of 5/5 in the workbook.")}
+      ${metricCard("High evidence methods", highEvidence, dashboardMetric("High evidence methods")?.definition || "Rows with high evidence scores.")}
+      ${metricCard("Immediate-use methods", immediateUse, dashboardMetric("Immediate-use methods")?.definition || "Immediate time horizon.")}
+      ${metricCard("Caution rows", cautionRows, dashboardMetric("Safety-sensitive / caution rows")?.definition || "Rows requiring avoidance, clinician input, or caution.")}
+    </section>
+
+    <section class="grid dashboard-widget-grid" aria-label="Dashboard method summaries">
+      ${methodSummaryWidget("Best evidence-supported methods", bestEvidence, "Evidence score")}
+      ${methodSummaryWidget("Lowest-risk methods", lowestRisk, "Safety score")}
+      ${methodSummaryWidget("Fastest acute methods", fastestAcute, "Speed")}
+      ${methodSummaryWidget("Most practical methods", mostPractical, "Ease score")}
     </section>
 
     <section class="grid dashboard-grid">
       <div class="panel">
         <div class="panel-header">
           <div>
-            <h2>Top 10 by total score</h2>
-            <p>Uses the workbook priority score when available. Select a row to inspect the method details.</p>
+            <h2>Top 10 ranked methods</h2>
+            <p>Uses the workbook dashboard rank and priority score when available. Select a row to inspect details.</p>
           </div>
         </div>
         <div class="rank-list">
@@ -339,6 +397,7 @@ function renderDashboard() {
       <div class="grid">
         ${chartPanel("Evidence grade distribution", "Select a bar to filter the Methods tab.", evidenceDistribution, "evidence")}
         ${chartPanel("Safety level distribution", "Select a bar to filter the Methods tab.", safetyDistribution, "safety")}
+        ${chartPanel("Difficulty distribution", "Select a bar to filter the Methods tab.", difficultyDistribution, "difficulty")}
       </div>
 
       <div class="panel">
@@ -355,7 +414,7 @@ function renderDashboard() {
         <div class="panel-header">
           <div>
             <h2>Use-case distribution</h2>
-            <p>Grouped by the workbook category field, used as the most consistent target grouping.</p>
+            <p>Grouped by the workbook use-case field.</p>
           </div>
         </div>
         ${barChart(useCaseDistribution, "useCaseCategory")}
@@ -364,11 +423,41 @@ function renderDashboard() {
 
     <section class="about-scoring">
       <span class="section-label">About scoring</span>
-      <p>The dashboard uses the workbook priority score as the total score. Evidence, safety, and ease labels come from workbook columns. Practical difficulty is derived from the workbook ease score only for filtering and display.</p>
+      <p>${escapeHtml(state.dashboard.interpretation || "The dashboard uses the workbook priority score as the total score. Evidence, safety, and ease labels come from workbook columns. Practical difficulty is derived from the workbook ease score only for filtering and display.")}</p>
     </section>
   `;
 
   bindDashboardInteractions();
+}
+
+function topMethodsBy(field) {
+  return [...state.methods]
+    .filter((method) => method[field] !== null && method[field] !== undefined && method[field] !== 0)
+    .sort((a, b) => compareNumber(b[field], a[field]) || compareNumber(b.priorityScore, a.priorityScore))
+    .slice(0, 3);
+}
+
+function dashboardMetric(metricName) {
+  return state.dashboard.metrics.find((item) => normalizeKey(item.metric) === normalizeKey(metricName));
+}
+
+function dashboardTopMethods() {
+  return state.dashboard.topMethods
+    .map((entry) => {
+      const method = state.methods.find((item) => normalizeKey(item.name) === normalizeKey(entry.method));
+      if (!method) {
+        warnMissing(`Dashboard method not found in Methods Database: ${entry.method}`);
+        return null;
+      }
+      return {
+        ...method,
+        rank: entry.rank || method.rank,
+        category: entry.category || method.category,
+        priorityScore: entry.priorityScore ?? method.priorityScore,
+      };
+    })
+    .filter(Boolean)
+    .slice(0, 10);
 }
 
 function miniRow(label, value) {
@@ -383,6 +472,43 @@ function metricCard(label, value, note) {
       <p>${escapeHtml(note || "")}</p>
     </article>
   `;
+}
+
+function methodSummaryWidget(label, methods, scoreLabel) {
+  if (!methods.length) {
+    return `
+      <article class="metric-card method-summary-card">
+        <small>${escapeHtml(label)}</small>
+        <strong>Not available</strong>
+        <p>The related spreadsheet column is missing or empty.</p>
+      </article>
+    `;
+  }
+  return `
+    <article class="metric-card method-summary-card">
+      <small>${escapeHtml(label)}</small>
+      <strong>${escapeHtml(methods.length)}</strong>
+      <div class="summary-method-list">
+        ${methods
+          .map(
+            (method) => `
+              <button class="summary-method" type="button" data-method-id="${method.id}">
+                <span>${escapeHtml(method.name)}</span>
+                <em>${escapeHtml(scoreLabel)} ${escapeHtml(summaryScore(method, scoreLabel))}</em>
+              </button>
+            `,
+          )
+          .join("")}
+      </div>
+    </article>
+  `;
+}
+
+function summaryScore(method, label) {
+  if (label === "Evidence score") return scoreText(method.evidenceScore);
+  if (label === "Safety score") return scoreText(method.safetyScore);
+  if (label === "Ease score") return scoreText(method.easeScore);
+  return method.timeHorizon || scoreText(method.speedScore);
 }
 
 function rankRow(method, rank) {
@@ -407,7 +533,7 @@ function chartPanel(title, subtitle, data, filterType) {
           <p>${escapeHtml(subtitle)}</p>
         </div>
       </div>
-      ${barChart(data, filterType)}
+      ${barChart(data, filterType, title)}
     </div>
   `;
 }
@@ -432,7 +558,10 @@ function scoreChart(methods) {
   `;
 }
 
-function barChart(items, filterType) {
+function barChart(items, filterType, title = "chart") {
+  if (!items.length) {
+    return emptyChartState(`No ${title.toLowerCase()} data available from the spreadsheet.`);
+  }
   const max = Math.max(...items.map((item) => item.count), 1);
   return `
     <div class="chart-list">
@@ -452,6 +581,14 @@ function barChart(items, filterType) {
   `;
 }
 
+function emptyChartState(message) {
+  return `
+    <div class="chart-empty-state">
+      <p>${escapeHtml(message)}</p>
+    </div>
+  `;
+}
+
 function bindDashboardInteractions() {
   document.querySelectorAll("[data-method-id]").forEach((button) => {
     button.addEventListener("click", () => openMethod(button.dataset.methodId));
@@ -463,7 +600,8 @@ function bindDashboardInteractions() {
       const value = button.dataset.chartValue;
       if (type === "evidence") state.filters.evidence = value;
       if (type === "safety") state.filters.safety = value;
-      if (type === "useCaseCategory") state.filters.useCase = "";
+      if (type === "useCaseCategory") state.filters.useCase = value;
+      if (type === "difficulty") state.filters.difficulty = value;
       state.tab = "methods";
       render();
     });
@@ -482,6 +620,7 @@ function renderMethods() {
         <button class="filter-toggle" id="filterToggle" type="button">${state.filtersOpen ? "Hide filters" : "Filters"}</button>
         <button class="reset-button" id="resetFilters" type="button">Reset</button>
       </div>
+      ${activeFilterChips()}
     </section>
 
     <section class="methods-layout">
@@ -496,6 +635,7 @@ function renderMethods() {
           <label for="sortSelect">Sort by</label>
           <select id="sortSelect">
             ${sortOption("rank", "Overall rank")}
+            ${sortOption("total", "Total score")}
             ${sortOption("reddit", "Reddit consensus / upvote relevance")}
             ${sortOption("evidence", "Evidence strength")}
             ${sortOption("safety", "Safety score")}
@@ -520,6 +660,43 @@ function renderMethods() {
   `;
 
   bindMethodControls();
+}
+
+function activeFilterChips() {
+  const chips = activeFilterItems();
+  if (!chips.length) return "";
+  return `
+    <div class="active-filter-chips" aria-label="Active filters">
+      ${chips
+        .map(
+          (chip) => `
+            <button class="active-filter-chip" type="button" data-clear-filter="${escapeAttr(chip.key)}">
+              <span>${escapeHtml(chip.label)}: ${escapeHtml(chip.value)}</span>
+              <strong aria-hidden="true">x</strong>
+            </button>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function activeFilterItems() {
+  const labels = {
+    query: "Search",
+    useCase: "Use-case",
+    evidence: "Evidence",
+    safety: "Safety",
+    speed: "Speed",
+    difficulty: "Difficulty",
+    tags: "Tag",
+  };
+  const items = [];
+  if (state.query.trim()) items.push({ key: "query", label: labels.query, value: state.query.trim() });
+  Object.entries(state.filters).forEach(([key, value]) => {
+    if (value) items.push({ key, label: labels[key] || key, value });
+  });
+  return items;
 }
 
 function selectFilter(label, key, options) {
@@ -609,6 +786,15 @@ function bindMethodControls() {
     renderMethods();
   });
 
+  document.querySelectorAll("[data-clear-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const key = button.dataset.clearFilter;
+      if (key === "query") state.query = "";
+      if (Object.prototype.hasOwnProperty.call(state.filters, key)) state.filters[key] = "";
+      renderMethods();
+    });
+  });
+
   document.querySelectorAll("[data-filter]").forEach((select) => {
     select.addEventListener("change", () => {
       state.filters[select.dataset.filter] = select.value;
@@ -635,6 +821,8 @@ function filteredMethods() {
       method.tags.join(" "),
       method.protocol,
       method.useCase,
+      method.evidenceGrade,
+      evidenceNotes(method),
       method.cautions,
       method.category,
       method.visibility,
@@ -656,6 +844,12 @@ function filteredMethods() {
 
 function sortedMethods(sortKey) {
   return [...state.methods].sort((a, b) => {
+    if (sortKey === "rank") {
+      const leftRank = a.dashboardRank ?? Infinity;
+      const rightRank = b.dashboardRank ?? Infinity;
+      return compareNumber(leftRank, rightRank) || compareNumber(b.priorityScore, a.priorityScore) || compareNumber(a.rank, b.rank);
+    }
+    if (sortKey === "total") return compareNumber(b.priorityScore, a.priorityScore) || compareNumber(a.rank, b.rank);
     if (sortKey === "reddit") return compareNumber(redditScore(b), redditScore(a)) || compareNumber(b.priorityScore, a.priorityScore);
     if (sortKey === "evidence") return compareNumber(b.evidenceScore, a.evidenceScore) || compareNumber(b.priorityScore, a.priorityScore);
     if (sortKey === "safety") return compareNumber(b.safetyScore, a.safetyScore) || compareNumber(b.priorityScore, a.priorityScore);
@@ -690,7 +884,7 @@ function openMethod(methodId) {
   const method = state.methods.find((item) => item.id === methodId);
   if (!method) return;
   const sourceMap = new Map(state.sources.map((source) => [source.id, source]));
-  const references = method.sourceIds.map((id) => sourceMap.get(id)).filter(Boolean);
+  const references = method.sourceIds.map((id) => sourceMap.get(id) || { id, missing: true });
 
   dialogContent.innerHTML = `
     <h2 class="dialog-title" id="dialogTitle">${escapeHtml(method.name)}</h2>
@@ -754,8 +948,8 @@ function detailSources(references, ids) {
                 .map(
                   (source) => `
                     <div>
-                      <strong>${escapeHtml(source.id)} / ${escapeHtml(source.type || "Source")}</strong>
-                      <div class="field-value">${escapeHtml(source.title || source.relevance || "Reference from workbook")}</div>
+                      <strong>${escapeHtml(source.id)} / ${escapeHtml(source.type || "Source not found")}</strong>
+                      <div class="field-value">${escapeHtml(source.missing ? "Referenced by the workbook but not listed in the Sources sheet." : source.title || source.relevance || "Reference from workbook")}</div>
                       ${source.url ? `<a href="${escapeAttr(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.url)}</a>` : ""}
                     </div>
                   `,
@@ -907,10 +1101,11 @@ function sourceCard(source) {
   `;
 }
 
-function distribution(items, getter) {
+function distribution(items, getter, options = {}) {
   const counts = new Map();
   items.forEach((item) => {
     const label = getter(item) || "Unspecified";
+    if (options.omitUnspecified && label === "Unspecified") return;
     counts.set(label, (counts.get(label) || 0) + 1);
   });
   return [...counts.entries()]
