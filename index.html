@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta
       name="description"
       content="Evidence-aware anxiety coping methods database built from a Reddit-derived workbook."
@@ -60,6 +60,14 @@
         </div>
       </footer>
     </div>
+
+    <nav class="mobile-tabs" aria-label="Main sections">
+      <button class="tab mobile-tab is-active" data-tab="dashboard" type="button">Dashboard</button>
+      <button class="tab mobile-tab" data-tab="methods" type="button">Methods</button>
+      <button class="tab mobile-tab" data-tab="protocols" type="button">Protocols</button>
+      <button class="tab mobile-tab" data-tab="safety" type="button">Safety</button>
+      <button class="tab mobile-tab" data-tab="sources" type="button">Sources</button>
+    </nav>
 
     <dialog id="methodDialog" class="method-dialog" aria-labelledby="dialogTitle">
       <div class="dialog-frame">
