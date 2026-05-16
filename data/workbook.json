@@ -1,0 +1,1910 @@
+{
+  "generatedAt": "2026-05-16T07:09:03",
+  "sourceWorkbook": "reddit_anxiety_methods_database.xlsx",
+  "sheets": {
+    "Dashboard": {
+      "headers": [
+        "Metric",
+        "Value",
+        "Definition",
+        "Column 4",
+        "Rank",
+        "Method",
+        "Category",
+        "Why it ranks high",
+        "Priority score",
+        "Column 10"
+      ],
+      "rows": [
+        {
+          "Metric": "Total methods",
+          "Value": 30,
+          "Definition": "Number of methods/advice patterns included",
+          "Column 4": "",
+          "Rank": 1,
+          "Method": "Walking, especially outdoors/nature",
+          "Category": "Behavioral",
+          "Why it ranks high": "Reddit support: Very High; evidence: Moderate–High; safety: 5/5",
+          "Priority score": 4.7,
+          "Column 10": ""
+        },
+        {
+          "Metric": "High/Very High Reddit support",
+          "Value": 12,
+          "Definition": "Rows recurring across Reddit threads or visible best/top comments",
+          "Column 4": "",
+          "Rank": 2,
+          "Method": "Regular exercise routine",
+          "Category": "Behavioral",
+          "Why it ranks high": "Reddit support: Very High; evidence: High; safety: 5/5",
+          "Priority score": 4.7,
+          "Column 10": ""
+        },
+        {
+          "Metric": "High evidence methods",
+          "Value": 6,
+          "Definition": "Rows with strong clinical support",
+          "Column 4": "",
+          "Rank": 3,
+          "Method": "Therapy, especially CBT or exposure-based therapy",
+          "Category": "Clinical care",
+          "Why it ranks high": "Reddit support: Very High; evidence: High; safety: 5/5",
+          "Priority score": 4.55,
+          "Column 10": ""
+        },
+        {
+          "Metric": "Immediate-use methods",
+          "Value": 15,
+          "Definition": "Rows usable during an anxiety spike",
+          "Column 4": "",
+          "Rank": 4,
+          "Method": "Longer exhale breathing",
+          "Category": "Acute regulation",
+          "Why it ranks high": "Reddit support: High; evidence: Moderate; safety: 5/5",
+          "Priority score": 4.35,
+          "Column 10": ""
+        },
+        {
+          "Metric": "Safety-sensitive / caution rows",
+          "Value": 2,
+          "Definition": "Rows requiring avoidance, clinician input, or caution",
+          "Column 4": "",
+          "Rank": 5,
+          "Method": "Box breathing / 4-4-4 or 4-4-4-4",
+          "Category": "Acute regulation",
+          "Why it ranks high": "Reddit support: High; evidence: Moderate; safety: 5/5",
+          "Priority score": 4.35,
+          "Column 10": ""
+        },
+        {
+          "Metric": "",
+          "Value": "",
+          "Definition": "",
+          "Column 4": "",
+          "Rank": 6,
+          "Method": "5-4-3-2-1 grounding",
+          "Category": "Acute regulation",
+          "Why it ranks high": "Reddit support: High; evidence: Moderate; safety: 5/5",
+          "Priority score": 4.35,
+          "Column 10": ""
+        },
+        {
+          "Metric": "",
+          "Value": "",
+          "Definition": "",
+          "Column 4": "",
+          "Rank": 7,
+          "Method": "CBT thought record",
+          "Category": "Cognitive skills",
+          "Why it ranks high": "Reddit support: High; evidence: High; safety: 5/5",
+          "Priority score": 4.35,
+          "Column 10": ""
+        },
+        {
+          "Metric": "",
+          "Value": "",
+          "Definition": "",
+          "Column 4": "",
+          "Rank": 8,
+          "Method": "Consistent sleep/wake rhythm",
+          "Category": "Sleep",
+          "Why it ranks high": "Reddit support: High; evidence: High; safety: 5/5",
+          "Priority score": 4.35,
+          "Column 10": ""
+        },
+        {
+          "Metric": "",
+          "Value": "",
+          "Definition": "",
+          "Column 4": "",
+          "Rank": 9,
+          "Method": "Reduce caffeine or keep it earlier",
+          "Category": "Lifestyle",
+          "Why it ranks high": "Reddit support: High; evidence: Moderate; safety: 5/5",
+          "Priority score": 4.2,
+          "Column 10": ""
+        },
+        {
+          "Metric": "",
+          "Value": "",
+          "Definition": "",
+          "Column 4": "",
+          "Rank": 10,
+          "Method": "Radical acceptance / response change",
+          "Category": "Cognitive skills",
+          "Why it ranks high": "Reddit support: High; evidence: Moderate; safety: 5/5",
+          "Priority score": 4.05,
+          "Column 10": ""
+        },
+        {
+          "Metric": "Interpretation: Priority score combines Reddit recurrence/visibility, clinical evidence, safety, and ease. It is not a medical ranking. For persistent, severe, trauma-linked, OCD-linked, or impairing anxiety, professional treatment remains the highest-confidence route.",
+          "Value": "",
+          "Definition": "",
+          "Column 4": "",
+          "Rank": "",
+          "Method": "",
+          "Category": "",
+          "Why it ranks high": "",
+          "Priority score": "",
+          "Column 10": ""
+        }
+      ],
+      "raw": [
+        [
+          "Reddit-Derived Anxiety Coping Methods Database",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Built 2026-05-16 | Reddit pattern synthesis + clinical evidence cross-check. Not medical advice.",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Metric",
+          "Value",
+          "Definition",
+          "",
+          "Rank",
+          "Method",
+          "Category",
+          "Why it ranks high",
+          "Priority score",
+          ""
+        ],
+        [
+          "Total methods",
+          30,
+          "Number of methods/advice patterns included",
+          "",
+          1,
+          "Walking, especially outdoors/nature",
+          "Behavioral",
+          "Reddit support: Very High; evidence: Moderate–High; safety: 5/5",
+          4.7,
+          ""
+        ],
+        [
+          "High/Very High Reddit support",
+          12,
+          "Rows recurring across Reddit threads or visible best/top comments",
+          "",
+          2,
+          "Regular exercise routine",
+          "Behavioral",
+          "Reddit support: Very High; evidence: High; safety: 5/5",
+          4.7,
+          ""
+        ],
+        [
+          "High evidence methods",
+          6,
+          "Rows with strong clinical support",
+          "",
+          3,
+          "Therapy, especially CBT or exposure-based therapy",
+          "Clinical care",
+          "Reddit support: Very High; evidence: High; safety: 5/5",
+          4.55,
+          ""
+        ],
+        [
+          "Immediate-use methods",
+          15,
+          "Rows usable during an anxiety spike",
+          "",
+          4,
+          "Longer exhale breathing",
+          "Acute regulation",
+          "Reddit support: High; evidence: Moderate; safety: 5/5",
+          4.35,
+          ""
+        ],
+        [
+          "Safety-sensitive / caution rows",
+          2,
+          "Rows requiring avoidance, clinician input, or caution",
+          "",
+          5,
+          "Box breathing / 4-4-4 or 4-4-4-4",
+          "Acute regulation",
+          "Reddit support: High; evidence: Moderate; safety: 5/5",
+          4.35,
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          6,
+          "5-4-3-2-1 grounding",
+          "Acute regulation",
+          "Reddit support: High; evidence: Moderate; safety: 5/5",
+          4.35,
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          7,
+          "CBT thought record",
+          "Cognitive skills",
+          "Reddit support: High; evidence: High; safety: 5/5",
+          4.35,
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          8,
+          "Consistent sleep/wake rhythm",
+          "Sleep",
+          "Reddit support: High; evidence: High; safety: 5/5",
+          4.35,
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          9,
+          "Reduce caffeine or keep it earlier",
+          "Lifestyle",
+          "Reddit support: High; evidence: Moderate; safety: 5/5",
+          4.2,
+          ""
+        ],
+        [
+          "",
+          "",
+          "",
+          "",
+          10,
+          "Radical acceptance / response change",
+          "Cognitive skills",
+          "Reddit support: High; evidence: Moderate; safety: 5/5",
+          4.05,
+          ""
+        ],
+        [
+          "Interpretation: Priority score combines Reddit recurrence/visibility, clinical evidence, safety, and ease. It is not a medical ranking. For persistent, severe, trauma-linked, OCD-linked, or impairing anxiety, professional treatment remains the highest-confidence route.",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    "Methods Database": {
+      "headers": [
+        "Category",
+        "Method",
+        "Reddit pattern summary",
+        "Reddit support",
+        "Upvote/visibility notes",
+        "Clinical evidence grade",
+        "Evidence score (1-5)",
+        "Safety score (1-5)",
+        "Ease score (1-5)",
+        "Time horizon",
+        "Best used for",
+        "Practical protocol",
+        "Avoid / cautions",
+        "Source IDs",
+        "Priority score"
+      ],
+      "rows": [
+        {
+          "Category": "Acute regulation",
+          "Method": "Longer exhale breathing",
+          "Reddit pattern summary": "Frequently recommended as a fast downshift: inhale shorter, exhale longer; users report it feels less forced than breath-holding.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "Repeated in r/Anxiety threads; appears in best/top-style comments.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 5,
+          "Time horizon": "Immediate",
+          "Best used for": "Panic-like arousal, racing body sensations",
+          "Practical protocol": "2–5 minutes: inhale 4 sec, exhale 6–8 sec; keep intensity gentle; stop if dizzy.",
+          "Avoid / cautions": "Can feel uncomfortable for people who over-focus on breathing; switch to grounding if it increases anxiety.",
+          "Source IDs": "R1;R9;C1;C5",
+          "Priority score": 4.35
+        },
+        {
+          "Category": "Acute regulation",
+          "Method": "Box breathing / 4-4-4 or 4-4-4-4",
+          "Reddit pattern summary": "A common Reddit default for acute anxiety and pre-sleep anxiety; valued because counting occupies attention.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "Multiple r/Anxiety threads mention box breathing and 4-count patterns.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 5,
+          "Time horizon": "Immediate",
+          "Best used for": "Acute anxiety, bedtime anxiety",
+          "Practical protocol": "3–5 rounds: inhale 4, hold 4, exhale 4, optionally hold 4. Use gentle holds only.",
+          "Avoid / cautions": "Skip holds if breath-holding causes panic or air hunger.",
+          "Source IDs": "R5;R12;C1",
+          "Priority score": 4.35
+        },
+        {
+          "Category": "Acute regulation",
+          "Method": "5-4-3-2-1 grounding",
+          "Reddit pattern summary": "Commonly recommended for anxiety spikes, derealization, and sensory overload; shifts attention from threat-monitoring to environment.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "Grounding appears repeatedly in r/Anxiety coping discussions.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 5,
+          "Time horizon": "Immediate",
+          "Best used for": "Overwhelm, dissociation-like anxiety, rumination loops",
+          "Practical protocol": "Name 5 things seen, 4 felt, 3 heard, 2 smelled, 1 tasted; speak or write them if possible.",
+          "Avoid / cautions": "Not a cure; use as a bridge to action or recovery routine.",
+          "Source IDs": "R16;C9",
+          "Priority score": 4.35
+        },
+        {
+          "Category": "Acute regulation",
+          "Method": "Cold water / ice on face or wrists",
+          "Reddit pattern summary": "Reddit users often describe cold stimulation as a rapid physiological interrupt.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears in technique threads; commonly framed as quick relief.",
+          "Clinical evidence grade": "Low–Moderate",
+          "Evidence score (1-5)": 3,
+          "Safety score (1-5)": 3,
+          "Ease score (1-5)": 4,
+          "Time horizon": "Immediate",
+          "Best used for": "High arousal, heat sensations, panic-like body activation",
+          "Practical protocol": "Apply cool water to face or hold cold object briefly; keep exposure mild and brief.",
+          "Avoid / cautions": "Avoid extreme cold, prolonged exposure, breath-straining, or if it causes pain/numbness.",
+          "Source IDs": "R4;R21",
+          "Priority score": 3.15
+        },
+        {
+          "Category": "Acute regulation",
+          "Method": "Mindfully drinking cold water",
+          "Reddit pattern summary": "Reddit users report cold water plus sensory attention as a simple in-the-moment stabilizer.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Seen in instant-relief discussions.",
+          "Clinical evidence grade": "Low",
+          "Evidence score (1-5)": 2,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 5,
+          "Time horizon": "Immediate",
+          "Best used for": "Mild–moderate anxiety spikes",
+          "Practical protocol": "Slowly sip cold water; notice temperature, swallowing, and breathing for 1–3 minutes.",
+          "Avoid / cautions": "Supportive only; not sufficient for severe panic or persistent anxiety.",
+          "Source IDs": "R16",
+          "Priority score": 3.4
+        },
+        {
+          "Category": "Cognitive skills",
+          "Method": "CBT thought record",
+          "Reddit pattern summary": "Reddit advice often converges on identifying anxious predictions and testing them rather than arguing endlessly.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "CBT themes and therapy skills recur across anxiety discussions.",
+          "Clinical evidence grade": "High",
+          "Evidence score (1-5)": 5,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 3,
+          "Time horizon": "Days–weeks",
+          "Best used for": "Catastrophizing, worry loops, health anxiety patterns",
+          "Practical protocol": "Write: trigger, automatic thought, emotion %, evidence for/against, balanced thought, next action.",
+          "Avoid / cautions": "Do not use as reassurance-compulsion; limit to one structured pass.",
+          "Source IDs": "C2;C3;C17",
+          "Priority score": 4.35
+        },
+        {
+          "Category": "Cognitive skills",
+          "Method": "Worry postponement / scheduled worry",
+          "Reddit pattern summary": "A recurring advice pattern: contain worry instead of trying to suppress it all day.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears as CBT-style worry management in anxiety self-help recommendations.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 4,
+          "Time horizon": "Days–weeks",
+          "Best used for": "GAD-style repeated worry",
+          "Practical protocol": "Set one 15-minute worry window; when worry appears, write a keyword and defer it to the window.",
+          "Avoid / cautions": "Needs consistency; can fail if used as avoidance rather than containment.",
+          "Source IDs": "C17;C11",
+          "Priority score": 3.85
+        },
+        {
+          "Category": "Cognitive skills",
+          "Method": "Radical acceptance / response change",
+          "Reddit pattern summary": "Reddit recovery stories often emphasize accepting anxiety sensations and reducing the fight against them.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "Mentioned in recovery-oriented r/Anxiety threads.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 3,
+          "Time horizon": "Weeks",
+          "Best used for": "Fear of anxiety, panic-sensation escalation",
+          "Practical protocol": "Label: 'anxiety is present'; reduce checking; return to a chosen behavior for 5–10 minutes.",
+          "Avoid / cautions": "Acceptance is not resignation; use with therapy for trauma/OCD-heavy patterns.",
+          "Source IDs": "R18;R23;C2",
+          "Priority score": 4.05
+        },
+        {
+          "Category": "Behavioral",
+          "Method": "Graded exposure",
+          "Reddit pattern summary": "One of the strongest Reddit themes in recovery posts: stop avoiding in small planned steps.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "Commonly reported in positive recovery threads; aligns strongly with clinical evidence.",
+          "Clinical evidence grade": "High",
+          "Evidence score (1-5)": 5,
+          "Safety score (1-5)": 4,
+          "Ease score (1-5)": 2,
+          "Time horizon": "Weeks–months",
+          "Best used for": "Phobias, avoidance, social anxiety, panic avoidance",
+          "Practical protocol": "Create a 0–100 fear ladder; repeat one step until distress drops or tolerability improves; progress gradually.",
+          "Avoid / cautions": "Best done with clinician for severe trauma, OCD, panic, or high-risk situations.",
+          "Source IDs": "R18;C6;C4;C28",
+          "Priority score": 4
+        },
+        {
+          "Category": "Behavioral",
+          "Method": "Behavioral activation / do the next small action",
+          "Reddit pattern summary": "Reddit users often report that action before motivation reduces anxiety inertia.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears indirectly in advice to clean, walk, get outside, or do one task.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 4,
+          "Time horizon": "Days–weeks",
+          "Best used for": "Avoidance, low mood plus anxiety",
+          "Practical protocol": "Pick a 5-minute concrete action: shower, dishes, step outside, message one person, tidy desk.",
+          "Avoid / cautions": "Keep the task small; do not convert it into perfectionism.",
+          "Source IDs": "R15;C17",
+          "Priority score": 3.85
+        },
+        {
+          "Category": "Behavioral",
+          "Method": "Walking, especially outdoors/nature",
+          "Reddit pattern summary": "One of the most repeated Reddit recommendations; users describe walking as both physical discharge and cognitive reset.",
+          "Reddit support": "Very High",
+          "Upvote/visibility notes": "Appears across many r/Anxiety threads, often in best comments.",
+          "Clinical evidence grade": "Moderate–High",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 5,
+          "Time horizon": "Immediate–weeks",
+          "Best used for": "General tension, rumination, restlessness",
+          "Practical protocol": "10–30 minutes at easy pace; no performance goal; optionally pair with music or a safe walking route.",
+          "Avoid / cautions": "Avoid using walking as compulsive escape from every trigger.",
+          "Source IDs": "R0;R3;R5;R11;R15;C2",
+          "Priority score": 4.7
+        },
+        {
+          "Category": "Behavioral",
+          "Method": "Regular exercise routine",
+          "Reddit pattern summary": "Common Reddit consensus: exercise is not a magic cure, but consistently lowers baseline anxiety for many users.",
+          "Reddit support": "Very High",
+          "Upvote/visibility notes": "Repeated across threads as one of the most reliable non-medication tools.",
+          "Clinical evidence grade": "High",
+          "Evidence score (1-5)": 5,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 3,
+          "Time horizon": "Weeks",
+          "Best used for": "Baseline anxiety, stress load, sleep support",
+          "Practical protocol": "3–5 days/week; combine resistance training and low-intensity cardio; start below maximum capacity.",
+          "Avoid / cautions": "Overtraining, stimulant-heavy workouts, or sleep disruption can worsen anxiety.",
+          "Source IDs": "R11;R15;R23;C2;C8",
+          "Priority score": 4.7
+        },
+        {
+          "Category": "Somatic relaxation",
+          "Method": "Progressive muscle relaxation",
+          "Reddit pattern summary": "Reddit users mention relaxing muscles one by one to reduce physical tension.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears in coping-method lists.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 4,
+          "Time horizon": "Immediate–weeks",
+          "Best used for": "Muscle tension, body scanning, pre-sleep arousal",
+          "Practical protocol": "Tense one muscle group 5 sec, release 10–20 sec; move from feet to face.",
+          "Avoid / cautions": "Use gentle contractions; avoid injured areas.",
+          "Source IDs": "R24;C14",
+          "Priority score": 3.85
+        },
+        {
+          "Category": "Mindfulness",
+          "Method": "Mindfulness meditation",
+          "Reddit pattern summary": "Frequent Reddit recommendation, usually framed as gradual training rather than immediate cure.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "Appears across threads on habits and long-term management.",
+          "Clinical evidence grade": "Moderate–High",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 3,
+          "Time horizon": "Weeks–months",
+          "Best used for": "Rumination, reactivity, anxious thoughts",
+          "Practical protocol": "5–10 minutes daily; focus on breath/body/sound; when distracted, label and return.",
+          "Avoid / cautions": "Can initially intensify awareness; use grounding or guided practice if distress rises.",
+          "Source IDs": "R11;R21;R23;C15",
+          "Priority score": 4.05
+        },
+        {
+          "Category": "Mindfulness",
+          "Method": "Body scan",
+          "Reddit pattern summary": "Often overlaps with meditation and sleep routines; useful when anxiety is held as body tension.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears in relaxation and sleep discussions.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 4,
+          "Time horizon": "Immediate–weeks",
+          "Best used for": "Tension, insomnia-related anxiety",
+          "Practical protocol": "Scan from toes upward; observe sensation without fixing it; 5–15 minutes.",
+          "Avoid / cautions": "Not ideal if body-focused attention triggers health anxiety; use external grounding instead.",
+          "Source IDs": "C14;C15",
+          "Priority score": 3.85
+        },
+        {
+          "Category": "Sleep",
+          "Method": "Consistent sleep/wake rhythm",
+          "Reddit pattern summary": "Reddit users often report sleep quality as a major anxiety lever.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "A top recurring habit in anxiety threads.",
+          "Clinical evidence grade": "High",
+          "Evidence score (1-5)": 5,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 3,
+          "Time horizon": "Weeks",
+          "Best used for": "Baseline anxiety, irritability, stress reactivity",
+          "Practical protocol": "Keep wake time within a 60–90 min range; morning light; reduce naps; use a wind-down cue.",
+          "Avoid / cautions": "Changing schedule too aggressively can backfire; shift gradually.",
+          "Source IDs": "R26;R11;C11",
+          "Priority score": 4.35
+        },
+        {
+          "Category": "Sleep",
+          "Method": "Pre-sleep worry list / brain dump",
+          "Reddit pattern summary": "Common advice: write worries down before bed to reduce mental looping.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Consistent with Reddit sleep-anxiety patterns and CBT-I style advice.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 4,
+          "Time horizon": "Immediate–weeks",
+          "Best used for": "Night worry, sleep-onset anxiety",
+          "Practical protocol": "10 minutes before wind-down: write worries, next possible step, and when to revisit.",
+          "Avoid / cautions": "Do not problem-solve indefinitely at night.",
+          "Source IDs": "C11;C17",
+          "Priority score": 3.85
+        },
+        {
+          "Category": "Environment",
+          "Method": "Clean or organize one small area",
+          "Reddit pattern summary": "Reddit users describe cleaning as anxiety-reducing because it creates control and visible progress.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears in advice threads as a practical coping behavior.",
+          "Clinical evidence grade": "Low–Moderate",
+          "Evidence score (1-5)": 3,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 5,
+          "Time horizon": "Immediate",
+          "Best used for": "Restlessness, overwhelm, avoidance",
+          "Practical protocol": "Set timer for 5 minutes; clean one surface only; stop when timer ends.",
+          "Avoid / cautions": "Avoid perfectionistic cleaning spirals.",
+          "Source IDs": "R15",
+          "Priority score": 3.7
+        },
+        {
+          "Category": "Social",
+          "Method": "Talk to a trusted person / walking buddy",
+          "Reddit pattern summary": "Reddit users often report that conversation plus walking changes state quickly.",
+          "Reddit support": "Medium–High",
+          "Upvote/visibility notes": "Appears in highly visible advice comments.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 4,
+          "Ease score (1-5)": 3,
+          "Time horizon": "Immediate–weeks",
+          "Best used for": "Isolation, spiraling thoughts",
+          "Practical protocol": "Send one direct message: 'Can you talk for 10 minutes?' or walk with someone supportive.",
+          "Avoid / cautions": "Avoid repeated reassurance-seeking loops; aim for connection and action.",
+          "Source IDs": "R0",
+          "Priority score": 3.68
+        },
+        {
+          "Category": "Clinical care",
+          "Method": "Therapy, especially CBT or exposure-based therapy",
+          "Reddit pattern summary": "Across Reddit recovery threads, therapy is repeatedly described as a major lever when anxiety is persistent.",
+          "Reddit support": "Very High",
+          "Upvote/visibility notes": "Appears in many r/Anxiety recovery and advice threads.",
+          "Clinical evidence grade": "High",
+          "Evidence score (1-5)": 5,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 2,
+          "Time horizon": "Weeks–months",
+          "Best used for": "Persistent anxiety, impairment, avoidance, trauma-linked anxiety",
+          "Practical protocol": "Use therapist-guided CBT/exposure; track triggers, avoidance, and progress weekly.",
+          "Avoid / cautions": "Seek qualified clinician; online advice is not a substitute for treatment.",
+          "Source IDs": "R23;C2;C3;C6",
+          "Priority score": 4.55
+        },
+        {
+          "Category": "Clinical care",
+          "Method": "Medication review with prescriber",
+          "Reddit pattern summary": "Reddit recovery stories often mention medication as helpful for some people, but it should be individualized.",
+          "Reddit support": "Medium–High",
+          "Upvote/visibility notes": "Mentioned in recovery threads; not a DIY intervention.",
+          "Clinical evidence grade": "High",
+          "Evidence score (1-5)": 5,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 1,
+          "Time horizon": "Weeks",
+          "Best used for": "Persistent moderate–severe anxiety, functional impairment",
+          "Practical protocol": "Discuss symptoms, side effects, sleep, caffeine/nicotine, and treatment goals with prescriber.",
+          "Avoid / cautions": "Do not start/stop/change psychiatric medication without clinician guidance.",
+          "Source IDs": "R18;R23;C2",
+          "Priority score": 3.87
+        },
+        {
+          "Category": "Lifestyle",
+          "Method": "Reduce caffeine or keep it earlier",
+          "Reddit pattern summary": "Reddit users commonly report caffeine reduction helps physiological anxiety.",
+          "Reddit support": "High",
+          "Upvote/visibility notes": "Repeated advice pattern, especially for jitteriness and insomnia.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 4,
+          "Time horizon": "Days–weeks",
+          "Best used for": "Jitteriness, panic sensations, insomnia",
+          "Practical protocol": "Track caffeine dose and timing; move it earlier; reduce gradually if dependent.",
+          "Avoid / cautions": "Abrupt reduction can cause withdrawal headaches/fatigue.",
+          "Source IDs": "R23;C8;C11",
+          "Priority score": 4.2
+        },
+        {
+          "Category": "Lifestyle",
+          "Method": "Limit nicotine escalation",
+          "Reddit pattern summary": "Anxiety communities often discuss stimulant-like cycles where nicotine relieves withdrawal but maintains baseline arousal.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears as user-reported lifestyle lever; evidence depends on pattern.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 3,
+          "Safety score (1-5)": 4,
+          "Ease score (1-5)": 2,
+          "Time horizon": "Weeks",
+          "Best used for": "Restlessness, dependence-driven anxiety cycles",
+          "Practical protocol": "Track timing and cravings; avoid increasing dose during anxiety; consider clinician-supported reduction.",
+          "Avoid / cautions": "Withdrawal can worsen anxiety temporarily; do not attempt abrupt major changes without support if dependent.",
+          "Source IDs": "C8",
+          "Priority score": 3.05
+        },
+        {
+          "Category": "Lifestyle",
+          "Method": "Avoid using cannabis as primary anxiety coping",
+          "Reddit pattern summary": "Some Reddit users report short-term relief, others report worsening anxiety/panic; safest classification is caution.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Mixed Reddit signal; not recommended as a primary anxiety method.",
+          "Clinical evidence grade": "Mixed/Low",
+          "Evidence score (1-5)": 2,
+          "Safety score (1-5)": 2,
+          "Ease score (1-5)": 1,
+          "Time horizon": "Variable",
+          "Best used for": "Not a preferred anxiety-control strategy",
+          "Practical protocol": "If legally prescribed, discuss anxiety effects, dose, and timing with clinician.",
+          "Avoid / cautions": "Can worsen anxiety, panic, cognition, motivation, and sleep architecture in some users; not appropriate as general advice for minors.",
+          "Source IDs": "R23",
+          "Priority score": 2.2
+        },
+        {
+          "Category": "Lifestyle",
+          "Method": "Nutrition regularity and hydration",
+          "Reddit pattern summary": "Reddit advice often includes eating better and hydration; users notice anxiety worsens when underfed or dehydrated.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears in GAD/lifestyle threads.",
+          "Clinical evidence grade": "Low–Moderate",
+          "Evidence score (1-5)": 3,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 3,
+          "Time horizon": "Days–weeks",
+          "Best used for": "Anxiety worsened by hunger, dehydration, irregular routine",
+          "Practical protocol": "Use regular meals or planned nutrition; include protein, carbohydrates, fluids, electrolytes as medically appropriate.",
+          "Avoid / cautions": "Extreme restriction/fasting can worsen anxiety for some people.",
+          "Source IDs": "R6;C19",
+          "Priority score": 3.4
+        },
+        {
+          "Category": "Attention shift",
+          "Method": "Audio book, calm playlist, or low-demand distraction",
+          "Reddit pattern summary": "Reddit users use structured distraction when anxiety is too intense for cognitive work.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Common in coping-method lists.",
+          "Clinical evidence grade": "Low–Moderate",
+          "Evidence score (1-5)": 3,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 5,
+          "Time horizon": "Immediate",
+          "Best used for": "Rumination loops, pre-sleep anxiety",
+          "Practical protocol": "Choose low-arousal content; set 20–30 min timer; return to the next small action after.",
+          "Avoid / cautions": "Avoid endless scrolling or emotionally activating content.",
+          "Source IDs": "R24",
+          "Priority score": 3.7
+        },
+        {
+          "Category": "Attention shift",
+          "Method": "Alphabet categories game",
+          "Reddit pattern summary": "Reddit users recommend naming items A–Z in a category to occupy working memory at bedtime.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Appears in sleep-anxiety coping comments.",
+          "Clinical evidence grade": "Low",
+          "Evidence score (1-5)": 2,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 5,
+          "Time horizon": "Immediate",
+          "Best used for": "Bedtime rumination",
+          "Practical protocol": "Pick a category; name one item for A, B, C… until drowsy or calmer.",
+          "Avoid / cautions": "Supportive only; if insomnia persists, use CBT-I principles.",
+          "Source IDs": "R12",
+          "Priority score": 3.4
+        },
+        {
+          "Category": "Emotion regulation",
+          "Method": "Self-labeling: 'this is anxiety, not danger'",
+          "Reddit pattern summary": "Reddit recovery advice often highlights reinterpreting sensations and reducing fear of symptoms.",
+          "Reddit support": "Medium–High",
+          "Upvote/visibility notes": "Common in panic/anxiety advice patterns.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 4,
+          "Time horizon": "Immediate–weeks",
+          "Best used for": "Fear of bodily sensations, panic escalation",
+          "Practical protocol": "Say/write: 'This is anxiety activation. It is uncomfortable, not automatically dangerous. Next action: ____.'",
+          "Avoid / cautions": "Do not use repeatedly as reassurance checking; pair with behavior.",
+          "Source IDs": "R9;R18;C2",
+          "Priority score": 4.02
+        },
+        {
+          "Category": "Planning",
+          "Method": "Trigger log and pattern detection",
+          "Reddit pattern summary": "Reddit users often discover links with sleep, caffeine, avoidance, work stress, or relationship stress.",
+          "Reddit support": "Medium",
+          "Upvote/visibility notes": "Repeated in advice to identify triggers and patterns.",
+          "Clinical evidence grade": "Moderate",
+          "Evidence score (1-5)": 4,
+          "Safety score (1-5)": 5,
+          "Ease score (1-5)": 3,
+          "Time horizon": "Weeks",
+          "Best used for": "Unclear anxiety patterns",
+          "Practical protocol": "Track: time, sleep, caffeine, nicotine, food, trigger, anxiety 0–10, behavior, outcome.",
+          "Avoid / cautions": "Avoid obsessive tracking; review once per week.",
+          "Source IDs": "C8;C17",
+          "Priority score": 3.7
+        },
+        {
+          "Category": "Higher-risk / not recommended",
+          "Method": "Valsalva, gag reflex, extreme breath holds",
+          "Reddit pattern summary": "Some Reddit comments mention vagus-nerve maneuvers, but these are not general self-help tools.",
+          "Reddit support": "Low–Medium",
+          "Upvote/visibility notes": "Appears in technique threads but with cautions.",
+          "Clinical evidence grade": "Low",
+          "Evidence score (1-5)": 1,
+          "Safety score (1-5)": 1,
+          "Ease score (1-5)": 2,
+          "Time horizon": "Immediate",
+          "Best used for": "Not recommended as routine anxiety management",
+          "Practical protocol": "Prefer safer breathing, grounding, cold water, or therapist-guided skills.",
+          "Avoid / cautions": "Avoid straining, gagging, or prolonged breath holds; can cause dizziness, vomiting, or medical risk.",
+          "Source IDs": "R4",
+          "Priority score": 1.5
+        }
+      ],
+      "raw": [
+        [
+          "Category",
+          "Method",
+          "Reddit pattern summary",
+          "Reddit support",
+          "Upvote/visibility notes",
+          "Clinical evidence grade",
+          "Evidence score (1-5)",
+          "Safety score (1-5)",
+          "Ease score (1-5)",
+          "Time horizon",
+          "Best used for",
+          "Practical protocol",
+          "Avoid / cautions",
+          "Source IDs",
+          "Priority score"
+        ],
+        [
+          "Acute regulation",
+          "Longer exhale breathing",
+          "Frequently recommended as a fast downshift: inhale shorter, exhale longer; users report it feels less forced than breath-holding.",
+          "High",
+          "Repeated in r/Anxiety threads; appears in best/top-style comments.",
+          "Moderate",
+          4,
+          5,
+          5,
+          "Immediate",
+          "Panic-like arousal, racing body sensations",
+          "2–5 minutes: inhale 4 sec, exhale 6–8 sec; keep intensity gentle; stop if dizzy.",
+          "Can feel uncomfortable for people who over-focus on breathing; switch to grounding if it increases anxiety.",
+          "R1;R9;C1;C5",
+          4.35
+        ],
+        [
+          "Acute regulation",
+          "Box breathing / 4-4-4 or 4-4-4-4",
+          "A common Reddit default for acute anxiety and pre-sleep anxiety; valued because counting occupies attention.",
+          "High",
+          "Multiple r/Anxiety threads mention box breathing and 4-count patterns.",
+          "Moderate",
+          4,
+          5,
+          5,
+          "Immediate",
+          "Acute anxiety, bedtime anxiety",
+          "3–5 rounds: inhale 4, hold 4, exhale 4, optionally hold 4. Use gentle holds only.",
+          "Skip holds if breath-holding causes panic or air hunger.",
+          "R5;R12;C1",
+          4.35
+        ],
+        [
+          "Acute regulation",
+          "5-4-3-2-1 grounding",
+          "Commonly recommended for anxiety spikes, derealization, and sensory overload; shifts attention from threat-monitoring to environment.",
+          "High",
+          "Grounding appears repeatedly in r/Anxiety coping discussions.",
+          "Moderate",
+          4,
+          5,
+          5,
+          "Immediate",
+          "Overwhelm, dissociation-like anxiety, rumination loops",
+          "Name 5 things seen, 4 felt, 3 heard, 2 smelled, 1 tasted; speak or write them if possible.",
+          "Not a cure; use as a bridge to action or recovery routine.",
+          "R16;C9",
+          4.35
+        ],
+        [
+          "Acute regulation",
+          "Cold water / ice on face or wrists",
+          "Reddit users often describe cold stimulation as a rapid physiological interrupt.",
+          "Medium",
+          "Appears in technique threads; commonly framed as quick relief.",
+          "Low–Moderate",
+          3,
+          3,
+          4,
+          "Immediate",
+          "High arousal, heat sensations, panic-like body activation",
+          "Apply cool water to face or hold cold object briefly; keep exposure mild and brief.",
+          "Avoid extreme cold, prolonged exposure, breath-straining, or if it causes pain/numbness.",
+          "R4;R21",
+          3.15
+        ],
+        [
+          "Acute regulation",
+          "Mindfully drinking cold water",
+          "Reddit users report cold water plus sensory attention as a simple in-the-moment stabilizer.",
+          "Medium",
+          "Seen in instant-relief discussions.",
+          "Low",
+          2,
+          5,
+          5,
+          "Immediate",
+          "Mild–moderate anxiety spikes",
+          "Slowly sip cold water; notice temperature, swallowing, and breathing for 1–3 minutes.",
+          "Supportive only; not sufficient for severe panic or persistent anxiety.",
+          "R16",
+          3.4
+        ],
+        [
+          "Cognitive skills",
+          "CBT thought record",
+          "Reddit advice often converges on identifying anxious predictions and testing them rather than arguing endlessly.",
+          "High",
+          "CBT themes and therapy skills recur across anxiety discussions.",
+          "High",
+          5,
+          5,
+          3,
+          "Days–weeks",
+          "Catastrophizing, worry loops, health anxiety patterns",
+          "Write: trigger, automatic thought, emotion %, evidence for/against, balanced thought, next action.",
+          "Do not use as reassurance-compulsion; limit to one structured pass.",
+          "C2;C3;C17",
+          4.35
+        ],
+        [
+          "Cognitive skills",
+          "Worry postponement / scheduled worry",
+          "A recurring advice pattern: contain worry instead of trying to suppress it all day.",
+          "Medium",
+          "Appears as CBT-style worry management in anxiety self-help recommendations.",
+          "Moderate",
+          4,
+          5,
+          4,
+          "Days–weeks",
+          "GAD-style repeated worry",
+          "Set one 15-minute worry window; when worry appears, write a keyword and defer it to the window.",
+          "Needs consistency; can fail if used as avoidance rather than containment.",
+          "C17;C11",
+          3.85
+        ],
+        [
+          "Cognitive skills",
+          "Radical acceptance / response change",
+          "Reddit recovery stories often emphasize accepting anxiety sensations and reducing the fight against them.",
+          "High",
+          "Mentioned in recovery-oriented r/Anxiety threads.",
+          "Moderate",
+          4,
+          5,
+          3,
+          "Weeks",
+          "Fear of anxiety, panic-sensation escalation",
+          "Label: 'anxiety is present'; reduce checking; return to a chosen behavior for 5–10 minutes.",
+          "Acceptance is not resignation; use with therapy for trauma/OCD-heavy patterns.",
+          "R18;R23;C2",
+          4.05
+        ],
+        [
+          "Behavioral",
+          "Graded exposure",
+          "One of the strongest Reddit themes in recovery posts: stop avoiding in small planned steps.",
+          "High",
+          "Commonly reported in positive recovery threads; aligns strongly with clinical evidence.",
+          "High",
+          5,
+          4,
+          2,
+          "Weeks–months",
+          "Phobias, avoidance, social anxiety, panic avoidance",
+          "Create a 0–100 fear ladder; repeat one step until distress drops or tolerability improves; progress gradually.",
+          "Best done with clinician for severe trauma, OCD, panic, or high-risk situations.",
+          "R18;C6;C4;C28",
+          4
+        ],
+        [
+          "Behavioral",
+          "Behavioral activation / do the next small action",
+          "Reddit users often report that action before motivation reduces anxiety inertia.",
+          "Medium",
+          "Appears indirectly in advice to clean, walk, get outside, or do one task.",
+          "Moderate",
+          4,
+          5,
+          4,
+          "Days–weeks",
+          "Avoidance, low mood plus anxiety",
+          "Pick a 5-minute concrete action: shower, dishes, step outside, message one person, tidy desk.",
+          "Keep the task small; do not convert it into perfectionism.",
+          "R15;C17",
+          3.85
+        ],
+        [
+          "Behavioral",
+          "Walking, especially outdoors/nature",
+          "One of the most repeated Reddit recommendations; users describe walking as both physical discharge and cognitive reset.",
+          "Very High",
+          "Appears across many r/Anxiety threads, often in best comments.",
+          "Moderate–High",
+          4,
+          5,
+          5,
+          "Immediate–weeks",
+          "General tension, rumination, restlessness",
+          "10–30 minutes at easy pace; no performance goal; optionally pair with music or a safe walking route.",
+          "Avoid using walking as compulsive escape from every trigger.",
+          "R0;R3;R5;R11;R15;C2",
+          4.7
+        ],
+        [
+          "Behavioral",
+          "Regular exercise routine",
+          "Common Reddit consensus: exercise is not a magic cure, but consistently lowers baseline anxiety for many users.",
+          "Very High",
+          "Repeated across threads as one of the most reliable non-medication tools.",
+          "High",
+          5,
+          5,
+          3,
+          "Weeks",
+          "Baseline anxiety, stress load, sleep support",
+          "3–5 days/week; combine resistance training and low-intensity cardio; start below maximum capacity.",
+          "Overtraining, stimulant-heavy workouts, or sleep disruption can worsen anxiety.",
+          "R11;R15;R23;C2;C8",
+          4.7
+        ],
+        [
+          "Somatic relaxation",
+          "Progressive muscle relaxation",
+          "Reddit users mention relaxing muscles one by one to reduce physical tension.",
+          "Medium",
+          "Appears in coping-method lists.",
+          "Moderate",
+          4,
+          5,
+          4,
+          "Immediate–weeks",
+          "Muscle tension, body scanning, pre-sleep arousal",
+          "Tense one muscle group 5 sec, release 10–20 sec; move from feet to face.",
+          "Use gentle contractions; avoid injured areas.",
+          "R24;C14",
+          3.85
+        ],
+        [
+          "Mindfulness",
+          "Mindfulness meditation",
+          "Frequent Reddit recommendation, usually framed as gradual training rather than immediate cure.",
+          "High",
+          "Appears across threads on habits and long-term management.",
+          "Moderate–High",
+          4,
+          5,
+          3,
+          "Weeks–months",
+          "Rumination, reactivity, anxious thoughts",
+          "5–10 minutes daily; focus on breath/body/sound; when distracted, label and return.",
+          "Can initially intensify awareness; use grounding or guided practice if distress rises.",
+          "R11;R21;R23;C15",
+          4.05
+        ],
+        [
+          "Mindfulness",
+          "Body scan",
+          "Often overlaps with meditation and sleep routines; useful when anxiety is held as body tension.",
+          "Medium",
+          "Appears in relaxation and sleep discussions.",
+          "Moderate",
+          4,
+          5,
+          4,
+          "Immediate–weeks",
+          "Tension, insomnia-related anxiety",
+          "Scan from toes upward; observe sensation without fixing it; 5–15 minutes.",
+          "Not ideal if body-focused attention triggers health anxiety; use external grounding instead.",
+          "C14;C15",
+          3.85
+        ],
+        [
+          "Sleep",
+          "Consistent sleep/wake rhythm",
+          "Reddit users often report sleep quality as a major anxiety lever.",
+          "High",
+          "A top recurring habit in anxiety threads.",
+          "High",
+          5,
+          5,
+          3,
+          "Weeks",
+          "Baseline anxiety, irritability, stress reactivity",
+          "Keep wake time within a 60–90 min range; morning light; reduce naps; use a wind-down cue.",
+          "Changing schedule too aggressively can backfire; shift gradually.",
+          "R26;R11;C11",
+          4.35
+        ],
+        [
+          "Sleep",
+          "Pre-sleep worry list / brain dump",
+          "Common advice: write worries down before bed to reduce mental looping.",
+          "Medium",
+          "Consistent with Reddit sleep-anxiety patterns and CBT-I style advice.",
+          "Moderate",
+          4,
+          5,
+          4,
+          "Immediate–weeks",
+          "Night worry, sleep-onset anxiety",
+          "10 minutes before wind-down: write worries, next possible step, and when to revisit.",
+          "Do not problem-solve indefinitely at night.",
+          "C11;C17",
+          3.85
+        ],
+        [
+          "Environment",
+          "Clean or organize one small area",
+          "Reddit users describe cleaning as anxiety-reducing because it creates control and visible progress.",
+          "Medium",
+          "Appears in advice threads as a practical coping behavior.",
+          "Low–Moderate",
+          3,
+          5,
+          5,
+          "Immediate",
+          "Restlessness, overwhelm, avoidance",
+          "Set timer for 5 minutes; clean one surface only; stop when timer ends.",
+          "Avoid perfectionistic cleaning spirals.",
+          "R15",
+          3.7
+        ],
+        [
+          "Social",
+          "Talk to a trusted person / walking buddy",
+          "Reddit users often report that conversation plus walking changes state quickly.",
+          "Medium–High",
+          "Appears in highly visible advice comments.",
+          "Moderate",
+          4,
+          4,
+          3,
+          "Immediate–weeks",
+          "Isolation, spiraling thoughts",
+          "Send one direct message: 'Can you talk for 10 minutes?' or walk with someone supportive.",
+          "Avoid repeated reassurance-seeking loops; aim for connection and action.",
+          "R0",
+          3.68
+        ],
+        [
+          "Clinical care",
+          "Therapy, especially CBT or exposure-based therapy",
+          "Across Reddit recovery threads, therapy is repeatedly described as a major lever when anxiety is persistent.",
+          "Very High",
+          "Appears in many r/Anxiety recovery and advice threads.",
+          "High",
+          5,
+          5,
+          2,
+          "Weeks–months",
+          "Persistent anxiety, impairment, avoidance, trauma-linked anxiety",
+          "Use therapist-guided CBT/exposure; track triggers, avoidance, and progress weekly.",
+          "Seek qualified clinician; online advice is not a substitute for treatment.",
+          "R23;C2;C3;C6",
+          4.55
+        ],
+        [
+          "Clinical care",
+          "Medication review with prescriber",
+          "Reddit recovery stories often mention medication as helpful for some people, but it should be individualized.",
+          "Medium–High",
+          "Mentioned in recovery threads; not a DIY intervention.",
+          "High",
+          5,
+          5,
+          1,
+          "Weeks",
+          "Persistent moderate–severe anxiety, functional impairment",
+          "Discuss symptoms, side effects, sleep, caffeine/nicotine, and treatment goals with prescriber.",
+          "Do not start/stop/change psychiatric medication without clinician guidance.",
+          "R18;R23;C2",
+          3.87
+        ],
+        [
+          "Lifestyle",
+          "Reduce caffeine or keep it earlier",
+          "Reddit users commonly report caffeine reduction helps physiological anxiety.",
+          "High",
+          "Repeated advice pattern, especially for jitteriness and insomnia.",
+          "Moderate",
+          4,
+          5,
+          4,
+          "Days–weeks",
+          "Jitteriness, panic sensations, insomnia",
+          "Track caffeine dose and timing; move it earlier; reduce gradually if dependent.",
+          "Abrupt reduction can cause withdrawal headaches/fatigue.",
+          "R23;C8;C11",
+          4.2
+        ],
+        [
+          "Lifestyle",
+          "Limit nicotine escalation",
+          "Anxiety communities often discuss stimulant-like cycles where nicotine relieves withdrawal but maintains baseline arousal.",
+          "Medium",
+          "Appears as user-reported lifestyle lever; evidence depends on pattern.",
+          "Moderate",
+          3,
+          4,
+          2,
+          "Weeks",
+          "Restlessness, dependence-driven anxiety cycles",
+          "Track timing and cravings; avoid increasing dose during anxiety; consider clinician-supported reduction.",
+          "Withdrawal can worsen anxiety temporarily; do not attempt abrupt major changes without support if dependent.",
+          "C8",
+          3.05
+        ],
+        [
+          "Lifestyle",
+          "Avoid using cannabis as primary anxiety coping",
+          "Some Reddit users report short-term relief, others report worsening anxiety/panic; safest classification is caution.",
+          "Medium",
+          "Mixed Reddit signal; not recommended as a primary anxiety method.",
+          "Mixed/Low",
+          2,
+          2,
+          1,
+          "Variable",
+          "Not a preferred anxiety-control strategy",
+          "If legally prescribed, discuss anxiety effects, dose, and timing with clinician.",
+          "Can worsen anxiety, panic, cognition, motivation, and sleep architecture in some users; not appropriate as general advice for minors.",
+          "R23",
+          2.2
+        ],
+        [
+          "Lifestyle",
+          "Nutrition regularity and hydration",
+          "Reddit advice often includes eating better and hydration; users notice anxiety worsens when underfed or dehydrated.",
+          "Medium",
+          "Appears in GAD/lifestyle threads.",
+          "Low–Moderate",
+          3,
+          5,
+          3,
+          "Days–weeks",
+          "Anxiety worsened by hunger, dehydration, irregular routine",
+          "Use regular meals or planned nutrition; include protein, carbohydrates, fluids, electrolytes as medically appropriate.",
+          "Extreme restriction/fasting can worsen anxiety for some people.",
+          "R6;C19",
+          3.4
+        ],
+        [
+          "Attention shift",
+          "Audio book, calm playlist, or low-demand distraction",
+          "Reddit users use structured distraction when anxiety is too intense for cognitive work.",
+          "Medium",
+          "Common in coping-method lists.",
+          "Low–Moderate",
+          3,
+          5,
+          5,
+          "Immediate",
+          "Rumination loops, pre-sleep anxiety",
+          "Choose low-arousal content; set 20–30 min timer; return to the next small action after.",
+          "Avoid endless scrolling or emotionally activating content.",
+          "R24",
+          3.7
+        ],
+        [
+          "Attention shift",
+          "Alphabet categories game",
+          "Reddit users recommend naming items A–Z in a category to occupy working memory at bedtime.",
+          "Medium",
+          "Appears in sleep-anxiety coping comments.",
+          "Low",
+          2,
+          5,
+          5,
+          "Immediate",
+          "Bedtime rumination",
+          "Pick a category; name one item for A, B, C… until drowsy or calmer.",
+          "Supportive only; if insomnia persists, use CBT-I principles.",
+          "R12",
+          3.4
+        ],
+        [
+          "Emotion regulation",
+          "Self-labeling: 'this is anxiety, not danger'",
+          "Reddit recovery advice often highlights reinterpreting sensations and reducing fear of symptoms.",
+          "Medium–High",
+          "Common in panic/anxiety advice patterns.",
+          "Moderate",
+          4,
+          5,
+          4,
+          "Immediate–weeks",
+          "Fear of bodily sensations, panic escalation",
+          "Say/write: 'This is anxiety activation. It is uncomfortable, not automatically dangerous. Next action: ____.'",
+          "Do not use repeatedly as reassurance checking; pair with behavior.",
+          "R9;R18;C2",
+          4.02
+        ],
+        [
+          "Planning",
+          "Trigger log and pattern detection",
+          "Reddit users often discover links with sleep, caffeine, avoidance, work stress, or relationship stress.",
+          "Medium",
+          "Repeated in advice to identify triggers and patterns.",
+          "Moderate",
+          4,
+          5,
+          3,
+          "Weeks",
+          "Unclear anxiety patterns",
+          "Track: time, sleep, caffeine, nicotine, food, trigger, anxiety 0–10, behavior, outcome.",
+          "Avoid obsessive tracking; review once per week.",
+          "C8;C17",
+          3.7
+        ],
+        [
+          "Higher-risk / not recommended",
+          "Valsalva, gag reflex, extreme breath holds",
+          "Some Reddit comments mention vagus-nerve maneuvers, but these are not general self-help tools.",
+          "Low–Medium",
+          "Appears in technique threads but with cautions.",
+          "Low",
+          1,
+          1,
+          2,
+          "Immediate",
+          "Not recommended as routine anxiety management",
+          "Prefer safer breathing, grounding, cold water, or therapist-guided skills.",
+          "Avoid straining, gagging, or prolonged breath holds; can cause dizziness, vomiting, or medical risk.",
+          "R4",
+          1.5
+        ]
+      ]
+    },
+    "Protocols": {
+      "headers": [
+        "Protocol",
+        "Use case",
+        "Steps",
+        "Duration",
+        "Notes"
+      ],
+      "rows": [
+        {
+          "Protocol": "2-minute acute reset",
+          "Use case": "Sudden anxiety spike",
+          "Steps": "1) Longer-exhale breathing for 60 sec. 2) 5-4-3-2-1 grounding. 3) Pick one small action.",
+          "Duration": "2–5 min",
+          "Notes": "Use when anxiety is high but you still need to function."
+        },
+        {
+          "Protocol": "Pre-sleep downshift",
+          "Use case": "Night worry / sleep onset",
+          "Steps": "1) Write worry list. 2) Box breathing 3 rounds. 3) Body scan or alphabet categories.",
+          "Duration": "10–20 min",
+          "Notes": "Avoid problem-solving after the worry list."
+        },
+        {
+          "Protocol": "Weekly baseline routine",
+          "Use case": "General anxiety load",
+          "Steps": "3 exercise sessions, 3 walks, 5 short mindfulness sessions, stable wake time, caffeine cutoff.",
+          "Duration": "7 days",
+          "Notes": "Track anxiety 0–10 once daily, not repeatedly."
+        },
+        {
+          "Protocol": "Avoidance reduction ladder",
+          "Use case": "Specific feared activity",
+          "Steps": "Make 0–100 fear ladder; choose a 30–50/100 step; repeat until tolerable; progress gradually.",
+          "Duration": "Weeks",
+          "Notes": "Best with clinician when avoidance is severe or trauma/OCD-linked."
+        },
+        {
+          "Protocol": "Rumination interruption",
+          "Use case": "Mental looping",
+          "Steps": "Label the loop; write one CBT thought record; defer extra worry to scheduled worry window.",
+          "Duration": "5–15 min",
+          "Notes": "Limit to one pass to avoid reassurance compulsion."
+        }
+      ],
+      "raw": [
+        [
+          "Protocol",
+          "Use case",
+          "Steps",
+          "Duration",
+          "Notes"
+        ],
+        [
+          "2-minute acute reset",
+          "Sudden anxiety spike",
+          "1) Longer-exhale breathing for 60 sec. 2) 5-4-3-2-1 grounding. 3) Pick one small action.",
+          "2–5 min",
+          "Use when anxiety is high but you still need to function."
+        ],
+        [
+          "Pre-sleep downshift",
+          "Night worry / sleep onset",
+          "1) Write worry list. 2) Box breathing 3 rounds. 3) Body scan or alphabet categories.",
+          "10–20 min",
+          "Avoid problem-solving after the worry list."
+        ],
+        [
+          "Weekly baseline routine",
+          "General anxiety load",
+          "3 exercise sessions, 3 walks, 5 short mindfulness sessions, stable wake time, caffeine cutoff.",
+          "7 days",
+          "Track anxiety 0–10 once daily, not repeatedly."
+        ],
+        [
+          "Avoidance reduction ladder",
+          "Specific feared activity",
+          "Make 0–100 fear ladder; choose a 30–50/100 step; repeat until tolerable; progress gradually.",
+          "Weeks",
+          "Best with clinician when avoidance is severe or trauma/OCD-linked."
+        ],
+        [
+          "Rumination interruption",
+          "Mental looping",
+          "Label the loop; write one CBT thought record; defer extra worry to scheduled worry window.",
+          "5–15 min",
+          "Limit to one pass to avoid reassurance compulsion."
+        ]
+      ]
+    },
+    "Safety Notes": {
+      "headers": [
+        "Topic",
+        "Guidance"
+      ],
+      "rows": [
+        {
+          "Topic": "Clinical boundary",
+          "Guidance": "This workbook summarizes Reddit-derived patterns and public clinical guidance. It is not diagnosis, treatment, or a replacement for a qualified clinician."
+        },
+        {
+          "Topic": "Medication",
+          "Guidance": "Do not start, stop, or change psychiatric medication based on Reddit advice. Use a prescriber for medication decisions."
+        },
+        {
+          "Topic": "Breathing exercises",
+          "Guidance": "Breathing can help, but breath holds or intense breathing can worsen symptoms in some people. Use gentle pacing and stop if dizzy."
+        },
+        {
+          "Topic": "Exposure",
+          "Guidance": "Exposure is evidence-based, but severe avoidance, trauma-linked anxiety, OCD, panic disorder, or high-risk situations should be handled with a clinician."
+        },
+        {
+          "Topic": "Substances",
+          "Guidance": "Cannabis, nicotine, alcohol, high-dose caffeine, and unverified supplements can worsen anxiety or create dependence cycles. They are not primary anxiety treatments."
+        },
+        {
+          "Topic": "Tracking",
+          "Guidance": "Track patterns once daily or weekly. Excessive symptom-checking can become a reassurance loop."
+        },
+        {
+          "Topic": "Urgent symptoms",
+          "Guidance": "For chest pain, fainting, severe confusion, dangerous impulses, or inability to stay safe, contact local emergency/medical support immediately."
+        }
+      ],
+      "raw": [
+        [
+          "Topic",
+          "Guidance"
+        ],
+        [
+          "Clinical boundary",
+          "This workbook summarizes Reddit-derived patterns and public clinical guidance. It is not diagnosis, treatment, or a replacement for a qualified clinician."
+        ],
+        [
+          "Medication",
+          "Do not start, stop, or change psychiatric medication based on Reddit advice. Use a prescriber for medication decisions."
+        ],
+        [
+          "Breathing exercises",
+          "Breathing can help, but breath holds or intense breathing can worsen symptoms in some people. Use gentle pacing and stop if dizzy."
+        ],
+        [
+          "Exposure",
+          "Exposure is evidence-based, but severe avoidance, trauma-linked anxiety, OCD, panic disorder, or high-risk situations should be handled with a clinician."
+        ],
+        [
+          "Substances",
+          "Cannabis, nicotine, alcohol, high-dose caffeine, and unverified supplements can worsen anxiety or create dependence cycles. They are not primary anxiety treatments."
+        ],
+        [
+          "Tracking",
+          "Track patterns once daily or weekly. Excessive symptom-checking can become a reassurance loop."
+        ],
+        [
+          "Urgent symptoms",
+          "For chest pain, fainting, severe confusion, dangerous impulses, or inability to stay safe, contact local emergency/medical support immediately."
+        ]
+      ]
+    },
+    "Sources": {
+      "headers": [
+        "ID",
+        "Source type",
+        "What it supports",
+        "URL"
+      ],
+      "rows": [
+        {
+          "ID": "R0",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Alternative therapy helpful: breathing exercises and walks",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/1anr577/what_alternative_therapy_has_been_most_helpful_at/"
+        },
+        {
+          "ID": "R1",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Breathing exercises work discussion",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/ytpocp/do_breathing_exercises_actually_work_for_anyone/"
+        },
+        {
+          "ID": "R3",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Things that helped anxiety",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/ug84f4/whats_something_that_has_actually_helped_you_a/"
+        },
+        {
+          "ID": "R4",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Successful technique/tool/skill discussion including cold water and cautions",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/1bn4mue/whats_your_most_successful_technique_tool_idea_or/"
+        },
+        {
+          "ID": "R5",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Go-to relaxation techniques: box breathing and nature walk",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/1emwo7p/what_are_your_goto_relaxation_techniques_when/"
+        },
+        {
+          "ID": "R6",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "GAD: meditation, therapy, eating better, exercise",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/1c4wanw/for_those_who_have_gad_what_have_you_done_that/"
+        },
+        {
+          "ID": "R9",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Longer exhale breathing",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/1foxdcd/what_is_the_technique_or_way_you_calm_yourself/"
+        },
+        {
+          "ID": "R11",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Natural ways: exercise, yoga/walking, sleep hygiene, mindfulness",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/zd6k58/what_are_some_healthy_natural_ways_of_managing/"
+        },
+        {
+          "ID": "R12",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Coping methods: box breathing and alphabet categories",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/xylqsj/what_coping_methods_do_you_use_when_you_are/"
+        },
+        {
+          "ID": "R15",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Other than therapy/medication: breathing, exercise, cleaning",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/10vhyvn/other_than_therapy_or_medication_what_is_the/"
+        },
+        {
+          "ID": "R16",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Instant relief: breath work, grounding, cold water",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/13j29g4/most_effective_methods_of_anxiety_relief_in_your/"
+        },
+        {
+          "ID": "R18",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Recovery stories: medication, exposure therapy, radical acceptance",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/1gmtlzy/people_who_healed_from_anxiety_please_share_your/"
+        },
+        {
+          "ID": "R21",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "What snaps you out: ice, mindfulness, laying outside",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/1qacz59/whats_one_thing_that_snaps_you_out_of_your/"
+        },
+        {
+          "ID": "R23",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Things that significantly improved anxiety: therapy, meds, exercise, meditation/breathwork, caffeine/weed comments",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/16ilx26/what_are_the_things_that_have_significantly/"
+        },
+        {
+          "ID": "R24",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "Coping methods: deep breathing, cold drink, distraction, PMR",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/10h3rgm/list_your_coping_methods_for_anxiety/"
+        },
+        {
+          "ID": "R26",
+          "Source type": "Reddit r/Anxiety",
+          "What it supports": "One habit that improved anxiety: prioritizing sleep",
+          "URL": "https://www.reddit.com/r/Anxiety/comments/10iohv7/what_has_been_the_one_habit_thats_improved_your/"
+        },
+        {
+          "ID": "C1",
+          "Source type": "NHS",
+          "What it supports": "Breathing exercises for stress, anxiety, panic",
+          "URL": "https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/"
+        },
+        {
+          "ID": "C2",
+          "Source type": "Curtiss et al., 2021 / PMC",
+          "What it supports": "CBT gold-standard evidence review",
+          "URL": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8475916/"
+        },
+        {
+          "ID": "C3",
+          "Source type": "American Psychological Association",
+          "What it supports": "What is Cognitive Behavioral Therapy?",
+          "URL": "https://www.apa.org/ptsd-guideline/patients-and-families/cognitive-behavioral"
+        },
+        {
+          "ID": "C4",
+          "Source type": "Bilek et al., 2021 / PMC",
+          "What it supports": "Exposure-focused CBT vs relaxation-based intervention",
+          "URL": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8548408/"
+        },
+        {
+          "ID": "C5",
+          "Source type": "Mayo Clinic",
+          "What it supports": "Exercise and stress",
+          "URL": "https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/exercise-and-stress/art-20044469"
+        },
+        {
+          "ID": "C6",
+          "Source type": "American Psychological Association",
+          "What it supports": "What is Exposure Therapy?",
+          "URL": "https://www.apa.org/ptsd-guideline/patients-and-families/exposure-therapy"
+        },
+        {
+          "ID": "C8",
+          "Source type": "Mayo Clinic Health System",
+          "What it supports": "11 tips for coping with an anxiety disorder",
+          "URL": "https://www.mayoclinichealthsystem.org/hometown-health/speaking-of-health/11-tips-for-coping-with-an-anxiety-disorder"
+        },
+        {
+          "ID": "C9",
+          "Source type": "NHS inform",
+          "What it supports": "Grounding exercises / 5-4-3-2-1",
+          "URL": "https://www.nhsinform.scot/healthy-living/mental-wellbeing/breathing-and-relaxation-exercises/grounding-exercises/"
+        },
+        {
+          "ID": "C11",
+          "Source type": "Mayo Clinic",
+          "What it supports": "Sleep tips and worry management before bedtime",
+          "URL": "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/sleep/art-20048379"
+        },
+        {
+          "ID": "C14",
+          "Source type": "NCBI Bookshelf / StatPearls",
+          "What it supports": "Relaxation techniques",
+          "URL": "https://www.ncbi.nlm.nih.gov/books/NBK513238/"
+        },
+        {
+          "ID": "C15",
+          "Source type": "Mayo Clinic",
+          "What it supports": "Mindful living / present-moment focus",
+          "URL": "https://www.mayoclinic.org/healthy-lifestyle/stress-management/multimedia/mindful-living-video/vid-20156750"
+        },
+        {
+          "ID": "C17",
+          "Source type": "NHS Every Mind Matters",
+          "What it supports": "Self-help CBT techniques",
+          "URL": "https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/self-help-cbt-techniques/"
+        },
+        {
+          "ID": "C19",
+          "Source type": "Mayo Clinic",
+          "What it supports": "Stress relief: diet, exercise, sleep, screen time, relaxation",
+          "URL": "https://www.mayoclinic.org/healthy-lifestyle/stress-management/basics/stress-relief/hlv-20049495"
+        }
+      ],
+      "raw": [
+        [
+          "ID",
+          "Source type",
+          "What it supports",
+          "URL"
+        ],
+        [
+          "R0",
+          "Reddit r/Anxiety",
+          "Alternative therapy helpful: breathing exercises and walks",
+          "https://www.reddit.com/r/Anxiety/comments/1anr577/what_alternative_therapy_has_been_most_helpful_at/"
+        ],
+        [
+          "R1",
+          "Reddit r/Anxiety",
+          "Breathing exercises work discussion",
+          "https://www.reddit.com/r/Anxiety/comments/ytpocp/do_breathing_exercises_actually_work_for_anyone/"
+        ],
+        [
+          "R3",
+          "Reddit r/Anxiety",
+          "Things that helped anxiety",
+          "https://www.reddit.com/r/Anxiety/comments/ug84f4/whats_something_that_has_actually_helped_you_a/"
+        ],
+        [
+          "R4",
+          "Reddit r/Anxiety",
+          "Successful technique/tool/skill discussion including cold water and cautions",
+          "https://www.reddit.com/r/Anxiety/comments/1bn4mue/whats_your_most_successful_technique_tool_idea_or/"
+        ],
+        [
+          "R5",
+          "Reddit r/Anxiety",
+          "Go-to relaxation techniques: box breathing and nature walk",
+          "https://www.reddit.com/r/Anxiety/comments/1emwo7p/what_are_your_goto_relaxation_techniques_when/"
+        ],
+        [
+          "R6",
+          "Reddit r/Anxiety",
+          "GAD: meditation, therapy, eating better, exercise",
+          "https://www.reddit.com/r/Anxiety/comments/1c4wanw/for_those_who_have_gad_what_have_you_done_that/"
+        ],
+        [
+          "R9",
+          "Reddit r/Anxiety",
+          "Longer exhale breathing",
+          "https://www.reddit.com/r/Anxiety/comments/1foxdcd/what_is_the_technique_or_way_you_calm_yourself/"
+        ],
+        [
+          "R11",
+          "Reddit r/Anxiety",
+          "Natural ways: exercise, yoga/walking, sleep hygiene, mindfulness",
+          "https://www.reddit.com/r/Anxiety/comments/zd6k58/what_are_some_healthy_natural_ways_of_managing/"
+        ],
+        [
+          "R12",
+          "Reddit r/Anxiety",
+          "Coping methods: box breathing and alphabet categories",
+          "https://www.reddit.com/r/Anxiety/comments/xylqsj/what_coping_methods_do_you_use_when_you_are/"
+        ],
+        [
+          "R15",
+          "Reddit r/Anxiety",
+          "Other than therapy/medication: breathing, exercise, cleaning",
+          "https://www.reddit.com/r/Anxiety/comments/10vhyvn/other_than_therapy_or_medication_what_is_the/"
+        ],
+        [
+          "R16",
+          "Reddit r/Anxiety",
+          "Instant relief: breath work, grounding, cold water",
+          "https://www.reddit.com/r/Anxiety/comments/13j29g4/most_effective_methods_of_anxiety_relief_in_your/"
+        ],
+        [
+          "R18",
+          "Reddit r/Anxiety",
+          "Recovery stories: medication, exposure therapy, radical acceptance",
+          "https://www.reddit.com/r/Anxiety/comments/1gmtlzy/people_who_healed_from_anxiety_please_share_your/"
+        ],
+        [
+          "R21",
+          "Reddit r/Anxiety",
+          "What snaps you out: ice, mindfulness, laying outside",
+          "https://www.reddit.com/r/Anxiety/comments/1qacz59/whats_one_thing_that_snaps_you_out_of_your/"
+        ],
+        [
+          "R23",
+          "Reddit r/Anxiety",
+          "Things that significantly improved anxiety: therapy, meds, exercise, meditation/breathwork, caffeine/weed comments",
+          "https://www.reddit.com/r/Anxiety/comments/16ilx26/what_are_the_things_that_have_significantly/"
+        ],
+        [
+          "R24",
+          "Reddit r/Anxiety",
+          "Coping methods: deep breathing, cold drink, distraction, PMR",
+          "https://www.reddit.com/r/Anxiety/comments/10h3rgm/list_your_coping_methods_for_anxiety/"
+        ],
+        [
+          "R26",
+          "Reddit r/Anxiety",
+          "One habit that improved anxiety: prioritizing sleep",
+          "https://www.reddit.com/r/Anxiety/comments/10iohv7/what_has_been_the_one_habit_thats_improved_your/"
+        ],
+        [
+          "C1",
+          "NHS",
+          "Breathing exercises for stress, anxiety, panic",
+          "https://www.nhs.uk/mental-health/self-help/guides-tools-and-activities/breathing-exercises-for-stress/"
+        ],
+        [
+          "C2",
+          "Curtiss et al., 2021 / PMC",
+          "CBT gold-standard evidence review",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8475916/"
+        ],
+        [
+          "C3",
+          "American Psychological Association",
+          "What is Cognitive Behavioral Therapy?",
+          "https://www.apa.org/ptsd-guideline/patients-and-families/cognitive-behavioral"
+        ],
+        [
+          "C4",
+          "Bilek et al., 2021 / PMC",
+          "Exposure-focused CBT vs relaxation-based intervention",
+          "https://pmc.ncbi.nlm.nih.gov/articles/PMC8548408/"
+        ],
+        [
+          "C5",
+          "Mayo Clinic",
+          "Exercise and stress",
+          "https://www.mayoclinic.org/healthy-lifestyle/stress-management/in-depth/exercise-and-stress/art-20044469"
+        ],
+        [
+          "C6",
+          "American Psychological Association",
+          "What is Exposure Therapy?",
+          "https://www.apa.org/ptsd-guideline/patients-and-families/exposure-therapy"
+        ],
+        [
+          "C8",
+          "Mayo Clinic Health System",
+          "11 tips for coping with an anxiety disorder",
+          "https://www.mayoclinichealthsystem.org/hometown-health/speaking-of-health/11-tips-for-coping-with-an-anxiety-disorder"
+        ],
+        [
+          "C9",
+          "NHS inform",
+          "Grounding exercises / 5-4-3-2-1",
+          "https://www.nhsinform.scot/healthy-living/mental-wellbeing/breathing-and-relaxation-exercises/grounding-exercises/"
+        ],
+        [
+          "C11",
+          "Mayo Clinic",
+          "Sleep tips and worry management before bedtime",
+          "https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/sleep/art-20048379"
+        ],
+        [
+          "C14",
+          "NCBI Bookshelf / StatPearls",
+          "Relaxation techniques",
+          "https://www.ncbi.nlm.nih.gov/books/NBK513238/"
+        ],
+        [
+          "C15",
+          "Mayo Clinic",
+          "Mindful living / present-moment focus",
+          "https://www.mayoclinic.org/healthy-lifestyle/stress-management/multimedia/mindful-living-video/vid-20156750"
+        ],
+        [
+          "C17",
+          "NHS Every Mind Matters",
+          "Self-help CBT techniques",
+          "https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/self-help-cbt-techniques/"
+        ],
+        [
+          "C19",
+          "Mayo Clinic",
+          "Stress relief: diet, exercise, sleep, screen time, relaxation",
+          "https://www.mayoclinic.org/healthy-lifestyle/stress-management/basics/stress-relief/hlv-20049495"
+        ]
+      ]
+    }
+  }
+}

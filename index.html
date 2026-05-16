@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Evidence-aware anxiety coping methods database built from a Reddit-derived workbook."
+    />
+    <title>Anxiety Methods Database</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#dashboard" aria-label="Anxiety Methods Database home">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+          </span>
+          <span>
+            <strong>Anxiety Methods Database</strong>
+            <small>Evidence-aware self-management library</small>
+          </span>
+        </a>
+
+        <nav class="tabs" aria-label="Main sections">
+          <button class="tab is-active" data-tab="dashboard" type="button">Dashboard</button>
+          <button class="tab" data-tab="methods" type="button">Methods</button>
+          <button class="tab" data-tab="protocols" type="button">Protocols</button>
+          <button class="tab" data-tab="safety" type="button">Safety</button>
+          <button class="tab" data-tab="sources" type="button">Sources</button>
+        </nav>
+      </header>
+
+      <aside class="disclaimer" role="note">
+        This app is for educational and self-management support only. It is not medical advice,
+        diagnosis, psychotherapy, crisis support, or a replacement for a licensed clinician.
+      </aside>
+
+      <main id="app">
+        <section class="state-card" aria-live="polite">
+          <div class="loader" aria-hidden="true"></div>
+          <h1>Loading workbook data</h1>
+          <p>Preparing the dashboard, methods library, protocols, safety notes, and sources.</p>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div>
+          <strong>Run locally</strong>
+          <span>python3 -m http.server 8000</span>
+        </div>
+        <div>
+          <strong>Open on Mac</strong>
+          <span>http://localhost:8000</span>
+        </div>
+        <div>
+          <strong>iPhone on same Wi-Fi</strong>
+          <span>http://192.168.7.8:8000</span>
+        </div>
+      </footer>
+    </div>
+
+    <dialog id="methodDialog" class="method-dialog" aria-labelledby="dialogTitle">
+      <div class="dialog-frame">
+        <button class="dialog-close" type="button" aria-label="Close method details">Close</button>
+        <div id="dialogContent"></div>
+      </div>
+    </dialog>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
