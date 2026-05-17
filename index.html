@@ -7,7 +7,20 @@
       name="description"
       content="Evidence-aware anxiety coping methods database built from a Reddit-derived workbook."
     />
+    <meta name="theme-color" content="#111615" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Anxiety Manager" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Anxiety Methods Database</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%23d7b24a'/%3E%3Cpath d='M20 28c0 8 5 14 12 14s12-6 12-14' fill='none' stroke='%231a1714' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='24' cy='24' r='3' fill='%231a1714'/%3E%3Ccircle cx='40' cy='24' r='3' fill='%231a1714'/%3E%3C/svg%3E"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -48,15 +61,15 @@
       <footer class="footer">
         <div>
           <strong>Run locally</strong>
-          <span>python3 -m http.server 8000</span>
+          <span>python3 -m http.server 8001</span>
         </div>
         <div>
           <strong>Open on Mac</strong>
-          <span>http://localhost:8000</span>
+          <span>http://localhost:8001</span>
         </div>
         <div>
           <strong>iPhone on same Wi-Fi</strong>
-          <span>http://192.168.7.8:8000</span>
+          <span>http://192.168.7.5:8001</span>
         </div>
       </footer>
     </div>

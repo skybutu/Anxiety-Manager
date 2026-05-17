@@ -67,6 +67,7 @@ const state = {
   methodPreset: "",
   sourceQuery: "",
   sourceType: "",
+  sourceCategory: "",
   filtersOpen: false,
 };
 
@@ -75,8 +76,11 @@ const missingWarnings = new Set();
 const app = document.querySelector("#app");
 const dialog = document.querySelector("#methodDialog");
 const dialogContent = document.querySelector("#dialogContent");
+const reducedMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+let revealObserver = null;
 
 applyStandaloneClasses();
+registerServiceWorker();
 init();
 
 function applyStandaloneClasses() {
@@ -90,6 +94,16 @@ function applyStandaloneClasses() {
 
   update();
   standaloneQuery?.addEventListener?.("change", update);
+}
+
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js", { scope: "./" }).catch((error) => {
+      console.warn("Service worker registration skipped.", error);
+    });
+  });
 }
 
 async function init() {
@@ -112,6 +126,7 @@ async function init() {
         <p>The app expected <strong>${escapeHtml(DATA_URL)}</strong>. Run the converter or place the generated JSON in the data folder, then refresh from a local server.</p>
       </section>
     `;
+    initScrollAnimations();
   }
 }
 
@@ -129,6 +144,7 @@ function bindShell() {
   });
 
   window.addEventListener("hashchange", syncTabFromHash);
+  reducedMotionQuery?.addEventListener?.("change", initScrollAnimations);
 }
 
 function hydrateState(payload) {
@@ -365,6 +381,7 @@ function renderDashboard() {
   const lowestRisk = topMethodsBy("safetyScore");
   const fastestAcute = topMethodsBy("speedScore");
   const mostPractical = topMethodsBy("easeScore");
+  const rankedSource = dashboardTop.length ? "Uses the workbook Dashboard sheet rank and priority score." : "Dashboard rank was not available, so this falls back to Methods sort order by workbook rank/score.";
   const evidenceDistribution = distribution(state.methods, (method) => method.evidenceGrade, { omitUnspecified: true });
   const safetyDistribution = distribution(state.methods, (method) => method.safetyLevel, { omitUnspecified: true });
   const useCaseDistribution = distribution(state.methods, (method) => method.useCase, { omitUnspecified: true });
@@ -384,6 +401,18 @@ function renderDashboard() {
   const lowestCautionCount = state.methods.filter((method) => method.safetyScore >= 5).length;
   const easyCount = state.methods.filter((method) => method.easeScore >= 4).length;
   const topPicks = dashboardTopPicks();
+  const metricCards = dashboardMetricCards({ totalMethods, topMethod, highEvidence, lowestCautionCount, immediateUse, easyCount, cautionRows });
+  const summaryWidgets = dashboardSummaryWidgets({ bestEvidence, lowestRisk, fastestAcute, mostPractical });
+  const chartPanels = dashboardChartPanels({
+    evidenceDistribution,
+    safetyDistribution,
+    difficultyDistribution,
+    timeDistribution,
+    commonUseCaseData,
+    commonUseCaseTitle,
+    commonUseCaseSubtitle,
+    useCaseHasRepeatedValues,
+  });
 
   app.innerHTML = `
     <section class="hero">
@@ -405,47 +434,37 @@ function renderDashboard() {
     </section>
 
     <section class="grid metrics-grid" aria-label="Dashboard metrics">
-      ${metricCard("Total methods", totalMethods, dashboardMetric("Total methods")?.definition || "Rows in the Methods Database sheet.")}
-      ${metricCard("Workbook-ranked entry", topMethod?.name || "Unavailable", scoreText(topMethod?.priorityScore))}
-      ${metricCard("Higher evidence entries", highEvidence, dashboardMetric("High evidence methods")?.definition || "Rows with higher workbook evidence scores.")}
-      ${metricCard("Lowest-caution entries", lowestCautionCount, "Rows with the strongest workbook caution score. Low caution does not mean suitable for everyone.")}
-      ${metricCard("Fastest reported entries", immediateUse, dashboardMetric("Immediate-use methods")?.definition || "Rows with an immediate workbook time horizon.")}
-      ${metricCard("Most practical entries", easyCount, "Rows marked easy or very easy from the workbook ease score.")}
-      ${metricCard("Requires caution", cautionRows, dashboardMetric("Safety-sensitive / caution rows")?.definition || "Rows flagged for avoidance, professional input, or caution.")}
+      ${metricCards.join("")}
     </section>
 
-    <section class="grid dashboard-widget-grid" aria-label="Dashboard method summaries">
-      ${methodSummaryWidget("Higher evidence-supported entries", bestEvidence, "Evidence score")}
-      ${methodSummaryWidget("Lower-caution entries", lowestRisk, "Caution score")}
-      ${methodSummaryWidget("Fastest reported time horizon", fastestAcute, "Time horizon")}
-      ${methodSummaryWidget("Highest ease entries", mostPractical, "Ease score")}
-    </section>
+    ${summaryWidgets.length ? `<section class="grid dashboard-widget-grid" aria-label="Dashboard method summaries">${summaryWidgets.join("")}</section>` : ""}
 
     <section class="dashboard-explainer panel">
       <div>
         <span class="section-label">How to read this dashboard</span>
-        <p>Rankings and “top pick” groupings are workbook-derived summaries, not clinical prescriptions. Reddit-derived patterns describe what users commonly reported, while evidence and caution fields remain separate workbook columns.</p>
+        <p>Rankings, chart groupings, and top insight cards are workbook-derived summaries. Reddit-derived patterns describe what users commonly reported; they are not clinical proof. Evidence and caution fields should be interpreted conservatively as educational self-management support, not medical advice.</p>
       </div>
     </section>
 
-    <section class="panel top-picks-panel">
+    ${topPicks.length ? `<section class="panel top-picks-panel">
       <div class="panel-header">
         <div>
-          <h2>Workbook-derived top picks</h2>
-          <p>These groups combine existing workbook fields such as evidence score, caution score, ease score, time horizon, category, and use-case text. They are meant for comparison, not individualized recommendations.</p>
+          <h2>Workbook-derived insight groups</h2>
+          <p>Each group uses only workbook fields such as evidence score, caution score, ease score, time horizon, category, use-case, and method text. Groups are for comparison and triage, not individualized recommendations.</p>
         </div>
       </div>
       <div class="grid top-picks-grid">
         ${topPicks.map((group) => topPickCard(group)).join("")}
       </div>
-    </section>
+    </section>` : ""}
 
     <section class="grid dashboard-grid">
       <div class="panel">
         <div class="panel-header">
           <div>
-            <h2>Top 10 ranked methods</h2>
-            <p>Uses workbook dashboard rank and priority score when available. Select a row to inspect workbook-derived details.</p>
+            <span class="section-label">Ranked workbook view</span>
+            <h2>Highest workbook-ranked methods</h2>
+            <p>${escapeHtml(rankedSource)} Select a row to inspect workbook-derived details.</p>
           </div>
         </div>
         <div class="rank-list">
@@ -453,32 +472,22 @@ function renderDashboard() {
         </div>
       </div>
 
-      <div class="grid">
-        ${chartPanel("Evidence grade distribution", "Select a bar to filter the Methods tab.", evidenceDistribution, "evidence")}
-        ${chartPanel("Caution level distribution", "Select a bar to filter the Methods tab.", safetyDistribution, "safety")}
-        ${chartPanel("Difficulty distribution", "Select a bar to filter the Methods tab.", difficultyDistribution, "difficulty")}
-        ${chartPanel("Reported time horizon distribution", "Select a bar to filter the Methods tab.", timeDistribution, "speed")}
+      <div class="grid dashboard-chart-stack">
+        ${chartPanels.slice(0, 4).join("")}
       </div>
 
       <div class="panel">
         <div class="panel-header">
           <div>
+            <span class="section-label">Priority score</span>
             <h2>Top 10 score chart</h2>
-            <p>Interactive method rows, sorted by workbook priority score.</p>
+            <p>Interactive method rows sorted by workbook priority score when available. Longer bars mean higher workbook priority score.</p>
           </div>
         </div>
         ${scoreChart(topByScore)}
       </div>
 
-      <div class="panel">
-        <div class="panel-header">
-          <div>
-            <h2>${escapeHtml(commonUseCaseTitle)}</h2>
-            <p>${escapeHtml(commonUseCaseSubtitle)}</p>
-          </div>
-        </div>
-        ${barChart(commonUseCaseData, useCaseHasRepeatedValues ? "useCaseCategory" : "")}
-      </div>
+      ${chartPanels.slice(4).join("")}
     </section>
 
     <section class="about-scoring">
@@ -488,13 +497,66 @@ function renderDashboard() {
   `;
 
   bindDashboardInteractions();
+  initScrollAnimations();
+}
+
+function dashboardMetricCards({ totalMethods, topMethod, highEvidence, lowestCautionCount, immediateUse, easyCount, cautionRows }) {
+  const cards = [
+    metricCard("Total methods", totalMethods, dashboardMetric("Total methods")?.definition || "Rows in the Methods Database sheet.", "Workbook rows"),
+  ];
+
+  if (topMethod) {
+    cards.push(metricCard("Highest workbook-ranked", topMethod.name, topMethod.priorityScore !== null ? `Priority score ${scoreText(topMethod.priorityScore)}` : "Top workbook-ranked method.", "Ranked"));
+  }
+  if (hasScoreField("evidenceScore")) {
+    cards.push(metricCard("Higher evidence entries", highEvidence, dashboardMetric("High evidence methods")?.definition || "Rows with higher workbook evidence scores.", "Evidence"));
+  }
+  if (hasScoreField("safetyScore")) {
+    cards.push(metricCard("Lowest-caution entries", lowestCautionCount, "Rows with the strongest workbook caution score. Lower caution does not mean suitable for everyone.", "Caution"));
+    cards.push(metricCard("Requires caution", cautionRows, dashboardMetric("Safety-sensitive / caution rows")?.definition || "Rows flagged for avoidance, professional input, or caution.", "Safety"));
+  }
+  if (hasTextField("timeHorizon")) {
+    cards.push(metricCard("Fastest reported entries", immediateUse, dashboardMetric("Immediate-use methods")?.definition || "Rows with an immediate workbook time horizon.", "Time"));
+  }
+  if (hasScoreField("easeScore")) {
+    cards.push(metricCard("Most practical entries", easyCount, "Rows marked easy or very easy from the workbook ease score.", "Ease"));
+  }
+
+  return cards;
+}
+
+function dashboardSummaryWidgets({ bestEvidence, lowestRisk, fastestAcute, mostPractical }) {
+  return [
+    hasScoreField("evidenceScore") ? methodSummaryWidget("Best evidence-supported methods", bestEvidence, "Evidence score") : "",
+    hasScoreField("safetyScore") ? methodSummaryWidget("Lowest-caution methods", lowestRisk, "Caution score") : "",
+    hasTextField("timeHorizon") ? methodSummaryWidget("Fastest reported methods", fastestAcute, "Time horizon") : "",
+    hasScoreField("easeScore") ? methodSummaryWidget("Most practical / easy methods", mostPractical, "Ease score") : "",
+  ].filter(Boolean);
+}
+
+function dashboardChartPanels({ evidenceDistribution, safetyDistribution, difficultyDistribution, timeDistribution, commonUseCaseData, commonUseCaseTitle, commonUseCaseSubtitle, useCaseHasRepeatedValues }) {
+  return [
+    chartPanel("Evidence-grade distribution", "Workbook evidence grade counts. Select a bar to filter the Methods tab.", evidenceDistribution, "evidence", "Evidence"),
+    chartPanel("Caution / safety distribution", "Workbook caution labels derived from safety score. Select a bar to filter the Methods tab.", safetyDistribution, "safety", "Caution"),
+    chartPanel("Difficulty distribution", "Practical difficulty derived from workbook ease score. Select a bar to filter the Methods tab.", difficultyDistribution, "difficulty", "Difficulty"),
+    chartPanel("Reported time horizon", "Workbook-reported speed or time horizon. Select a bar to filter the Methods tab.", timeDistribution, "speed", "Time"),
+    chartPanel(commonUseCaseTitle, commonUseCaseSubtitle, commonUseCaseData, useCaseHasRepeatedValues ? "useCaseCategory" : "", useCaseHasRepeatedValues ? "Use-case" : "Theme"),
+  ];
+}
+
+function hasScoreField(field) {
+  return state.methods.some((method) => method[field] !== null && method[field] !== undefined);
+}
+
+function hasTextField(field) {
+  return state.methods.some((method) => text(method[field]));
 }
 
 function dashboardTopPicks() {
-  return [
+  const groups = [
     {
       title: "Evidence + lower caution",
-      note: "Sorted by workbook evidence score, caution score, then priority score.",
+      note: "Workbook evidence score plus lower-caution rows, sorted by evidence, caution, then priority score.",
       methods: topMethodsByComposite(
         (method) => method.evidenceScore !== null && method.safetyScore !== null && method.safetyScore >= 4,
         [(method) => method.evidenceScore, (method) => method.safetyScore, (method) => method.priorityScore],
@@ -504,7 +566,7 @@ function dashboardTopPicks() {
     },
     {
       title: "Fastest acute regulation",
-      note: "Matches workbook category or use-case text for acute, panic-like, arousal, or grounding contexts.",
+      note: "Workbook text match for acute, panic-like, arousal, grounding, or racing-body contexts, sorted by reported time horizon.",
       methods: topMethodsByComposite(
         (method) => method.speedScore > 0 && methodTextIncludes(method, ["acute", "panic", "arousal", "grounding", "racing body"]),
         [(method) => method.speedScore, (method) => method.priorityScore, (method) => method.safetyScore],
@@ -513,8 +575,18 @@ function dashboardTopPicks() {
       score: (method) => method.timeHorizon || scoreText(method.speedScore),
     },
     {
-      title: "Rumination and worry loops",
-      note: "Matches existing workbook use-case, summary, or protocol text for rumination, worry, or catastrophizing.",
+      title: "Low-effort options",
+      note: "Workbook rows marked easy or very easy, sorted by ease score, caution score, then priority score.",
+      methods: topMethodsByComposite(
+        (method) => method.easeScore !== null && method.easeScore >= 4,
+        [(method) => method.easeScore, (method) => method.safetyScore, (method) => method.priorityScore],
+      ),
+      scoreLabel: "Ease",
+      score: (method) => `Ease ${scoreText(method.easeScore)}`,
+    },
+    {
+      title: "Rumination-focused methods",
+      note: "Workbook text match for rumination, worry, thought loops, or catastrophizing.",
       methods: topMethodsByComposite(
         (method) => methodTextIncludes(method, ["rumination", "worry", "catastrophizing", "thought", "loop"]),
         [(method) => method.priorityScore, (method) => method.evidenceScore, (method) => method.safetyScore],
@@ -523,8 +595,8 @@ function dashboardTopPicks() {
       score: (method) => scoreText(method.priorityScore),
     },
     {
-      title: "Sleep anxiety",
-      note: "Matches workbook text for sleep, bedtime, night worry, pre-sleep, or insomnia-related anxiety.",
+      title: "Sleep-supportive methods",
+      note: "Workbook text match for sleep, bedtime, night worry, pre-sleep, or insomnia-related anxiety.",
       methods: topMethodsByComposite(
         (method) => methodTextIncludes(method, ["sleep", "bedtime", "night", "pre-sleep", "insomnia"]),
         [(method) => method.priorityScore, (method) => method.easeScore, (method) => method.safetyScore],
@@ -533,16 +605,19 @@ function dashboardTopPicks() {
       score: (method) => scoreText(method.priorityScore),
     },
     {
-      title: "Lower effort",
-      note: "Sorted by workbook ease score, caution score, then priority score.",
+      title: "Avoidance / exposure-related",
+      note: "Workbook text match for exposure, avoidance, behavioral activation, facing situations, or approach practice.",
       methods: topMethodsByComposite(
-        (method) => method.easeScore !== null && method.easeScore >= 4,
-        [(method) => method.easeScore, (method) => method.safetyScore, (method) => method.priorityScore],
+        (method) => methodTextIncludes(method, ["exposure", "avoidance", "behavioral activation", "facing", "situations", "approach"]),
+        [(method) => method.priorityScore, (method) => method.evidenceScore, (method) => method.safetyScore],
       ),
-      scoreLabel: "Ease",
-      score: (method) => `Ease ${scoreText(method.easeScore)}`,
+      scoreLabel: "Score",
+      score: (method) => scoreText(method.priorityScore),
     },
   ];
+  return groups
+    .map((group) => ({ ...group, methods: uniqueMethods(group.methods).slice(0, 4) }))
+    .filter((group) => group.methods.length);
 }
 
 function topMethodsByComposite(filterFn, sortFns, limit = 4) {
@@ -597,11 +672,12 @@ function miniRow(label, value) {
   return `<div class="mini-row"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`;
 }
 
-function metricCard(label, value, note) {
+function metricCard(label, value, note, kicker = "Workbook") {
   return `
-    <article class="metric-card">
+    <article class="metric-card dashboard-metric-card">
       <small>${escapeHtml(label)}</small>
       <strong>${escapeHtml(value)}</strong>
+      <span>${escapeHtml(kicker)}</span>
       <p>${escapeHtml(note || "")}</p>
     </article>
   `;
@@ -609,18 +685,13 @@ function metricCard(label, value, note) {
 
 function methodSummaryWidget(label, methods, scoreLabel) {
   if (!methods.length) {
-    return `
-      <article class="metric-card method-summary-card">
-        <small>${escapeHtml(label)}</small>
-        <strong>Not available</strong>
-        <p>The related spreadsheet column is missing or empty.</p>
-      </article>
-    `;
+    return "";
   }
   return `
     <article class="metric-card method-summary-card">
       <small>${escapeHtml(label)}</small>
       <strong>${escapeHtml(methods.length)}</strong>
+      <p>Top workbook rows for this signal. Select a row for details.</p>
       <div class="summary-method-list">
         ${methods
           .map(
@@ -639,10 +710,10 @@ function methodSummaryWidget(label, methods, scoreLabel) {
 
 function topPickCard(group) {
   return `
-    <article class="top-pick-card app-card">
+    <article class="top-pick-card dashboard-insight-card app-card">
       <div class="card-main">
         <div class="badge-row card-badges">
-          ${badge("Top pick", "")}
+          ${badge("Insight group", "")}
           ${badge(group.scoreLabel, "")}
         </div>
         <h3 class="card-title">${escapeHtml(group.title)}</h3>
@@ -689,14 +760,23 @@ function rankRow(method, rank) {
   `;
 }
 
-function chartPanel(title, subtitle, data, filterType) {
+function chartPanel(title, subtitle, data, filterType, eyebrow = "Workbook chart") {
+  const total = data.reduce((sum, item) => sum + item.count, 0);
+  const hasData = data.length > 0;
   return `
-    <div class="panel">
+    <div class="panel dashboard-chart-panel">
       <div class="panel-header">
         <div>
+          <span class="section-label">${escapeHtml(eyebrow)}</span>
           <h2>${escapeHtml(title)}</h2>
           <p>${escapeHtml(subtitle)}</p>
         </div>
+        ${hasData ? `<span class="chart-total">${escapeHtml(total)} rows</span>` : ""}
+      </div>
+      <div class="chart-legend" aria-hidden="true">
+        <span>Workbook value</span>
+        <span>Share</span>
+        <span>Count</span>
       </div>
       ${barChart(data, filterType, title)}
     </div>
@@ -776,7 +856,7 @@ function bindDashboardInteractions() {
 }
 
 function renderMethods() {
-  const filtered = filteredMethods();
+  const filtered = uniqueMethods(filteredMethods());
   const tags = unique(state.methods.flatMap((method) => method.tags)).sort();
   const hasTags = tags.length > 0;
   const preset = activeMethodPreset();
@@ -785,8 +865,9 @@ function renderMethods() {
     <section class="methods-toolbar">
       <div class="search-row">
         <input id="methodSearch" type="search" value="${escapeAttr(state.query)}" placeholder="Search methods" aria-label="Search methods, summaries, steps, use-cases, and cautions" />
+        ${sortControlMarkup()}
         <button class="filter-toggle" id="filterToggle" type="button">${state.filtersOpen ? "Hide filters" : "Filters"}</button>
-        <button class="reset-button" id="resetFilters" type="button">Reset</button>
+        <button class="reset-button" id="resetFilters" type="button">Reset view</button>
       </div>
       ${methodPresetBar()}
       ${activeFilterChips()}
@@ -801,19 +882,6 @@ function renderMethods() {
         ${selectFilter("Reported time horizon", "speed", unique(state.methods.map((method) => method.timeHorizon)).sort())}
         ${selectFilter("Practical difficulty", "difficulty", unique(state.methods.map((method) => method.difficulty)).sort())}
         ${hasTags ? selectFilter("Tags", "tags", tags) : ""}
-        <div class="filter">
-          <label for="sortSelect">Sort by</label>
-          <select id="sortSelect">
-            ${sortOption("rank", "Workbook rank")}
-            ${sortOption("total", "Workbook score")}
-            ${sortOption("reddit", "Reddit-derived consensus / visibility")}
-            ${sortOption("evidence", "Evidence strength")}
-            ${sortOption("safety", "Caution score")}
-            ${sortOption("ease", "Ease of implementation")}
-            ${sortOption("speed", "Reported time horizon")}
-            ${sortOption("balance", "Best overall balance")}
-          </select>
-        </div>
       </aside>
 
       <section>
@@ -833,6 +901,25 @@ function renderMethods() {
   `;
 
   bindMethodControls();
+  initScrollAnimations();
+}
+
+function sortControlMarkup() {
+  return `
+    <label class="sort-control" for="sortSelect">
+      <span>Sort</span>
+      <select id="sortSelect">
+        ${sortOption("rank", "Workbook rank")}
+        ${sortOption("total", "Workbook score")}
+        ${sortOption("reddit", "Reddit-derived consensus / visibility")}
+        ${sortOption("evidence", "Evidence strength")}
+        ${sortOption("safety", "Caution score")}
+        ${sortOption("ease", "Ease of implementation")}
+        ${sortOption("speed", "Reported time horizon")}
+        ${sortOption("balance", "Best overall balance")}
+      </select>
+    </label>
+  `;
 }
 
 function methodPresetBar() {
@@ -844,7 +931,8 @@ function methodPresetBar() {
         .map(
           (preset) => `
             <button class="preset-chip ${state.methodPreset === preset.id ? "is-active" : ""}" type="button" data-method-preset="${preset.id}">
-              ${escapeHtml(preset.label)}
+              <span>${escapeHtml(preset.label)}</span>
+              <small>${escapeHtml(preset.signal)}</small>
             </button>
           `,
         )
@@ -855,11 +943,13 @@ function methodPresetBar() {
 }
 
 function presetExplanation(preset, count) {
+  const activeFilters = activeFilterItems().filter((item) => item.key !== "preset");
   return `
     <div class="preset-explanation" role="note">
       <div>
         <span class="section-label">${escapeHtml(preset.label)}</span>
         <p>${escapeHtml(preset.description)}</p>
+        <p class="preset-combine-note">${escapeHtml(activeFilters.length ? "This preset is combined with the current search and filters." : "This preset can be combined with search and filters.")}</p>
       </div>
       <strong>${count} matching method${count === 1 ? "" : "s"}</strong>
     </div>
@@ -890,6 +980,7 @@ function activeFilterChips() {
           `,
         )
         .join("")}
+      ${chips.length > 1 ? `<button class="active-filter-chip active-filter-clear" type="button" data-reset-all>Clear all</button>` : ""}
     </div>
   `;
 }
@@ -937,9 +1028,9 @@ function sortOption(value, label) {
 function methodCard(method) {
   const preset = activeMethodPreset();
   const presetReason = preset?.matches(method) ? preset.reason(method) : "";
-  const derivedChips = methodDerivedChips(method, preset);
-  const tags = method.tags.length ? chipRow(method.tags, "Tags") : "";
-  const sourcePreview = method.sourceIds.length ? chipRow(method.sourceIds.slice(0, 5), "Sources") : "";
+  const derivedChips = methodDerivedChips(method, preset).slice(0, 3);
+  const tags = method.tags.length ? chipRow(method.tags.slice(0, 3), "Tags") : "";
+  const practicalPreview = text(method.protocol);
   return `
     <button class="method-card app-card" type="button" data-method-id="${method.id}">
       <div class="card-main">
@@ -952,28 +1043,39 @@ function methodCard(method) {
         <p class="card-summary">${escapeHtml(method.summary || "No summary provided in the workbook.")}</p>
       </div>
 
-      <div class="card-preview-stack">
-        <div class="detail-field card-preview">
-          <span class="field-label">Workbook steps preview</span>
-          <div class="field-value">${escapeHtml(shorten(method.protocol, 190) || "No practical steps listed in the workbook.")}</div>
-        </div>
-        ${presetReason ? `<div class="detail-field card-preview preset-reason"><span class="field-label">Why this appears here</span><div class="field-value">${escapeHtml(presetReason)}</div></div>` : ""}
-        ${
-          derivedChips.length
-            ? `<div class="card-chips">${chipRow(derivedChips, "Workbook-derived fit markers")}</div>`
-            : tags || sourcePreview
-              ? `<div class="card-chips">${tags || sourcePreview}</div>`
-              : ""
-        }
+      <div class="method-signal-grid" aria-label="Workbook-derived signals">
+        ${methodSignal("Evidence", scoreDisplay(method.evidenceScore), method.evidenceGrade)}
+        ${methodSignal("Caution", scoreDisplay(method.safetyScore), method.safetyLevel)}
+        ${methodSignal("Time", method.timeHorizon, "")}
+        ${methodSignal("Ease", scoreDisplay(method.easeScore), method.difficulty)}
       </div>
 
-      <div class="card-footer card-meta">
-        ${smallFact("Reported time", method.timeHorizon)}
-        ${smallFact("Difficulty", method.difficulty)}
-        ${smallFact("Use-case", method.useCase)}
+      <div class="card-preview-stack method-card-detail">
+        ${method.useCase ? `<div class="method-use-case"><span class="field-label">May be useful for</span><strong>${escapeHtml(method.useCase)}</strong></div>` : ""}
+        ${presetReason ? `<div class="detail-field card-preview preset-reason"><span class="field-label">Why shown here</span><div class="field-value">${escapeHtml(shorten(presetReason, 135))}</div></div>` : ""}
+        ${practicalPreview ? `<div class="detail-field card-preview method-practical-preview"><span class="field-label">Practical preview</span><div class="field-value">${escapeHtml(shorten(practicalPreview, 130))}</div></div>` : ""}
+        ${derivedChips.length ? `<div class="card-chips">${chipRow(derivedChips, "Workbook-derived fit markers")}</div>` : tags ? `<div class="card-chips">${tags}</div>` : ""}
       </div>
     </button>
   `;
+}
+
+function methodSignal(label, value, hint) {
+  const safeValue = text(value);
+  const safeHint = text(hint);
+  if (!safeValue && !safeHint) return "";
+  const displayValue = safeValue || safeHint;
+  return `
+    <span class="method-signal">
+      <small>${escapeHtml(label)}</small>
+      <strong>${escapeHtml(displayValue)}</strong>
+      ${safeValue && safeHint && safeHint !== safeValue ? `<em>${escapeHtml(safeHint)}</em>` : ""}
+    </span>
+  `;
+}
+
+function scoreDisplay(value) {
+  return value === null || value === undefined ? "" : scoreText(value);
 }
 
 function smallFact(label, value) {
@@ -1006,10 +1108,12 @@ function bindMethodControls() {
   });
 
   document.querySelector("#resetFilters")?.addEventListener("click", () => {
-    state.query = "";
-    state.filters = { useCase: "", evidence: "", safety: "", speed: "", difficulty: "", tags: "" };
-    state.sort = "rank";
-    state.methodPreset = "";
+    resetMethodView();
+    renderMethods();
+  });
+
+  document.querySelector("[data-reset-all]")?.addEventListener("click", () => {
+    resetMethodView();
     renderMethods();
   });
 
@@ -1055,6 +1159,13 @@ function bindMethodControls() {
   });
 }
 
+function resetMethodView() {
+  state.query = "";
+  state.filters = { useCase: "", evidence: "", safety: "", speed: "", difficulty: "", tags: "" };
+  state.sort = "rank";
+  state.methodPreset = "";
+}
+
 function filteredMethods() {
   const query = state.query.trim().toLowerCase();
   const preset = activeMethodPreset();
@@ -1087,6 +1198,16 @@ function filteredMethods() {
   });
 }
 
+function uniqueMethods(methods) {
+  const seen = new Set();
+  return methods.filter((method) => {
+    const key = normalizeKey(method.name) || method.id;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function sortedMethods(sortKey) {
   return [...state.methods].sort((a, b) => {
     if (sortKey === "rank") {
@@ -1110,6 +1231,7 @@ function methodPresets() {
     {
       id: "balance",
       label: "Best overall balance",
+      signal: "Evidence + caution + ease",
       description: "Prioritizes methods with stronger workbook evidence, lower caution, practical difficulty that is not too high, and workbook rank or score when available.",
       defaultSort: "balance",
       available: () => state.methods.some((method) => method.evidenceScore !== null && method.safetyScore !== null && method.easeScore !== null),
@@ -1122,10 +1244,10 @@ function methodPresets() {
         method.safetyScore >= 3 &&
         method.easeScore >= 3,
       reason: (method) => [
-        scorePhrase("Evidence", method.evidenceScore),
+        scorePhrase("Workbook evidence", method.evidenceScore),
         scorePhrase("caution", method.safetyScore),
         scorePhrase("ease", method.easeScore),
-        method.priorityScore !== null ? `workbook score ${scoreText(method.priorityScore)}` : workbookRankPhrase(method),
+        method.priorityScore !== null ? `workbook priority score ${scoreText(method.priorityScore)}` : workbookRankPhrase(method),
       ]
         .filter(Boolean)
         .join("; "),
@@ -1133,12 +1255,13 @@ function methodPresets() {
     {
       id: "acute",
       label: "Fastest acute regulation",
+      signal: "Time horizon + body cues",
       description: "Prioritizes immediate or short reported time horizons and workbook text related to acute anxiety, panic-like arousal, grounding, tension, or a rapid downshift.",
       defaultSort: "speed",
       available: () => state.methods.some((method) => acutePresetMatch(method)),
       matches: acutePresetMatch,
       reason: (method) => [
-        method.timeHorizon ? `reported time horizon: ${method.timeHorizon}` : scorePhrase("speed", method.speedScore),
+        method.timeHorizon ? `workbook reported time horizon: ${method.timeHorizon}` : scorePhrase("speed", method.speedScore),
         methodTextMatchLabel(method, ACUTE_TERMS),
         scorePhrase("caution", method.safetyScore),
       ]
@@ -1148,6 +1271,7 @@ function methodPresets() {
     {
       id: "low-effort",
       label: "Low-effort options",
+      signal: "Ease + lower caution",
       description: "Prioritizes rows marked easy or very easy in the workbook, with lower caution when that field is available.",
       defaultSort: "ease",
       available: () => state.methods.some((method) => method.easeScore !== null),
@@ -1163,6 +1287,7 @@ function methodPresets() {
     {
       id: "rumination",
       label: "Rumination-focused",
+      signal: "Workbook text match",
       description: "Matches existing workbook text for rumination, worry, intrusive thoughts, cognitive loops, catastrophizing, or OCD-style overthinking.",
       defaultSort: "balance",
       available: () => state.methods.some((method) => methodRecommendationTextIncludes(method, RUMINATION_TERMS)),
@@ -1178,13 +1303,14 @@ function methodPresets() {
     {
       id: "sleep",
       label: "Sleep-supportive",
+      signal: "Sleep-related workbook text",
       description: "Matches existing workbook text for sleep anxiety, bedtime, insomnia, wind-down, night anxiety, or restlessness.",
       defaultSort: "balance",
       available: () => state.methods.some((method) => methodRecommendationTextIncludes(method, SLEEP_TERMS)),
       matches: (method) => methodRecommendationTextIncludes(method, SLEEP_TERMS),
       reason: (method) => [
         methodTextMatchLabel(method, SLEEP_TERMS),
-        method.timeHorizon ? `reported time horizon: ${method.timeHorizon}` : "",
+        method.timeHorizon ? `workbook reported time horizon: ${method.timeHorizon}` : "",
         scorePhrase("ease", method.easeScore),
       ]
         .filter(Boolean)
@@ -1193,6 +1319,7 @@ function methodPresets() {
     {
       id: "exposure",
       label: "Avoidance / exposure",
+      signal: "Approach practice text",
       description: "Matches existing workbook text related to exposure, behavioral activation, facing situations, reducing avoidance, or CBT-oriented practice.",
       defaultSort: "balance",
       available: () => state.methods.some((method) => methodRecommendationTextIncludes(method, EXPOSURE_TERMS)),
@@ -1331,28 +1458,45 @@ function openMethod(methodId) {
   const presetReason = preset?.matches(method) ? preset.reason(method) : "";
 
   dialogContent.innerHTML = `
-    <h2 class="dialog-title" id="dialogTitle">${escapeHtml(method.name)}</h2>
-    <div class="badge-row">
-      ${badge(method.evidenceGrade, evidenceClass(method.evidenceGrade))}
-      ${badge(method.safetyLevel, safetyClass(method.safetyScore))}
-      ${badge(`Score ${scoreText(method.priorityScore)}`, "")}
-      ${badge(method.category || "Uncategorized", "")}
-    </div>
+    <header class="dialog-header">
+      <h2 class="dialog-title" id="dialogTitle">${escapeHtml(method.name)}</h2>
+      <div class="badge-row">
+        ${badge(method.evidenceGrade, evidenceClass(method.evidenceGrade))}
+        ${badge(method.safetyLevel, safetyClass(method.safetyScore))}
+        ${method.priorityScore !== null ? badge(`Score ${scoreText(method.priorityScore)}`, "") : ""}
+        ${badge(method.category || "Uncategorized", "")}
+      </div>
+    </header>
 
-    <div class="detail-grid">
-      ${detailField("Workbook summary", method.summary, true)}
-      ${detailField("Reddit-derived pattern", method.redditSupport)}
-      ${detailField("Upvote / visibility notes", method.visibility)}
-      ${detailField("Evidence grade", method.evidenceGrade)}
-      ${detailField("Workbook evidence notes", evidenceNotes(method), true)}
-      ${detailField("Workbook practical steps", method.protocol, true)}
-      ${presetReason ? detailField("Why this appears in the active view", presetReason, true) : ""}
-      ${detailField("Commonly used for", method.useCase)}
-      ${detailField("When to avoid or use caution", method.cautions, true)}
-      ${detailField("Reported time horizon", method.timeHorizon)}
-      ${detailField("Difficulty", method.difficulty)}
-      ${method.tags.length ? detailField("Tags", method.tags.join(", ")) : ""}
-      ${detailSources(references, method.sourceIds)}
+    <div class="dialog-section-stack">
+      ${detailSection("Overview", [
+        detailField("Workbook summary", method.summary, true),
+        detailField("May be useful for", method.useCase),
+        detailField("Workbook category", method.category),
+      ])}
+      ${detailSection("Practical use", [
+        detailField("Workbook practical steps", method.protocol, true),
+        detailField("Reported time horizon", method.timeHorizon),
+        detailField("Difficulty / ease", method.difficulty),
+        method.easeScore !== null ? detailField("Ease score", `${method.easeScore}/5`) : "",
+      ])}
+      ${detailSection("Evidence / Reddit pattern", [
+        detailField("Evidence grade", method.evidenceGrade),
+        detailField("Workbook evidence notes", evidenceNotes(method), true),
+        detailField("Reddit-derived pattern", method.redditSupport),
+        detailField("Upvote / visibility notes", method.visibility),
+      ])}
+      ${detailSection("Safety / caution", [
+        detailField("Caution level", method.safetyLevel),
+        method.safetyScore !== null ? detailField("Caution score", `${method.safetyScore}/5`) : "",
+        detailField("When to avoid or use caution", method.cautions, true),
+      ])}
+      ${detailSection("Tags / metadata", [
+        method.tags.length ? detailField("Tags", method.tags.join(", ")) : "",
+        method.sourceIds.length ? detailField("Workbook source IDs", method.sourceIds.join(", ")) : "",
+        detailSources(references, method.sourceIds),
+      ])}
+      ${presetReason ? detailSection("Why shown here", [detailField("Workbook-derived preset relevance", presetReason, true)], "dialog-section-highlight") : ""}
     </div>
   `;
 
@@ -1361,6 +1505,21 @@ function openMethod(methodId) {
   } else {
     dialog.setAttribute("open", "");
   }
+}
+
+function detailSection(title, fields, className = "") {
+  const content = fields.filter(Boolean).join("");
+  if (!content) return "";
+  return `
+    <section class="dialog-section ${className}">
+      <div class="dialog-section-header">
+        <h3>${escapeHtml(title)}</h3>
+      </div>
+      <div class="detail-grid">
+        ${content}
+      </div>
+    </section>
+  `;
 }
 
 function closeDialog() {
@@ -1414,12 +1573,22 @@ function evidenceNotes(method) {
 }
 
 function renderProtocols() {
+  const stats = protocolSummaryStats();
   app.innerHTML = `
     <section class="panel-header">
       <div>
         <h1 class="section-title">Protocols</h1>
-        <p>Protocol cards are drawn from the workbook Protocols sheet. They are educational self-management routines, not treatment plans or a substitute for professional care.</p>
+        <p>Protocol cards are drawn from the workbook Protocols sheet. They are educational self-management sequences, not treatment plans or a substitute for professional care.</p>
       </div>
+    </section>
+    <section class="protocols-note panel">
+      <span class="section-label">How to read protocols</span>
+      <p>Each card uses only workbook fields. Where related methods appear, they are labeled as potentially related because they are matched from workbook method names, use-cases, categories, and protocol text.</p>
+    </section>
+    <section class="protocol-summary-strip panel" aria-label="Protocol workbook summary">
+      ${smallFact("Workbook sequences", stats.count)}
+      ${stats.stepCount ? smallFact("Listed steps", stats.stepCount) : ""}
+      ${stats.durationCount ? smallFact("With duration", stats.durationCount) : ""}
     </section>
     ${
       state.protocols.length
@@ -1427,42 +1596,205 @@ function renderProtocols() {
         : emptyState("No protocols found", "The Protocols sheet did not contain usable rows.")
     }
   `;
+
+  bindProtocolControls();
+  initScrollAnimations();
 }
 
-function protocolCard(protocol) {
+function protocolCard(protocol, index) {
+  const steps = protocolStepItems(protocol.steps);
+  const previewSteps = steps.slice(0, 3);
+  const related = protocolRelatedMethods(protocol);
+  const detailId = `protocol-detail-${index}`;
+  const hasDetails = steps.length > previewSteps.length || protocol.goal || protocol.notes || related.methods.length;
   return `
-    <article class="protocol-card app-card">
+    <article class="protocol-card protocol-sequence-card app-card">
       <div class="card-main">
         <div class="badge-row card-badges">
-          ${badge("Protocol", "")}
-          ${badge(protocol.duration || "Duration not listed", "")}
+          ${badge("Workbook sequence", "")}
+          ${protocol.duration ? badge(protocol.duration, "") : ""}
+          ${steps.length ? badge(`${steps.length} steps`, "") : ""}
         </div>
         <h3 class="card-title">${escapeHtml(protocol.name)}</h3>
-        ${protocol.goal ? `<p class="card-summary"><strong>Goal:</strong> ${escapeHtml(protocol.goal)}</p>` : ""}
+        ${protocol.goal ? `<p class="card-summary"><strong>Workbook use-case:</strong> ${escapeHtml(protocol.goal)}</p>` : ""}
       </div>
 
-      ${protocol.steps ? `<div class="detail-field card-preview"><span class="field-label">Workbook steps</span><ol class="protocol-steps">${stepsList(protocol.steps)}</ol></div>` : ""}
-      ${protocol.notes ? `<div class="detail-field card-preview"><span class="field-label">Safety/context notes</span><p class="field-value">${escapeHtml(protocol.notes)}</p></div>` : ""}
-      ${protocol.related.length ? `<div class="card-chips">${chipRow(protocol.related, "Related methods")}</div>` : ""}
-      <div class="card-footer card-meta">
-        ${smallFact("Duration", protocol.duration)}
-        ${smallFact("Use-case", protocol.goal)}
+      <div class="protocol-fact-row">
+        ${protocolMetaFact("Duration", protocol.duration)}
+        ${protocolMetaFact("Use-case", protocol.goal)}
+        ${steps.length ? protocolMetaFact("Steps", `${steps.length}`) : ""}
       </div>
+
+      <div class="card-preview-stack">
+        ${
+          previewSteps.length
+            ? `<div class="detail-field card-preview protocol-step-preview"><span class="field-label">${steps.length > previewSteps.length ? "First workbook steps" : "Workbook steps"}</span>${protocolStepList(previewSteps)}</div>`
+            : ""
+        }
+        ${protocol.notes ? `<div class="detail-field card-preview protocol-caution"><span class="field-label">Workbook context / caution</span><p class="field-value">${escapeHtml(protocol.notes)}</p></div>` : ""}
+        ${related.methods.length ? protocolRelatedBlock(related) : ""}
+      </div>
+
+      ${
+        hasDetails
+          ? `<details class="protocol-details" id="${detailId}">
+        <summary>View workbook sequence</summary>
+        <div class="protocol-detail-content">
+          ${protocol.goal ? detailField("When this workbook sequence is used", protocol.goal, true) : ""}
+          ${steps.length ? `<section class="detail-field is-wide protocol-step-detail"><span class="field-label">Full workbook steps</span>${protocolStepList(steps)}</section>` : ""}
+          ${protocol.notes ? detailField("Workbook notes / caution", protocol.notes, true) : ""}
+          ${related.methods.length ? protocolRelatedBlock(related, true) : ""}
+        </div>
+      </details>`
+          : ""
+      }
     </article>
   `;
 }
 
+function bindProtocolControls() {
+  document.querySelectorAll("[data-protocol-method-id]").forEach((button) => {
+    button.addEventListener("click", () => openMethod(button.dataset.protocolMethodId));
+  });
+}
+
+function protocolMetaFact(label, value) {
+  if (!text(value)) return "";
+  return smallFact(label, value);
+}
+
+function protocolSummaryStats() {
+  const stepCount = state.protocols.reduce((sum, protocol) => sum + protocolStepItems(protocol.steps).length, 0);
+  const durationCount = state.protocols.filter((protocol) => text(protocol.duration)).length;
+  return {
+    count: state.protocols.length,
+    stepCount,
+    durationCount,
+  };
+}
+
 function stepsList(value) {
-  const parts = text(value)
+  return protocolStepItems(value).map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+}
+
+function protocolStepList(steps) {
+  return `<ol class="protocol-steps">${steps.map((step) => `<li><span>${escapeHtml(step)}</span></li>`).join("")}</ol>`;
+}
+
+function protocolStepItems(value) {
+  const raw = text(value);
+  if (!raw) return [];
+  const parts = raw
     .split(/\s*(?=\d+\)\s*)/)
     .map((part) => part.replace(/^\d+\)\s*/, "").trim())
     .filter(Boolean);
 
-  const steps = parts.length > 1 ? parts : splitList(value);
-  return steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+  if (parts.length > 1) return parts.map(cleanProtocolStep).filter(Boolean);
+  return splitList(raw).map(cleanProtocolStep).filter(Boolean);
+}
+
+function cleanProtocolStep(step) {
+  return text(step).replace(/\.$/, "");
+}
+
+function protocolRelatedMethods(protocol) {
+  const explicit = protocol.related
+    .map((name) => state.methods.find((method) => normalizeKey(method.name) === normalizeKey(name)) || null)
+    .filter(Boolean);
+
+  if (explicit.length) {
+    return {
+      label: "Related methods from workbook",
+      methods: explicit.slice(0, 5),
+    };
+  }
+
+  const scored = state.methods
+    .map((method) => ({ method, score: protocolMethodScore(protocol, method) }))
+    .filter((entry) => entry.score >= 2)
+    .sort((a, b) => compareNumber(b.score, a.score) || compareNumber(b.method.priorityScore, a.method.priorityScore) || compareNumber(a.method.rank, b.method.rank))
+    .slice(0, 5)
+    .map((entry) => entry.method);
+
+  return {
+    label: "Potentially related methods from workbook fields",
+    methods: scored,
+  };
+}
+
+function protocolMethodScore(protocol, method) {
+  const protocolText = normalizeProtocolText([protocol.name, protocol.goal, protocol.steps, protocol.notes].join(" "));
+  const methodText = normalizeProtocolText([method.name, method.category, method.useCase, method.protocol, method.summary].join(" "));
+  const protocolTokens = protocolKeywords(protocolText);
+  const methodTokens = protocolKeywords(methodText);
+  let score = 0;
+
+  methodTokens.forEach((token) => {
+    if (protocolTokens.has(token)) score += token.length > 6 ? 1.2 : 1;
+  });
+
+  const methodNameTokens = protocolKeywords(normalizeProtocolText(method.name));
+  methodNameTokens.forEach((token) => {
+    if (protocolTokens.has(token)) score += 1.4;
+  });
+
+  if (method.category && protocolText.includes(normalizeProtocolText(method.category))) score += 1.5;
+  if (method.useCase && tokenOverlap(protocolTokens, protocolKeywords(normalizeProtocolText(method.useCase))) >= 2) score += 1.3;
+  if (protocolText.includes(normalizeProtocolText(method.name))) score += 4;
+
+  return score;
+}
+
+function protocolKeywords(value) {
+  const stopWords = new Set(["with", "when", "this", "that", "from", "into", "your", "until", "after", "before", "once", "extra", "short", "small", "general", "stable", "routine", "anxiety", "workbook"]);
+  return new Set(
+    normalizeProtocolText(value)
+      .split(" ")
+      .map((token) => token.trim())
+      .filter((token) => token.length > 3 && !stopWords.has(token)),
+  );
+}
+
+function normalizeProtocolText(value) {
+  return text(value)
+    .toLowerCase()
+    .replace(/[–—-]/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function tokenOverlap(left, right) {
+  let count = 0;
+  right.forEach((token) => {
+    if (left.has(token)) count += 1;
+  });
+  return count;
+}
+
+function protocolRelatedBlock(related, isDetail = false) {
+  const methods = isDetail ? related.methods : related.methods.slice(0, 3);
+  return `
+    <section class="${isDetail ? "detail-field is-wide protocol-related-detail" : "detail-field card-preview protocol-related"}">
+      <span class="field-label">${escapeHtml(related.label)}</span>
+      <div class="protocol-related-list">
+        ${methods
+          .map(
+            (method) => `
+              <button class="related-method-pill" type="button" data-protocol-method-id="${method.id}">
+                <strong>${escapeHtml(method.name)}</strong>
+                <span>${escapeHtml(method.useCase || method.category || "Workbook method")}</span>
+              </button>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
 }
 
 function renderSafety() {
+  const sections = safetySections();
   app.innerHTML = `
     <section class="hero">
       <div class="hero-copy">
@@ -1476,36 +1808,177 @@ function renderSafety() {
         </div>
       </div>
     </section>
+    ${sections.length ? `<section class="safety-map panel">
+      <div>
+        <span class="section-label">Workbook safety map</span>
+        <p>Grouped from the Safety Notes sheet by topic and guidance text. These notes are caution boundaries for educational self-management information, not a substitute for clinical care.</p>
+      </div>
+      <div class="safety-map-grid">
+        ${sections.map((section) => `<span>${escapeHtml(section.title)} <strong>${section.notes.length}</strong></span>`).join("")}
+      </div>
+    </section>` : ""}
     ${
       state.safetyNotes.length
-        ? `<section class="grid safety-grid">${state.safetyNotes.map(safetyCard).join("")}</section>`
+        ? sections.map(safetySection).join("")
         : emptyState("No safety notes found", "The Safety Notes sheet did not contain usable rows.")
     }
   `;
+
+  initScrollAnimations();
 }
 
-function safetyCard(note) {
+function safetySections() {
+  const definitions = safetySectionDefinitions();
+  const assigned = new Set();
+  const sections = definitions
+    .map((definition) => {
+      const notes = state.safetyNotes.filter((note, index) => {
+        if (assigned.has(index)) return false;
+        const matches = safetyNoteBelongsToSection(note, definition);
+        if (matches) assigned.add(index);
+        return matches;
+      });
+      return { ...definition, notes };
+    })
+    .filter((section) => section.notes.length);
+
+  const remaining = state.safetyNotes.filter((_, index) => !assigned.has(index));
+  if (remaining.length) {
+    sections.push({
+      id: "other",
+      title: "Other workbook safety notes",
+      description: "Additional caution notes from the workbook.",
+      tone: "is-boundary",
+      notes: remaining,
+    });
+  }
+
+  return sections;
+}
+
+function safetySectionDefinitions() {
+  return [
+    {
+      id: "urgent",
+      title: "Urgent support boundaries",
+      description: "Workbook notes that identify situations for local medical or support contact.",
+      terms: ["urgent", "emergency", "dangerous", "unable", "stay safe", "chest pain", "fainting", "confusion"],
+      tone: "is-urgent",
+      topics: ["urgent symptoms"],
+    },
+    {
+      id: "clinician",
+      title: "When to involve a clinician",
+      description: "Workbook notes that point toward prescriber or clinician involvement.",
+      terms: ["clinician", "prescriber", "medication", "trauma", "ocd", "panic disorder", "severe avoidance"],
+      tone: "is-clinician",
+      topics: ["medication", "exposure"],
+    },
+    {
+      id: "reddit-limits",
+      title: "Limitations of Reddit advice",
+      description: "Workbook notes about clinical boundaries and the limits of Reddit-derived patterns.",
+      terms: ["reddit", "diagnosis", "treatment", "replacement", "qualified clinician"],
+      tone: "is-boundary",
+      topics: ["clinical boundary"],
+    },
+    {
+      id: "substances",
+      title: "Substance-related cautions",
+      description: "Workbook notes about substances or supplements that may worsen anxiety or create dependence cycles.",
+      terms: ["cannabis", "nicotine", "alcohol", "caffeine", "supplements", "dependence", "substances"],
+      tone: "is-substance",
+      topics: ["substances"],
+    },
+    {
+      id: "overuse",
+      title: "Overuse / compulsive coping cautions",
+      description: "Workbook notes about excessive checking or reassurance-loop patterns.",
+      terms: ["excessive", "symptom-checking", "reassurance", "loop", "tracking"],
+      tone: "is-overuse",
+      topics: ["tracking"],
+    },
+    {
+      id: "method-caution",
+      title: "Requires caution",
+      description: "Workbook notes about methods that may not be appropriate for everyone.",
+      terms: ["breathing", "breath", "dizzy", "exposure", "worsen", "stop"],
+      tone: "is-caution",
+      topics: ["breathing exercises"],
+    },
+  ];
+}
+
+function safetyNoteBelongsToSection(note, definition) {
+  const topic = normalizeKey(note.topic);
+  const explicitDefinition = safetySectionDefinitions().find((item) => (item.topics || []).some((definedTopic) => topic === normalizeKey(definedTopic)));
+  if (explicitDefinition) return explicitDefinition.id === definition.id;
+  return safetyNoteMatches(note, definition.terms);
+}
+
+function safetyNoteMatches(note, terms) {
+  const haystack = `${note.topic} ${note.guidance}`.toLowerCase();
+  return terms.some((term) => haystack.includes(term));
+}
+
+function safetySection(section) {
   return `
-    <article class="safety-card app-card">
+    <section class="safety-section">
+      <div class="panel-header safety-section-header">
+        <div>
+          <span class="section-label">Workbook caution group</span>
+          <h2>${escapeHtml(section.title)}</h2>
+          <p>${escapeHtml(section.description)}</p>
+        </div>
+        <span class="safety-section-count">${section.notes.length} note${section.notes.length === 1 ? "" : "s"}</span>
+      </div>
+      <div class="grid safety-grid">
+        ${section.notes.map((note) => safetyCard(note, section)).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function safetyCard(note, section) {
+  const paragraphs = safetyParagraphs(note.guidance);
+  return `
+    <article class="safety-card app-card ${section.tone || ""}">
       <div class="card-main">
         <div class="badge-row card-badges">
-          ${badge("Safety note", "")}
+          ${badge("Workbook note", "")}
+          ${badge(section.title, "")}
         </div>
         <h3 class="card-title">${escapeHtml(note.topic)}</h3>
-        <p class="card-summary">${escapeHtml(note.guidance)}</p>
       </div>
+      ${
+        paragraphs.length
+          ? `<div class="detail-field card-preview safety-guidance"><span class="field-label">Workbook guidance</span>${paragraphs.map((paragraph) => `<p class="field-value">${escapeHtml(paragraph)}</p>`).join("")}</div>`
+          : ""
+      }
     </article>
   `;
 }
 
+function safetyParagraphs(value) {
+  const guidance = text(value);
+  if (!guidance) return [];
+  const sentences = guidance.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map((part) => part.trim()).filter(Boolean) || [guidance];
+  if (sentences.length <= 2) return [guidance];
+  return sentences;
+}
+
 function renderSources() {
   const types = unique(state.sources.map((source) => source.type)).sort();
+  const categories = unique(state.sources.map(sourceCategory)).sort();
   const filtered = state.sources.filter((source) => {
-    const haystack = [source.id, source.type, source.title, source.relevance, source.notes, source.url].join(" ").toLowerCase();
-    if (state.sourceQuery && !haystack.includes(state.sourceQuery.toLowerCase())) return false;
+    const category = sourceCategory(source);
+    const haystack = [source.id, source.type, category, source.title, source.relevance, source.notes, source.url, sourceHost(source.url)].join(" ").toLowerCase();
+    if (state.sourceQuery.trim() && !haystack.includes(state.sourceQuery.trim().toLowerCase())) return false;
     if (state.sourceType && source.type !== state.sourceType) return false;
+    if (state.sourceCategory && category !== state.sourceCategory) return false;
     return true;
   });
+  const sourceStats = sourceSummaryStats();
 
   app.innerHTML = `
     <section class="panel-header">
@@ -1515,13 +1988,35 @@ function renderSources() {
       </div>
     </section>
 
-    <section class="sources-tools">
+    <section class="sources-note panel">
+      <span class="section-label">Source interpretation</span>
+      <p>Sources are workbook references used for context and evidence comparison. Reddit-derived discussion sources are not clinical proof, and the workbook should not be read as an exhaustive evidence review.</p>
+    </section>
+
+    <section class="sources-summary-strip panel" aria-label="Source workbook summary">
+      ${smallFact("Workbook sources", state.sources.length)}
+      ${smallFact("Valid links", sourceStats.validLinks)}
+      ${smallFact("Source categories", categories.length)}
+      ${sourceStats.redditCount ? smallFact("Reddit-derived", sourceStats.redditCount) : ""}
+    </section>
+
+    <section class="sources-tools" aria-label="Source search and filters">
       <input class="control" id="sourceSearch" type="search" value="${escapeAttr(state.sourceQuery)}" placeholder="Search sources, relevance, URLs" aria-label="Search sources" />
+      <select class="control" id="sourceCategory" aria-label="Filter source category">
+        <option value="">All categories</option>
+        ${categories.map((category) => `<option value="${escapeAttr(category)}" ${state.sourceCategory === category ? "selected" : ""}>${escapeHtml(category)}</option>`).join("")}
+      </select>
       <select class="control" id="sourceType" aria-label="Filter source type">
         <option value="">All source types</option>
         ${types.map((type) => `<option value="${escapeAttr(type)}" ${state.sourceType === type ? "selected" : ""}>${escapeHtml(type)}</option>`).join("")}
       </select>
+      <button class="reset-button source-reset" id="sourceReset" type="button">Reset</button>
     </section>
+
+    <div class="results-meta sources-meta">
+      <span>${filtered.length} of ${state.sources.length} workbook sources</span>
+      <span>${escapeHtml(sourceFilterSummary())}</span>
+    </div>
 
     ${
       filtered.length
@@ -1539,23 +2034,208 @@ function renderSources() {
     state.sourceType = event.target.value;
     renderSources();
   });
+  document.querySelector("#sourceCategory")?.addEventListener("change", (event) => {
+    state.sourceCategory = event.target.value;
+    renderSources();
+  });
+  document.querySelector("#sourceReset")?.addEventListener("click", () => {
+    state.sourceQuery = "";
+    state.sourceType = "";
+    state.sourceCategory = "";
+    renderSources();
+  });
+
+  initScrollAnimations();
+}
+
+function initScrollAnimations() {
+  disconnectRevealObserver();
+
+  try {
+    applyMotionClasses(app);
+
+    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+      revealAllMotion(app);
+      return;
+    }
+
+    const revealItems = [...app.querySelectorAll(".scroll-reveal")];
+    if (!revealItems.length) return;
+
+    revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting && entry.intersectionRatio <= 0) return;
+          entry.target.classList.add("scroll-reveal-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -12% 0px",
+        threshold: 0.14,
+      },
+    );
+
+    window.requestAnimationFrame(() => {
+      revealItems.forEach((item) => revealObserver?.observe(item));
+    });
+  } catch {
+    revealAllMotion(app);
+  }
+}
+
+function disconnectRevealObserver() {
+  revealObserver?.disconnect();
+  revealObserver = null;
+}
+
+function applyMotionClasses(root) {
+  if (!root) return;
+
+  [...root.children].forEach((section) => {
+    section.classList.add("scroll-section", "scroll-reveal", "motion-panel");
+  });
+
+  root
+    .querySelectorAll(".hero, .panel-header, .methods-toolbar, .sources-tools, .results-meta")
+    .forEach((item) => item.classList.add("scroll-reveal", "motion-soft"));
+
+  root
+    .querySelectorAll(".grid, .rank-list, .chart-list, .summary-method-list, .sources-list, .safety-map-grid")
+    .forEach((group) => group.classList.add("stagger-group"));
+
+  root
+    .querySelectorAll(
+      [
+        ".metric-card",
+        ".dashboard-chart-panel",
+        ".top-pick-card",
+        ".method-card",
+        ".protocol-card",
+        ".safety-card",
+        ".source-card",
+        ".rank-row",
+        ".summary-method",
+        ".dashboard-pick",
+        ".chart-row",
+        ".empty-state",
+        ".chart-empty-state",
+        ".preset-explanation",
+      ].join(", "),
+    )
+    .forEach((item) => item.classList.add("scroll-reveal", "motion-card", "stagger-item"));
+
+  root.querySelectorAll(".stagger-group").forEach((group) => {
+    [...group.querySelectorAll(":scope > .stagger-item, :scope > .scroll-reveal, :scope > article, :scope > button, :scope > .panel")]
+      .slice(0, 36)
+      .forEach((item, index) => {
+        item.classList.add("stagger-item");
+        item.style.setProperty("--reveal-delay", `${Math.min(index, 10) * 85}ms`);
+      });
+  });
+}
+
+function revealAllMotion(root) {
+  root?.querySelectorAll(".scroll-reveal").forEach((item) => {
+    item.classList.add("scroll-reveal-visible");
+  });
+}
+
+function prefersReducedMotion() {
+  return reducedMotionQuery?.matches === true;
 }
 
 function sourceCard(source) {
+  const category = sourceCategory(source);
+  const url = validSourceUrl(source.url);
+  const title = sourceDisplayTitle(source);
+  const titleUsesRelevance = !source.title && source.relevance;
+  const host = sourceHost(source.url);
   return `
-    <article class="source-card app-card">
+    <article class="source-card ${sourceCategoryClass(category)} app-card">
       <div class="card-main">
         <div class="badge-row card-badges">
-          ${badge(source.id || "Source", "")}
-          ${badge(source.type || "Type not listed", "")}
+          ${source.id ? badge(source.id, "") : ""}
+          ${badge(category, "")}
+          ${source.type ? badge(source.type, "") : ""}
         </div>
-        <h3 class="card-title">${escapeHtml(source.title || source.relevance || source.url || "Untitled source")}</h3>
-        ${source.relevance && source.title ? `<p class="card-summary">${escapeHtml(source.relevance)}</p>` : ""}
-        ${source.notes ? `<p class="card-summary">${escapeHtml(source.notes)}</p>` : ""}
+        <h3 class="card-title">${escapeHtml(title)}</h3>
       </div>
-      ${source.url ? `<div class="card-actions"><a href="${escapeAttr(source.url)}" target="_blank" rel="noreferrer">Open source</a></div>` : ""}
+      <div class="card-preview-stack">
+        ${source.relevance && !titleUsesRelevance ? `<div class="detail-field card-preview source-role"><span class="field-label">Workbook role</span><p class="field-value">${escapeHtml(source.relevance)}</p></div>` : ""}
+        ${source.notes ? `<div class="detail-field card-preview"><span class="field-label">Workbook notes</span><p class="field-value">${escapeHtml(source.notes)}</p></div>` : ""}
+      </div>
+      <div class="card-footer card-meta">
+        ${sourceMetaFact("Category", category)}
+        ${sourceMetaFact("Source type", source.type)}
+        ${host ? sourceMetaFact("Host", host) : ""}
+      </div>
+      ${
+        url
+          ? `<div class="card-actions source-actions"><a href="${escapeAttr(url)}" target="_blank" rel="noreferrer" aria-label="Open ${escapeAttr(title)}">Open source<span>${escapeHtml(host)}</span></a></div>`
+          : ""
+      }
     </article>
   `;
+}
+
+function sourceMetaFact(label, value) {
+  if (!text(value)) return "";
+  return smallFact(label, value);
+}
+
+function sourceDisplayTitle(source) {
+  return source.title || source.relevance || (source.id ? `Workbook source ${source.id}` : "Workbook source");
+}
+
+function sourceSummaryStats() {
+  return {
+    validLinks: state.sources.filter((source) => validSourceUrl(source.url)).length,
+    redditCount: state.sources.filter((source) => sourceCategory(source).includes("Reddit")).length,
+  };
+}
+
+function sourceFilterSummary() {
+  const active = [state.sourceQuery.trim(), state.sourceCategory, state.sourceType].filter(Boolean).length;
+  return active ? `${active} active source filter${active === 1 ? "" : "s"}` : "No source filters active";
+}
+
+function sourceCategory(source) {
+  const type = text(source.type).toLowerCase();
+  if (type.includes("reddit")) return "Reddit-derived discussion source";
+  if (type.includes("pmc") || type.includes("et al") || type.includes("ncbi") || type.includes("bookshelf")) return "Clinical/research reference";
+  if (type.includes("nhs") || type.includes("mayo") || type.includes("american psychological association") || type.includes("apa")) return "Clinical/public guidance source";
+  return "Workbook source";
+}
+
+function sourceCategoryClass(category) {
+  const value = normalizeKey(category);
+  if (value.includes("reddit")) return "is-reddit-source";
+  if (value.includes("clinical") || value.includes("research")) return "is-clinical-source";
+  return "is-workbook-source";
+}
+
+function validSourceUrl(value) {
+  const candidate = text(value);
+  if (!candidate) return "";
+  try {
+    const url = new URL(candidate);
+    if (!["http:", "https:"].includes(url.protocol)) return "";
+    return url.href;
+  } catch {
+    return "";
+  }
+}
+
+function sourceHost(value) {
+  const url = validSourceUrl(value);
+  if (!url) return "";
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
 }
 
 function distribution(items, getter, options = {}) {
