@@ -26,15 +26,26 @@
   <body>
     <div class="app-shell">
       <header class="topbar">
-        <a class="brand" href="#dashboard" aria-label="Anxiety Methods Database home">
-          <span class="brand-mark" aria-hidden="true">
-            <span></span>
-          </span>
-          <span>
-            <strong>Anxiety Methods Database</strong>
-            <small>Evidence-aware self-management library</small>
-          </span>
-        </a>
+        <div class="topbar-start">
+          <a class="brand" href="#dashboard" aria-label="Anxiety Methods Database home">
+            <span class="brand-mark" aria-hidden="true">
+              <span></span>
+            </span>
+            <span>
+              <strong>Anxiety Methods Database</strong>
+              <small>Evidence-aware self-management library</small>
+            </span>
+          </a>
+          <button
+            id="settingsButton"
+            class="settings-button"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="settingsDialog"
+          >
+            About
+          </button>
+        </div>
 
         <nav class="tabs" aria-label="Main sections">
           <button class="tab is-active" data-tab="dashboard" type="button">Dashboard</button>
@@ -86,6 +97,13 @@
       <div class="dialog-frame">
         <button class="dialog-close" type="button" aria-label="Close method details">Close</button>
         <div id="dialogContent"></div>
+      </div>
+    </dialog>
+
+    <dialog id="settingsDialog" class="method-dialog settings-dialog" aria-labelledby="settingsTitle">
+      <div class="dialog-frame settings-frame">
+        <button class="dialog-close settings-close" type="button" aria-label="Close settings and about panel">Close</button>
+        <div id="settingsContent"></div>
       </div>
     </dialog>
 

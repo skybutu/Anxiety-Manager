@@ -76,6 +76,9 @@ const missingWarnings = new Set();
 const app = document.querySelector("#app");
 const dialog = document.querySelector("#methodDialog");
 const dialogContent = document.querySelector("#dialogContent");
+const settingsButton = document.querySelector("#settingsButton");
+const settingsDialog = document.querySelector("#settingsDialog");
+const settingsContent = document.querySelector("#settingsContent");
 const reducedMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 let revealObserver = null;
 const revealCompleteTimers = new WeakMap();
@@ -142,12 +145,19 @@ function bindShell() {
     button.addEventListener("click", () => setTab(button.dataset.tab));
   });
 
+  settingsButton.addEventListener("click", openSettings);
+  settingsDialog.querySelector(".settings-close").addEventListener("click", closeSettings);
+  settingsDialog.addEventListener("click", (event) => {
+    if (event.target === settingsDialog) closeSettings();
+  });
+
   dialog.querySelector(".dialog-close").addEventListener("click", closeDialog);
   dialog.addEventListener("click", (event) => {
     if (event.target === dialog) closeDialog();
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && dialog.open) closeDialog();
+    if (event.key === "Escape" && settingsDialog.open) closeSettings();
   });
 
   window.addEventListener("hashchange", syncTabFromHash);
@@ -1535,6 +1545,49 @@ function closeDialog() {
   } else {
     dialog.removeAttribute("open");
   }
+}
+
+function openSettings() {
+  const sourceWorkbook = state.data?.sourceWorkbook || "reddit_anxiety_methods_database.xlsx";
+  const generatedAt = state.data?.generatedAt ? ` Generated JSON timestamp: ${state.data.generatedAt}.` : "";
+
+  settingsContent.innerHTML = `
+    <header class="dialog-header settings-header">
+      <span class="section-label">Settings / About</span>
+      <h2 class="dialog-title" id="settingsTitle">Anxiety Methods Database</h2>
+      <p class="settings-version">Version v1.0.0</p>
+    </header>
+
+    <div class="dialog-section-stack">
+      ${detailSection("Data source", [
+        detailField("Source workbook", sourceWorkbook),
+        detailField("Generated data", `Displayed content is parsed from the workbook-derived data file.${generatedAt}`, true),
+      ])}
+      ${detailSection("Disclaimer", [detailField("Clinical safety wording", DISCLAIMER, true)])}
+      ${detailSection("Workbook-derived ranking", [
+        detailField(
+          "Ranking explanation",
+          "Rankings, chart groupings, priority scores, evidence scores, caution scores, ease scores, time horizons, protocols, sources, and method details are derived from workbook fields when available. Reddit-derived patterns describe reported user patterns and are kept separate from evidence fields. These summaries are educational comparisons, not individualized recommendations, medical advice, diagnosis, psychotherapy, crisis support, or a replacement for professional care.",
+          true,
+        ),
+      ])}
+    </div>
+  `;
+
+  if (typeof settingsDialog.showModal === "function") {
+    settingsDialog.showModal();
+  } else {
+    settingsDialog.setAttribute("open", "");
+  }
+}
+
+function closeSettings() {
+  if (typeof settingsDialog.close === "function") {
+    settingsDialog.close();
+  } else {
+    settingsDialog.removeAttribute("open");
+  }
+  settingsButton.focus({ preventScroll: true });
 }
 
 function detailField(label, value, wide = false) {
