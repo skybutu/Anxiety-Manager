@@ -141,17 +141,48 @@ a {
 }
 
 .scroll-reveal {
-  opacity: 0.04;
-  transform: translate3d(0, var(--reveal-y, 32px), 0) scale(var(--reveal-scale, 0.982));
+  opacity: 1;
+  visibility: visible;
+  filter: none;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0) scale(1);
   transition:
     opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0ms),
     transform var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0ms);
   will-change: opacity, transform;
 }
 
-.scroll-reveal-visible {
+body.motion-ready .scroll-reveal:not(.is-visible):not(.is-complete) {
+  opacity: 0.08;
+  visibility: visible;
+  filter: none;
+  pointer-events: auto;
+  transform: translate3d(0, var(--reveal-y, 32px), 0) scale(var(--reveal-scale, 0.982));
+}
+
+body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete) {
+  opacity: 0.12;
+  transform: translate3d(0, var(--replay-y, 26px), 0) scale(var(--replay-scale, 0.985));
+}
+
+.scroll-reveal.is-visible,
+.scroll-reveal.scroll-reveal-visible {
   opacity: 1;
+  visibility: visible;
+  filter: none;
+  pointer-events: auto;
   transform: translate3d(0, 0, 0) scale(1);
+}
+
+.scroll-reveal.is-complete {
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  pointer-events: auto !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
+  transition: none !important;
+  transition-delay: 0ms !important;
+  will-change: auto;
 }
 
 .motion-soft {
@@ -2773,6 +2804,21 @@ a {
     transform var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0ms) !important;
 }
 
+.scroll-reveal.is-complete,
+.scroll-reveal.motion-soft.is-complete,
+.scroll-reveal.motion-panel.is-complete,
+.scroll-reveal.motion-card.is-complete,
+.scroll-reveal.is-replaying.is-complete {
+  opacity: 1 !important;
+  visibility: visible !important;
+  filter: none !important;
+  pointer-events: auto !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
+  transition: none !important;
+  transition-delay: 0ms !important;
+  will-change: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -2794,12 +2840,19 @@ a {
   .mobile-tab.is-active,
   .mobile-tab:active,
   .scroll-reveal,
+  .scroll-reveal.is-visible,
+  .scroll-reveal.is-complete,
+  .scroll-reveal.is-replaying,
   .scroll-reveal-visible {
     transform: none !important;
   }
 
-  .scroll-reveal {
+  .scroll-reveal,
+  body.motion-ready .scroll-reveal {
     opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    pointer-events: auto !important;
   }
 
   .method-dialog[open],

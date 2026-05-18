@@ -78,6 +78,13 @@ const dialog = document.querySelector("#methodDialog");
 const dialogContent = document.querySelector("#dialogContent");
 const reducedMotionQuery = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 let revealObserver = null;
+const revealCompleteTimers = new WeakMap();
+const revealCompleteHandlers = new WeakMap();
+const revealStartTimes = new WeakMap();
+let revealSafetyTimers = [];
+let revealCycle = 0;
+const REVEAL_COMPLETE_TIMEOUT = 1150;
+const REVEAL_MIN_COMPLETE_MS = 360;
 
 applyStandaloneClasses();
 registerServiceWorker();
@@ -2049,45 +2056,57 @@ function renderSources() {
 }
 
 function initScrollAnimations() {
+  const cycle = ++revealCycle;
   disconnectRevealObserver();
+  clearRevealSafetyTimers();
+  document.body.classList.remove("motion-ready");
 
   try {
     applyMotionClasses(app);
 
-    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
-      revealAllMotion(app);
-      return;
-    }
-
     const revealItems = [...app.querySelectorAll(".scroll-reveal")];
     if (!revealItems.length) return;
+
+    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+      completeAllReveals(app);
+      return;
+    }
 
     revealObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting && entry.intersectionRatio <= 0) return;
-          entry.target.classList.add("scroll-reveal-visible");
-          observer.unobserve(entry.target);
+          startReveal(entry.target, observer);
         });
       },
       {
         root: null,
-        rootMargin: "0px 0px -12% 0px",
-        threshold: 0.14,
+        rootMargin: "0px 0px -8% 0px",
+        threshold: 0.1,
       },
     );
 
-    window.requestAnimationFrame(() => {
-      revealItems.forEach((item) => revealObserver?.observe(item));
-    });
+    replayActiveTabMotion(app, revealItems, cycle);
   } catch {
-    revealAllMotion(app);
+    document.body.classList.remove("motion-ready");
+    completeAllReveals(app);
   }
 }
 
 function disconnectRevealObserver() {
   revealObserver?.disconnect();
   revealObserver = null;
+}
+
+function prepareRevealItem(item) {
+  cancelRevealComplete(item);
+  item.classList.remove("is-visible", "is-complete", "scroll-reveal-visible");
+  item.classList.remove("is-replaying");
+  item.style.removeProperty("opacity");
+  item.style.removeProperty("transform");
+  item.style.removeProperty("filter");
+  item.style.removeProperty("visibility");
+  item.style.removeProperty("pointer-events");
 }
 
 function applyMotionClasses(root) {
@@ -2131,19 +2150,146 @@ function applyMotionClasses(root) {
       .slice(0, 36)
       .forEach((item, index) => {
         item.classList.add("stagger-item");
-        item.style.setProperty("--reveal-delay", `${Math.min(index, 10) * 85}ms`);
+        item.style.setProperty("--reveal-delay", `${Math.min(index, 6) * 70}ms`);
       });
   });
 }
 
-function revealAllMotion(root) {
+function replayActiveTabMotion(root, revealItems = [...root.querySelectorAll(".scroll-reveal")], cycle = revealCycle) {
+  revealItems.forEach((item) => {
+    prepareRevealItem(item);
+    item.classList.add("is-replaying");
+  });
+  document.body.classList.add("motion-ready");
+
+  window.requestAnimationFrame(() => {
+    if (cycle !== revealCycle) return;
+
+    const replayItems = [];
+
+    revealItems.forEach((item) => {
+      revealObserver?.observe(item);
+      if (isInRevealSafetyRange(item)) replayItems.push(item);
+    });
+
+    const replaySet = new Set(replayItems);
+    revealItems.forEach((item) => {
+      if (!replaySet.has(item) && !item.classList.contains("is-visible")) {
+        item.classList.remove("is-replaying");
+      }
+    });
+
+    replayItems.forEach((item, index) => {
+      item.style.setProperty("--reveal-delay", `${Math.min(index, 6) * 70}ms`);
+    });
+
+    if (replayItems.length) {
+      replayItems[0].getBoundingClientRect();
+    }
+
+    window.requestAnimationFrame(() => {
+      if (cycle !== revealCycle) return;
+      replayItems.forEach((item) => startReveal(item));
+    });
+
+    revealSafetyTimers.push(window.setTimeout(() => {
+      if (cycle !== revealCycle) return;
+      completeVisibleReveals(root, true);
+    }, REVEAL_COMPLETE_TIMEOUT));
+    revealSafetyTimers.push(window.setTimeout(() => {
+      if (cycle !== revealCycle) return;
+      completeVisibleReveals(root, true);
+    }, REVEAL_COMPLETE_TIMEOUT + 500));
+  });
+}
+
+function clearRevealSafetyTimers() {
+  revealSafetyTimers.forEach((timer) => window.clearTimeout(timer));
+  revealSafetyTimers = [];
+}
+
+function startReveal(item, observer = revealObserver) {
+  if (!item || item.classList.contains("is-complete")) return;
+
+  const isReplay = item.classList.contains("is-replaying");
+  item.classList.add("is-visible", "scroll-reveal-visible");
+  observer?.unobserve(item);
+  scheduleRevealComplete(item, isReplay);
+}
+
+function scheduleRevealComplete(item, completeOnTimeoutOnly = false) {
+  cancelRevealComplete(item);
+  revealStartTimes.set(item, performance.now());
+
+  const complete = (event) => {
+    if (event && event.target !== item) return;
+    if (event && !["opacity", "transform"].includes(event.propertyName)) return;
+    const startedAt = revealStartTimes.get(item) || 0;
+    if (event && performance.now() - startedAt < REVEAL_MIN_COMPLETE_MS) return;
+    completeReveal(item);
+  };
+
+  if (!completeOnTimeoutOnly) {
+    item.addEventListener("transitionend", complete);
+    revealCompleteHandlers.set(item, complete);
+  }
+
+  const timer = window.setTimeout(() => completeReveal(item), REVEAL_COMPLETE_TIMEOUT);
+  revealCompleteTimers.set(item, timer);
+}
+
+function cancelRevealComplete(item) {
+  const existingTimer = revealCompleteTimers.get(item);
+  if (existingTimer) window.clearTimeout(existingTimer);
+  revealCompleteTimers.delete(item);
+
+  const existingHandler = revealCompleteHandlers.get(item);
+  if (existingHandler) item.removeEventListener("transitionend", existingHandler);
+  revealCompleteHandlers.delete(item);
+  revealStartTimes.delete(item);
+}
+
+function completeReveal(item) {
+  if (!item) return;
+
+  cancelRevealComplete(item);
+
+  item.classList.add("is-visible", "is-complete", "scroll-reveal-visible");
+  item.classList.remove("is-replaying");
+  item.style.removeProperty("--reveal-delay");
+  item.style.removeProperty("opacity");
+  item.style.removeProperty("transform");
+  item.style.removeProperty("filter");
+  item.style.removeProperty("visibility");
+  item.style.removeProperty("pointer-events");
+  revealObserver?.unobserve(item);
+}
+
+function completeVisibleReveals(root, forceComplete = false) {
+  root?.querySelectorAll(".scroll-reveal:not(.is-complete)").forEach((item) => {
+    if (!isInRevealSafetyRange(item)) return;
+    if (forceComplete) {
+      completeReveal(item);
+    } else {
+      startReveal(item);
+    }
+  });
+}
+
+function completeAllReveals(root) {
   root?.querySelectorAll(".scroll-reveal").forEach((item) => {
-    item.classList.add("scroll-reveal-visible");
+    completeReveal(item);
   });
 }
 
 function prefersReducedMotion() {
   return reducedMotionQuery?.matches === true;
+}
+
+function isInRevealSafetyRange(item) {
+  const rect = item.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  return rect.bottom >= -120 && rect.top <= viewportHeight + 160;
 }
 
 function sourceCard(source) {
