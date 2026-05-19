@@ -25,11 +25,12 @@
   --surface-border: rgba(255, 255, 255, 0.09);
   --surface-border-strong: rgba(255, 255, 255, 0.13);
   --surface-border-soft: rgba(255, 255, 255, 0.065);
-  --surface-bg:
-    linear-gradient(180deg, rgba(35, 43, 41, 0.92), rgba(24, 31, 29, 0.9)),
-    rgba(29, 36, 34, 0.86);
-  --surface-bg-hover:
-    linear-gradient(180deg, rgba(39, 52, 49, 0.95), rgba(28, 38, 35, 0.93));
+  --section-panel-bg: rgba(5, 10, 18, 0.45);
+  --major-card-bg: rgba(8, 14, 24, 0.50);
+  --dense-card-bg: rgba(8, 14, 24, 0.70);
+  --hero-card-bg: var(--major-card-bg);
+  --surface-bg: var(--major-card-bg);
+  --surface-bg-hover: var(--dense-card-bg);
   --inset-bg: rgba(255, 255, 255, 0.04);
   --inset-bg-hover: rgba(87, 168, 255, 0.08);
   --field-bg: rgba(255, 255, 255, 0.055);
@@ -99,15 +100,31 @@ body {
   max-width: 100%;
   margin: 0;
   overflow-x: hidden;
-  background:
-    radial-gradient(circle at 14% 0%, rgba(215, 178, 74, 0.12), transparent 25rem),
-    radial-gradient(circle at 86% 4%, rgba(87, 168, 255, 0.12), transparent 26rem),
-    linear-gradient(180deg, #0f1413 0%, #151a19 48%, #101413 100%);
+  background-image:
+    linear-gradient(rgba(3, 8, 18, 0.30), rgba(3, 8, 18, 0.40)),
+    url("./anxietyflow-background.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-blend-mode: normal !important;
   color: var(--text);
   line-height: 1.5;
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+}
+
+body::before,
+body::after,
+.hero::before,
+.hero::after,
+.hero-copy::before,
+.hero-copy::after,
+.hero-panel::before,
+.hero-panel::after {
+  content: none !important;
+  display: none !important;
 }
 
 body.pwa-standalone,
@@ -210,6 +227,12 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   --reveal-y: 24px;
   --reveal-scale: 0.985;
   --reveal-duration: 620ms;
+}
+
+[id*="app"],
+.app-shell,
+main {
+  background: transparent !important;
 }
 
 .app-shell {
@@ -400,6 +423,12 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   gap: 22px;
   align-items: stretch;
   margin-bottom: 22px;
+  background-color: transparent !important;
+}
+
+[class*="hero-section"],
+.dashboard {
+  background-color: transparent !important;
 }
 
 .hero-copy {
@@ -408,9 +437,7 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   padding: clamp(28px, 5vw, 64px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(circle at 92% 8%, rgba(87, 168, 255, 0.16), transparent 18rem),
-    linear-gradient(135deg, rgba(35, 29, 25, 0.98), rgba(18, 26, 25, 0.94));
+  background: var(--hero-card-bg);
   box-shadow: var(--shadow);
 }
 
@@ -449,9 +476,7 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   padding: 24px;
   border: 1px solid rgba(214, 231, 255, 0.13);
   border-radius: var(--radius-lg);
-  background:
-    radial-gradient(circle at 92% 10%, rgba(87, 168, 255, 0.18), transparent 14rem),
-    linear-gradient(160deg, rgba(23, 42, 64, 0.98) 0%, rgba(18, 31, 42, 0.98) 100%);
+  background: var(--hero-card-bg);
   box-shadow: var(--shadow);
 }
 
@@ -592,7 +617,7 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   padding: 16px;
   border: 1px solid var(--surface-border-soft);
   border-radius: var(--radius);
-  background: var(--preview-bg);
+  background: var(--dense-card-bg);
 }
 
 .public-value-card h3,
@@ -638,7 +663,6 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
 }
 
 .metric-card,
-.panel,
 .method-card,
 .protocol-card,
 .source-card,
@@ -646,7 +670,14 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
 .state-card {
   border: 1px solid var(--surface-border);
   border-radius: var(--radius);
-  background: var(--surface-bg);
+  background: var(--dense-card-bg);
+  box-shadow: var(--shadow-soft);
+}
+
+.panel {
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  background: var(--section-panel-bg);
   box-shadow: var(--shadow-soft);
 }
 
@@ -1168,8 +1199,7 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   padding: 14px;
   border: 1px solid var(--surface-border);
   border-radius: var(--radius);
-  background:
-    linear-gradient(180deg, rgba(28, 36, 34, 0.96), rgba(18, 24, 23, 0.94));
+  background: var(--dense-card-bg);
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(16px);
 }
@@ -2139,9 +2169,7 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   place-items: center;
   padding: 32px;
   border-style: dashed;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(87, 168, 255, 0.09), transparent 18rem),
-    rgba(29, 36, 34, 0.72);
+  background: var(--dense-card-bg);
   text-align: center;
 }
 
@@ -2334,9 +2362,7 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   padding: clamp(18px, 3vw, 26px);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius);
-  background:
-    radial-gradient(circle at 100% 0%, rgba(87, 168, 255, 0.1), transparent 18rem),
-    var(--surface-bg);
+  background: var(--section-panel-bg);
   box-shadow: var(--shadow-soft);
 }
 
@@ -3184,4 +3210,56 @@ body.motion-ready .scroll-reveal.is-replaying:not(.is-visible):not(.is-complete)
   body.ios-standalone .hero-panel {
     padding: 15px;
   }
+}
+
+/* Background visibility and glass surfaces */
+html,
+body,
+#app,
+main,
+[class*="dashboard"] {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+body {
+  background-image:
+    linear-gradient(rgba(3, 8, 18, 0.30), rgba(3, 8, 18, 0.40)),
+    url("./anxietyflow-background.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-blend-mode: normal !important;
+}
+
+#app,
+.app-shell,
+main,
+[class*="container"],
+[class*="dashboard"] {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.card,
+[class*="card"],
+[class*="panel"],
+[class*="hero"] {
+  background-color: rgba(3, 8, 18, 0.45) !important;
+  background: rgba(3, 8, 18, 0.45) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(0, 242, 254, 0.12) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+}
+
+body::before,
+body::after,
+.hero::before,
+.hero::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
 }

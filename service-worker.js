@@ -1,10 +1,11 @@
-const CACHE_VERSION = "2026-05-17-pwa-1";
+const CACHE_VERSION = "2026-05-20-bg-glass-2";
 const CACHE_NAME = `anxiety-manager-${CACHE_VERSION}`;
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./anxietyflow-background.png",
   "./data/workbook.json",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
