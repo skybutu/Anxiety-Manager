@@ -5,14 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta
       name="description"
-      content="Evidence-aware anxiety coping methods database built from a Reddit-derived workbook."
+      content="An educational, workbook-derived database of anxiety coping methods, protocols, safety notes, and sources, comparing Reddit-derived patterns with evidence and caution fields."
     />
     <meta name="theme-color" content="#111615" />
+    <meta name="application-name" content="Anxiety Manager" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Anxiety Manager" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>Anxiety Methods Database</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AnxietyFlow" />
+    <meta property="og:title" content="Anxiety Manager — Evidence-Aware Coping Methods Database" />
+    <meta
+      property="og:description"
+      content="An educational, workbook-derived database of anxiety coping methods, protocols, safety notes, and sources, comparing Reddit-derived patterns with evidence and caution fields."
+    />
+    <meta property="og:url" content="https://anxietyflow.com/" />
+    <meta property="og:image" content="https://anxietyflow.com/icons/icon-512.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Anxiety Manager — Evidence-Aware Coping Methods Database" />
+    <meta
+      name="twitter:description"
+      content="An educational, workbook-derived database of anxiety coping methods, protocols, safety notes, and sources, comparing Reddit-derived patterns with evidence and caution fields."
+    />
+    <meta name="twitter:image" content="https://anxietyflow.com/icons/icon-512.png" />
+    <title>Anxiety Manager — Evidence-Aware Coping Methods Database</title>
+    <link rel="canonical" href="https://anxietyflow.com/" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
@@ -27,13 +45,13 @@
     <div class="app-shell">
       <header class="topbar">
         <div class="topbar-start">
-          <a class="brand" href="#dashboard" aria-label="Anxiety Methods Database home">
+          <a class="brand" href="#dashboard" aria-label="Anxiety Manager home">
             <span class="brand-mark" aria-hidden="true">
               <span></span>
             </span>
             <span>
-              <strong>Anxiety Methods Database</strong>
-              <small>Evidence-aware self-management library</small>
+              <strong>Anxiety Manager</strong>
+              <small>Evidence-aware coping methods database</small>
             </span>
           </a>
           <button
@@ -42,6 +60,7 @@
             type="button"
             aria-haspopup="dialog"
             aria-controls="settingsDialog"
+            aria-label="Open about and methodology panel"
           >
             About
           </button>
@@ -57,8 +76,8 @@
       </header>
 
       <aside class="disclaimer" role="note">
-        This app is for educational and self-management support only. It is not medical advice,
-        diagnosis, psychotherapy, crisis support, or a replacement for a licensed clinician.
+        Educational self-management support only. This site is not medical advice, diagnosis,
+        psychotherapy, crisis support, or a replacement for a licensed clinician.
       </aside>
 
       <main id="app">
@@ -74,7 +93,7 @@
           <span class="section-label">About</span>
           <h2 id="aboutAnxietyFlowTitle">About AnxietyFlow</h2>
           <div class="about-footer-copy">
-            <p>AnxietyFlow is an evidence-informed anxiety management web app designed to organize coping methods by priority, category, safety, and practical usefulness.</p>
+            <p>AnxietyFlow is an evidence-informed anxiety management website designed to organize coping methods by priority, category, safety, and practical usefulness.</p>
             <p>The app is not a replacement for professional diagnosis, psychotherapy, emergency care, or medication management. It is intended as a structured self-support tool for education, reflection, and day-to-day coping.</p>
             <p>Created by Guy Greenberg, an independent learner focused on psychology, technology, fitness, and practical mental health tools.</p>
           </div>
@@ -99,7 +118,7 @@
 
     <dialog id="settingsDialog" class="method-dialog settings-dialog" aria-labelledby="settingsTitle">
       <div class="dialog-frame settings-frame">
-        <button class="dialog-close settings-close" type="button" aria-label="Close settings and about panel">Close</button>
+        <button class="dialog-close settings-close" type="button" aria-label="Close about and methodology panel">Close</button>
         <div id="settingsContent"></div>
       </div>
     </dialog>

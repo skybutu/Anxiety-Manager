@@ -1,7 +1,7 @@
 {
-  "name": "Anxiety Methods Database",
+  "name": "Anxiety Manager",
   "short_name": "Anxiety Manager",
-  "description": "Evidence-aware self-management library built from a local workbook.",
+  "description": "Educational, workbook-derived anxiety coping methods database with protocols, safety notes, and sources.",
   "id": ".",
   "start_url": ".",
   "scope": ".",

@@ -432,25 +432,49 @@ function renderDashboard() {
   });
 
   app.innerHTML = `
-    <section class="hero">
+    <section class="hero" aria-labelledby="siteHeroTitle">
       <div class="hero-copy">
-        <h1>Evidence-aware anxiety coping methods</h1>
-        <p>Explore Reddit-derived coping patterns alongside the workbook evidence and caution notes. Reddit reports are kept separate from evidence fields so each method can be read as educational self-management information, not clinical proof or care advice.</p>
+        <h1 id="siteHeroTitle">Anxiety Manager is an evidence-aware coping methods database</h1>
+        <p>Explore workbook-derived anxiety coping methods, protocols, safety notes, and sources in one structured research resource. Reddit-derived patterns are presented as commonly reported observations, not clinical proof, and every method should be read as educational self-management support rather than medical advice.</p>
+        <div class="hero-actions" aria-label="Primary website sections">
+          <button class="site-button" type="button" data-scroll-target="dashboardMetrics">View dashboard</button>
+          <button class="site-button" type="button" data-jump-tab="methods">Explore methods</button>
+          <button class="site-button site-button-secondary" type="button" data-jump-tab="safety">Review safety</button>
+          <button class="site-button site-button-secondary" type="button" data-jump-tab="sources">Inspect sources</button>
+        </div>
       </div>
       <div class="hero-panel">
         <div>
-          <h2>Research dashboard with practical detail</h2>
-          <p>${escapeHtml(DISCLAIMER)}</p>
+          <h2>Built from a structured workbook</h2>
+          <p>The source of truth is <strong>${escapeHtml(state.data.sourceWorkbook || "reddit_anxiety_methods_database.xlsx")}</strong>. Rankings, source references, protocols, evidence fields, and caution fields are derived from workbook data when available.</p>
         </div>
         <div class="mini-stack">
           ${miniRow("Source workbook", state.data.sourceWorkbook || "Workbook JSON")}
           ${miniRow("Methods available", state.methods.length)}
+          ${miniRow("Protocols listed", state.protocols.length)}
           ${miniRow("Sources indexed", state.sources.length)}
         </div>
       </div>
     </section>
 
-    <section class="grid metrics-grid" aria-label="Dashboard metrics">
+    <section class="public-value-section panel" aria-labelledby="publicValueTitle">
+      <div class="panel-header">
+        <div>
+          <span class="section-label">Website guide</span>
+          <h2 id="publicValueTitle">What this site does</h2>
+          <p>Use the website to inspect coping-method data, compare workbook fields, and move between Dashboard, Methods, Protocols, Safety, and Sources without turning community-derived advice into clinical proof.</p>
+        </div>
+      </div>
+      <div class="grid public-value-grid">
+        ${publicValueCard("How the data is organized", "Methods are grouped and compared by workbook rank, priority score, category, evidence grade, caution level, ease, time horizon, use-case, and source references.")}
+        ${publicValueCard("Explore evidence-aware methods", "Search, filter, and sort coping methods while keeping Reddit-derived observations separate from evidence and caution fields.")}
+        ${publicValueCard("Why Safety Notes matter", "Safety notes highlight workbook boundaries around urgent symptoms, medications, exposure, substances, breathing, overuse, and clinician involvement.")}
+        ${publicValueCard("Source transparency", "The Sources tab exposes workbook references and labels Reddit-derived, clinical, and public-guidance sources for context.")}
+        ${publicValueCard("Limitations", "The site does not diagnose, treat, determine personal safety, or recommend a best method for every person.")}
+      </div>
+    </section>
+
+    <section class="grid metrics-grid" id="dashboardMetrics" aria-label="Dashboard metrics">
       ${metricCards.join("")}
     </section>
 
@@ -460,6 +484,27 @@ function renderDashboard() {
       <div>
         <span class="section-label">How to read this dashboard</span>
         <p>Rankings, chart groupings, and top insight cards are workbook-derived summaries. Reddit-derived patterns describe what users commonly reported; they are not clinical proof. Evidence and caution fields should be interpreted conservatively as educational self-management support, not medical advice.</p>
+      </div>
+    </section>
+
+    <section class="methodology-panel panel" id="methodology" aria-labelledby="methodologyTitle">
+      <div class="panel-header">
+        <div>
+          <span class="section-label">Methodology</span>
+          <h2 id="methodologyTitle">How this website interprets the workbook</h2>
+          <p>The website presents the workbook as an interactive database. It does not diagnose, treat, determine personal safety, or replace a licensed clinician.</p>
+        </div>
+      </div>
+      <div class="grid methodology-grid">
+        ${methodologyCard("Spreadsheet source of truth", "Method names, summaries, protocols, scores, cautions, and sources are parsed from the workbook-derived data file.")}
+        ${methodologyCard("Community-derived observations", "Reddit-derived patterns describe commonly reported user experience and visibility. They are observational and should not be read as treatment evidence.")}
+        ${methodologyCard("Workbook-derived rankings", "Dashboard ranks, priority scores, insight groups, and charts use workbook fields such as evidence score, caution score, ease score, time horizon, category, and use-case.")}
+        ${methodologyCard("Conservative interpretation", "Evidence and caution fields should be read carefully. Lower-caution rows do not mean suitable for everyone, and higher-evidence rows are not individualized recommendations.")}
+        ${methodologyCard("Source transparency", "The Sources tab exposes workbook references and labels source categories so readers can inspect the context behind the database.")}
+      </div>
+      <div class="methodology-actions" aria-label="Methodology links">
+        <button class="site-button site-button-secondary" type="button" data-jump-tab="sources">Inspect sources</button>
+        <button class="site-button site-button-secondary" type="button" data-jump-tab="protocols">View protocols</button>
       </div>
     </section>
 
@@ -689,6 +734,24 @@ function miniRow(label, value) {
   return `<div class="mini-row"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`;
 }
 
+function publicValueCard(title, body) {
+  return `
+    <article class="public-value-card">
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(body)}</p>
+    </article>
+  `;
+}
+
+function methodologyCard(title, body) {
+  return `
+    <article class="methodology-card">
+      <h3>${escapeHtml(title)}</h3>
+      <p>${escapeHtml(body)}</p>
+    </article>
+  `;
+}
+
 function metricCard(label, value, note, kicker = "Workbook") {
   return `
     <article class="metric-card dashboard-metric-card">
@@ -868,6 +931,16 @@ function bindDashboardInteractions() {
       if (type === "speed") state.filters.speed = value;
       state.tab = "methods";
       render();
+    });
+  });
+
+  document.querySelectorAll("[data-jump-tab]").forEach((button) => {
+    button.addEventListener("click", () => setTab(button.dataset.jumpTab));
+  });
+
+  document.querySelectorAll("[data-scroll-target]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelector(`#${button.dataset.scrollTarget}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 }
@@ -1553,8 +1626,8 @@ function openSettings() {
 
   settingsContent.innerHTML = `
     <header class="dialog-header settings-header">
-      <span class="section-label">Settings / About</span>
-      <h2 class="dialog-title" id="settingsTitle">Anxiety Methods Database</h2>
+      <span class="section-label">About / Methodology</span>
+      <h2 class="dialog-title" id="settingsTitle">Anxiety Manager</h2>
       <p class="settings-version">Version v1.0.0</p>
     </header>
 
@@ -1567,7 +1640,7 @@ function openSettings() {
       ${detailSection("Workbook-derived ranking", [
         detailField(
           "Ranking explanation",
-          "Rankings, chart groupings, priority scores, evidence scores, caution scores, ease scores, time horizons, protocols, sources, and method details are derived from workbook fields when available. Reddit-derived patterns describe reported user patterns and are kept separate from evidence fields. These summaries are educational comparisons, not individualized recommendations, medical advice, diagnosis, psychotherapy, crisis support, or a replacement for professional care.",
+          "Rankings, chart groupings, priority scores, evidence scores, caution scores, ease scores, time horizons, protocols, sources, and method details are derived from workbook fields when available. Reddit-derived patterns describe reported user patterns and are kept separate from evidence fields. These summaries are educational comparisons, not individualized recommendations, medical advice, diagnosis, psychotherapy, emergency care, medication management, crisis support, or a replacement for professional care.",
           true,
         ),
       ])}
@@ -2181,6 +2254,8 @@ function applyMotionClasses(root) {
     .querySelectorAll(
       [
         ".metric-card",
+        ".public-value-card",
+        ".methodology-card",
         ".dashboard-chart-panel",
         ".top-pick-card",
         ".method-card",
