@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-16T07:09:03",
+  "generatedAt": "2026-05-20T01:56:48",
   "sourceWorkbook": "reddit_anxiety_methods_database.xlsx",
   "sheets": {
     "Dashboard": {
@@ -1903,6 +1903,108 @@
           "Mayo Clinic",
           "Stress relief: diet, exercise, sleep, screen time, relaxation",
           "https://www.mayoclinic.org/healthy-lifestyle/stress-management/basics/stress-relief/hlv-20049495"
+        ]
+      ]
+    },
+    "Supplements": {
+      "headers": [
+        "Supplement_Name",
+        "Target_Symptoms",
+        "Clinical_Evidence",
+        "Reddit_Popularity",
+        "Psych_Med_Interactions",
+        "Risk_Level"
+      ],
+      "rows": [
+        {
+          "Supplement_Name": "L-Theanine",
+          "Target_Symptoms": "Acute anxiety, Caffeine jitters, Panic onset",
+          "Clinical_Evidence": "High",
+          "Reddit_Popularity": "Extremely High (Highly recommended for rapid onset relaxation and caffeine jitters)",
+          "Psych_Med_Interactions": "Benzodiazepines (amplifies sedation), Blood pressure meds",
+          "Risk_Level": "Low"
+        },
+        {
+          "Supplement_Name": "Ashwagandha",
+          "Target_Symptoms": "Chronic stress, High cortisol, Social anxiety",
+          "Clinical_Evidence": "High",
+          "Reddit_Popularity": "Very High (Popular for long-term cortisol reduction, though users warn against continuous cycling without breaks)",
+          "Psych_Med_Interactions": "SSRIs (Serotonin risk), Thyroid meds",
+          "Risk_Level": "Moderate"
+        },
+        {
+          "Supplement_Name": "Magnesium Glycinate",
+          "Target_Symptoms": "Physical anxiety, Muscle tension, Insomnia",
+          "Clinical_Evidence": "High",
+          "Reddit_Popularity": "Massive (The absolute crowd-favorite form of magnesium on Reddit for muscle relaxation and sleep anxiety)",
+          "Psych_Med_Interactions": "Antibiotics (space out 2 hours)",
+          "Risk_Level": "Low"
+        },
+        {
+          "Supplement_Name": "NAC",
+          "Target_Symptoms": "Intrusive thoughts, Rumination, OCD loops",
+          "Clinical_Evidence": "Medium-High",
+          "Reddit_Popularity": "High (Frequently suggested for intrusive thoughts, rumination, and OCD-like anxiety patterns)",
+          "Psych_Med_Interactions": "Blood thinners, Nitroglycerin",
+          "Risk_Level": "Low"
+        },
+        {
+          "Supplement_Name": "Saffron",
+          "Target_Symptoms": "Depressive anxiety, Low mood, Burnout",
+          "Clinical_Evidence": "Medium-High",
+          "Reddit_Popularity": "Rising Trend (Gaining popularity as a natural alternative with mild SSRI-like properties)",
+          "Psych_Med_Interactions": "SSRIs / SNRIs / MAOIs (High risk of Serotonin Syndrome)",
+          "Risk_Level": "High"
+        }
+      ],
+      "raw": [
+        [
+          "Supplement_Name",
+          "Target_Symptoms",
+          "Clinical_Evidence",
+          "Reddit_Popularity",
+          "Psych_Med_Interactions",
+          "Risk_Level"
+        ],
+        [
+          "L-Theanine",
+          "Acute anxiety, Caffeine jitters, Panic onset",
+          "High",
+          "Extremely High (Highly recommended for rapid onset relaxation and caffeine jitters)",
+          "Benzodiazepines (amplifies sedation), Blood pressure meds",
+          "Low"
+        ],
+        [
+          "Ashwagandha",
+          "Chronic stress, High cortisol, Social anxiety",
+          "High",
+          "Very High (Popular for long-term cortisol reduction, though users warn against continuous cycling without breaks)",
+          "SSRIs (Serotonin risk), Thyroid meds",
+          "Moderate"
+        ],
+        [
+          "Magnesium Glycinate",
+          "Physical anxiety, Muscle tension, Insomnia",
+          "High",
+          "Massive (The absolute crowd-favorite form of magnesium on Reddit for muscle relaxation and sleep anxiety)",
+          "Antibiotics (space out 2 hours)",
+          "Low"
+        ],
+        [
+          "NAC",
+          "Intrusive thoughts, Rumination, OCD loops",
+          "Medium-High",
+          "High (Frequently suggested for intrusive thoughts, rumination, and OCD-like anxiety patterns)",
+          "Blood thinners, Nitroglycerin",
+          "Low"
+        ],
+        [
+          "Saffron",
+          "Depressive anxiety, Low mood, Burnout",
+          "Medium-High",
+          "Rising Trend (Gaining popularity as a natural alternative with mild SSRI-like properties)",
+          "SSRIs / SNRIs / MAOIs (High risk of Serotonin Syndrome)",
+          "High"
         ]
       ]
     }

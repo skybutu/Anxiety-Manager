@@ -1,4 +1,4 @@
-const CACHE_VERSION = "2026-05-20-bg-glass-2";
+const CACHE_VERSION = "2026-05-20-supplements-matrix-1";
 const CACHE_NAME = `anxiety-manager-${CACHE_VERSION}`;
 const CORE_ASSETS = [
   "./",

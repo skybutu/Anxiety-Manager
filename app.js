@@ -40,6 +40,15 @@ const SOURCE_ALIASES = {
   url: ["URL", "Url", "Link"],
 };
 
+const SUPPLEMENT_ALIASES = {
+  name: ["Supplement_Name", "Supplement Name", "Name"],
+  symptoms: ["Target_Symptoms", "Target Symptoms", "Symptoms"],
+  clinicalEvidence: ["Clinical_Evidence", "Clinical Evidence"],
+  redditPopularity: ["Reddit_Popularity", "Reddit Popularity"],
+  interactions: ["Psych_Med_Interactions", "Psych Med Interactions", "Medication Interactions"],
+  risk: ["Risk_Level", "Risk Level", "Risk"],
+};
+
 const state = {
   tab: "dashboard",
   data: null,
@@ -51,6 +60,7 @@ const state = {
     interpretation: "",
   },
   methods: [],
+  supplements: [],
   protocols: [],
   safetyNotes: [],
   sources: [],
@@ -71,7 +81,7 @@ const state = {
   filtersOpen: false,
 };
 
-const VALID_TABS = ["dashboard", "methods", "protocols", "safety", "sources"];
+const VALID_TABS = ["dashboard", "methods", "supplements", "protocols", "safety", "sources"];
 const missingWarnings = new Set();
 const app = document.querySelector("#app");
 const dialog = document.querySelector("#methodDialog");
@@ -168,6 +178,7 @@ function hydrateState(payload) {
   const sheets = payload.sheets || {};
   const dashboardSheet = sheets.Dashboard || firstSheetByName(sheets, "dashboard");
   const methodsSheet = sheets["Methods Database"] || firstSheetByName(sheets, "methods");
+  const supplementsSheet = sheets.Supplements || firstSheetByName(sheets, "supplement");
   const protocolsSheet = sheets.Protocols || firstSheetByName(sheets, "protocol");
   const safetySheet = sheets["Safety Notes"] || firstSheetByName(sheets, "safety");
   const sourcesSheet = sheets.Sources || firstSheetByName(sheets, "source");
@@ -175,6 +186,7 @@ function hydrateState(payload) {
   state.dashboard = mapDashboard(dashboardSheet);
   state.sources = (sourcesSheet?.rows || []).map(mapSource).filter((source) => source.id || source.url);
   state.methods = (methodsSheet?.rows || []).map((row, index) => mapMethod(row, index)).filter((method) => method.name);
+  state.supplements = (supplementsSheet?.rows || []).map((row, index) => mapSupplement(row, index)).filter((supplement) => supplement.name);
   applyDashboardRanks();
   state.protocols = (protocolsSheet?.rows || []).map(mapProtocol).filter((protocol) => protocol.name);
   state.safetyNotes = (safetySheet?.rows || []).map(mapSafetyNote).filter((note) => note.topic || note.guidance);
@@ -264,6 +276,19 @@ function mapMethod(row, index) {
   };
 }
 
+function mapSupplement(row, index) {
+  return {
+    id: `supplement-${index}`,
+    name: text(read(row, SUPPLEMENT_ALIASES.name)),
+    symptoms: text(read(row, SUPPLEMENT_ALIASES.symptoms)),
+    clinicalEvidence: text(read(row, SUPPLEMENT_ALIASES.clinicalEvidence)),
+    redditPopularity: text(read(row, SUPPLEMENT_ALIASES.redditPopularity)),
+    interactions: text(read(row, SUPPLEMENT_ALIASES.interactions)),
+    risk: normalizeRisk(read(row, SUPPLEMENT_ALIASES.risk)),
+    raw: row,
+  };
+}
+
 function mapProtocol(row) {
   return {
     name: text(read(row, PROTOCOL_ALIASES.name)),
@@ -329,6 +354,11 @@ function normalizeEvidence(value) {
   return text(value) || "Unspecified";
 }
 
+function normalizeRisk(value) {
+  const risk = text(value);
+  return risk || "Unspecified";
+}
+
 function safetyLevel(score) {
   if (score === null) return "Unspecified";
   if (score >= 5) return "Lower caution";
@@ -363,6 +393,7 @@ function render() {
 
   if (state.tab === "dashboard") renderDashboard();
   if (state.tab === "methods") renderMethods();
+  if (state.tab === "supplements") renderSupplements();
   if (state.tab === "protocols") renderProtocols();
   if (state.tab === "safety") renderSafety();
   if (state.tab === "sources") renderSources();
@@ -439,6 +470,7 @@ function renderDashboard() {
         <div class="hero-actions" aria-label="Primary website sections">
           <button class="site-button" type="button" data-scroll-target="dashboardMetrics">View dashboard</button>
           <button class="site-button" type="button" data-jump-tab="methods">Explore methods</button>
+          <button class="site-button site-button-secondary" type="button" data-jump-tab="supplements">Supplements Matrix</button>
           <button class="site-button site-button-secondary" type="button" data-jump-tab="safety">Review safety</button>
           <button class="site-button site-button-secondary" type="button" data-jump-tab="sources">Inspect sources</button>
         </div>
@@ -451,6 +483,7 @@ function renderDashboard() {
         <div class="mini-stack">
           ${miniRow("Source workbook", state.data.sourceWorkbook || "Workbook JSON")}
           ${miniRow("Methods available", state.methods.length)}
+          ${miniRow("Supplements matrix", state.supplements.length)}
           ${miniRow("Protocols listed", state.protocols.length)}
           ${miniRow("Sources indexed", state.sources.length)}
         </div>
@@ -994,6 +1027,129 @@ function renderMethods() {
   initScrollAnimations();
 }
 
+function renderSupplements() {
+  const groups = supplementRiskGroups();
+  const total = state.supplements.length;
+  const highRiskCount = state.supplements.filter((supplement) => normalizeKey(supplement.risk) === "high").length;
+
+  app.innerHTML = `
+    <section class="supplements-hero panel">
+      <div>
+        <span class="section-label">Supplements Matrix</span>
+        <h1 class="section-title">Supplement signals separated from coping methods</h1>
+        <p>This matrix is parsed from the dedicated Supplements workbook sheet. It is educational database content only and is not medical advice, diagnosis, treatment, supplement recommendation, or medication guidance.</p>
+      </div>
+      <div class="supplements-summary-grid" aria-label="Supplements matrix summary">
+        ${smallFact("Supplements", total)}
+        ${smallFact("High-risk flags", highRiskCount)}
+        ${smallFact("Sort", "Risk level")}
+      </div>
+    </section>
+
+    <section class="supplements-warning panel" role="note">
+      <span class="section-label">Medication safety boundary</span>
+      <p>Do not combine supplements with psychiatric medication, sedatives, thyroid medication, blood thinners, blood pressure medication, nitroglycerin, SSRIs, SNRIs, or MAOIs without a physician or pharmacist. High-risk entries require clinician review.</p>
+    </section>
+
+    ${
+      groups.length
+        ? groups.map(supplementRiskSection).join("")
+        : emptyState("No supplement matrix found", "The workbook did not include a Supplements sheet.")
+    }
+  `;
+
+  initScrollAnimations();
+}
+
+function supplementRiskGroups() {
+  const order = ["High", "Moderate", "Low", "Unspecified"];
+  const groups = new Map(order.map((risk) => [risk, []]));
+
+  sortedSupplements().forEach((supplement) => {
+    const key = order.find((risk) => normalizeKey(risk) === normalizeKey(supplement.risk)) || "Unspecified";
+    groups.get(key).push(supplement);
+  });
+
+  return [...groups.entries()]
+    .filter(([, supplements]) => supplements.length)
+    .map(([risk, supplements]) => ({ risk, supplements }));
+}
+
+function sortedSupplements() {
+  return [...state.supplements].sort((a, b) => {
+    const riskOrder = { high: 0, moderate: 1, low: 2, unspecified: 3 };
+    const left = riskOrder[normalizeKey(a.risk)] ?? 3;
+    const right = riskOrder[normalizeKey(b.risk)] ?? 3;
+    return left - right || a.name.localeCompare(b.name);
+  });
+}
+
+function supplementRiskSection(group) {
+  return `
+    <section class="supplement-risk-section ${supplementRiskClass(group.risk)}">
+      <div class="supplement-risk-heading">
+        <div>
+          <span class="section-label">Risk level</span>
+          <h2>${escapeHtml(group.risk)} Risk</h2>
+        </div>
+        <span>${group.supplements.length} entr${group.supplements.length === 1 ? "y" : "ies"}</span>
+      </div>
+      <div class="grid supplements-grid">
+        ${group.supplements.map(supplementCard).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function supplementCard(supplement) {
+  const isHighRisk = normalizeKey(supplement.risk) === "high";
+  return `
+    <article class="supplement-card ${supplementRiskClass(supplement.risk)} app-card">
+      <div class="card-main">
+        <div class="badge-row card-badges">
+          ${badge(supplement.risk, supplementRiskClass(supplement.risk))}
+          ${supplement.clinicalEvidence ? badge(`Clinical ${supplement.clinicalEvidence}`, clinicalEvidenceClass(supplement.clinicalEvidence)) : ""}
+        </div>
+        <h3 class="card-title">${escapeHtml(supplement.name)}</h3>
+      </div>
+
+      <div class="supplement-matrix-fields">
+        ${supplementMatrixField("Target symptoms", supplement.symptoms)}
+        ${supplementMatrixField("Reddit popularity", supplement.redditPopularity)}
+        ${supplementInteractionBlock(supplement.interactions, isHighRisk)}
+      </div>
+    </article>
+  `;
+}
+
+function supplementMatrixField(label, value) {
+  if (!text(value)) return "";
+  return `
+    <div class="supplement-field">
+      <span class="field-label">${escapeHtml(label)}</span>
+      <div class="field-value">${escapeHtml(value)}</div>
+    </div>
+  `;
+}
+
+function supplementInteractionBlock(value, isHighRisk = false) {
+  if (!text(value)) return "";
+  return `
+    <div class="supplement-safety-alert ${isHighRisk ? "is-critical" : ""}">
+      <span class="field-label">${isHighRisk ? "CRITICAL CONTRAINDICATION" : "Psych med interactions"}</span>
+      <div class="field-value">${escapeHtml(value)}</div>
+    </div>
+  `;
+}
+
+function supplementRiskClass(risk) {
+  const value = normalizeKey(risk);
+  if (value === "high") return "risk-high";
+  if (value === "moderate") return "risk-moderate";
+  if (value === "low") return "risk-low";
+  return "risk-unspecified";
+}
+
 function sortControlMarkup() {
   return `
     <label class="sort-control" for="sortSelect">
@@ -1182,6 +1338,15 @@ function chipRow(items, label) {
 
 function badge(label, className) {
   return `<span class="badge ${className}">${escapeHtml(label || "Unspecified")}</span>`;
+}
+
+function clinicalEvidenceClass(label) {
+  const value = normalizeKey(label);
+  if (value.includes("high") && !value.includes("medium")) return "supplement-evidence-high";
+  if (value.includes("mediumhigh")) return "supplement-evidence-medium-high";
+  if (value.includes("medium")) return "supplement-evidence-medium";
+  if (value.includes("low")) return "supplement-evidence-low";
+  return "supplement-evidence-neutral";
 }
 
 function bindMethodControls() {
@@ -2259,6 +2424,7 @@ function applyMotionClasses(root) {
         ".dashboard-chart-panel",
         ".top-pick-card",
         ".method-card",
+        ".supplement-card",
         ".protocol-card",
         ".safety-card",
         ".source-card",
