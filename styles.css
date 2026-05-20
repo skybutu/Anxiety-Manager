@@ -2986,6 +2986,8 @@ main {
 
   .mobile-tabs {
     bottom: calc(12px + var(--safe-bottom));
+    height: calc(var(--mobile-nav-height) + 10px) !important;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom)) !important;
   }
 }
 

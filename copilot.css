@@ -325,3 +325,10 @@
     border-radius: 16px;
   }
 }
+
+@media (display-mode: standalone) and (max-width: 768px) {
+  #chatToggle {
+    bottom: calc(95px + env(safe-area-inset-bottom)) !important;
+    right: 20px !important;
+  }
+}
