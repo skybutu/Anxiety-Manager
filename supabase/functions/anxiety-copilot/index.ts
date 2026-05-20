@@ -36,7 +36,13 @@ serve(async (req: Request): Promise<Response> => {
     return jsonError("AI service not configured on the server.", 503);
   }
 
-  let body: { history?: unknown[]; context?: ContextPayload; model?: string };
+  let body: {
+    prompt?: string;
+    message?: string;
+    history?: unknown[];
+    context?: ContextPayload;
+    model?: string;
+  };
   try {
     body = await req.json();
   } catch {
@@ -44,23 +50,32 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   const {
+    prompt,
+    message,
     history = [],
     context = {},
     model = "gemini-2.5-flash",
   } = body;
 
-  if (!Array.isArray(history) || history.length === 0) {
-    return jsonError("history array is required.", 400);
+  const currentMessage = message ?? prompt;
+
+  if (typeof currentMessage !== "string" || currentMessage.trim().length === 0) {
+    return jsonError("message is required.", 400);
+  }
+
+  if (!Array.isArray(history)) {
+    return jsonError("history must be an array.", 400);
   }
 
   try {
-    return await proxyGemini(history, context, apiKey, model);
+    return await proxyGemini(currentMessage, history, context, apiKey, model);
   } catch (err) {
     return jsonError(`Upstream LLM error: ${(err as Error).message}`, 502);
   }
 });
 
 async function proxyGemini(
+  message: string,
   history: unknown[],
   context: ContextPayload,
   apiKey: string,
@@ -90,10 +105,14 @@ Your rules:
 - Keep responses under 120 words unless a detailed step-by-step is explicitly requested.
 - Always distinguish workbook-derived observations from general knowledge.`;
 
-  const geminiContents = (history as Array<{ role: string; content: string }>).map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
+  const geminiHistory = (history as Array<{ role: string; content: string }>).slice(-4).map((m) => ({
+    role: m.role === "assistant" || m.role === "model" ? "model" : "user",
     parts: [{ text: m.content }],
   }));
+  const geminiContents = [
+    ...geminiHistory,
+    { role: "user", parts: [{ text: message }] },
+  ];
 
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`;
 
