@@ -2890,6 +2890,7 @@ main {
 
   .mobile-tab {
     display: inline-flex;
+    flex: 0 0 auto !important;
     align-items: center;
     justify-content: center;
     min-width: 0;
