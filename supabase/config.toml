@@ -1,0 +1,7 @@
+project_id = "jdcjmygysexvvtxxxpvo"
+
+[api]
+enabled = true
+
+[functions.anxiety-copilot]
+verify_jwt = true

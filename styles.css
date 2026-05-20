@@ -2829,11 +2829,14 @@ main {
     bottom: calc(var(--mobile-nav-gap) + var(--safe-bottom));
     left: calc(10px + var(--safe-left));
     z-index: 30;
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 4px;
+    display: flex !important;
+    gap: 12px !important;
+    white-space: nowrap !important;
+    overflow-x: auto !important;
+    scrollbar-width: none;
     max-width: calc(100vw - 20px - var(--safe-left) - var(--safe-right));
     padding: 7px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
     border: 1px solid var(--glass-border);
     border-radius: 22px;
     background:
@@ -2849,6 +2852,10 @@ main {
     isolation: isolate;
   }
 
+  .mobile-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
   .mobile-tab {
     display: inline-flex;
     align-items: center;
@@ -2862,7 +2869,7 @@ main {
     font-weight: 820;
     line-height: 1.1;
     text-align: center;
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .mobile-tab:hover,
@@ -2901,6 +2908,12 @@ main {
 
   .method-dialog {
     max-height: calc(100dvh - 20px - var(--safe-top) - var(--safe-bottom));
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-tab {
+    font-size: 0.69rem;
   }
 }
 

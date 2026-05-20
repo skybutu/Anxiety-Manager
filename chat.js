@@ -1,7 +1,7 @@
 /**
  * chat.js — AI Copilot widget for AnxietyFlow
  *
- * Configuration: Set CHAT_CONFIG.apiKey and optionally change provider/model.
+ * Configuration: Set CHAT_CONFIG.geminiModel or edgeFunctionUrl to override defaults.
  * The widget is appended directly to document.body so it is never buried
  * inside the app-shell stacking context.
  *
@@ -10,11 +10,9 @@
 
 // ── Configuration ────────────────────────────────────────────
 const CHAT_CONFIG = {
-  provider: "openai",   // "openai" | "gemini"
-  apiKey: "",           // Set your API key here
-  model: "gpt-4o-mini",
-  openaiEndpoint: "https://api.openai.com/v1/chat/completions",
-  geminiModel: "gemini-1.5-flash",
+  provider: "gemini",
+  geminiModel: "gemini-2.5-flash",
+  edgeFunctionUrl: "https://jdcjmygysexvvtxxxpvo.supabase.co/functions/v1/anxiety-copilot",
 };
 
 // ── Module state ─────────────────────────────────────────────
@@ -34,58 +32,98 @@ function getAppState() {
   return window._anxietyApp?.getState?.() ?? {};
 }
 
-// ── System prompt builder ────────────────────────────────────
-function buildSystemPrompt() {
-  const appState = getAppState();
-  const methodCount = appState.methods?.length ?? 0;
-  const topMethods = (appState.methods ?? [])
-    .slice(0, 8)
-    .map((m) => `- ${m.name}: ${m.summary ?? ""}`.trim())
-    .join("\n");
-  const supplementCount = appState.supplements?.length ?? 0;
-  const protocolCount = appState.protocols?.length ?? 0;
-  const currentTab = appState.tab ?? "dashboard";
-
-  return `You are the AnxietyFlow Copilot, a helpful, evidence-aware assistant embedded in the AnxietyFlow anxiety coping methods database.
-
-The database contains ${methodCount} anxiety coping methods, ${supplementCount} supplement entries, and ${protocolCount} protocols.
-
-The user is currently viewing the "${currentTab}" section.
-
-Top workbook-ranked methods available in this database:
-${topMethods || "Data not yet loaded."}
-
-Your role:
-- Help users understand and navigate the coping methods in the database
-- Explain concepts like evidence grades, safety scores, time horizons, and protocols
-- Suggest which section or method to look at based on the user's needs
-- Always maintain appropriate clinical boundaries — remind users this is educational information, not medical advice
-- Never diagnose, prescribe, or replace professional mental health care
-- If a user seems in crisis, always direct them to emergency services or a licensed professional
-
-Keep responses concise and practical. Use plain language. Always distinguish between workbook-derived information and your own knowledge.`;
+function getEdgeFunctionUrl() {
+  const supabaseUrl = window._anxietyApp?.supabaseUrl || CHAT_CONFIG.edgeFunctionUrl.replace("/functions/v1/anxiety-copilot", "");
+  return `${supabaseUrl}/functions/v1/anxiety-copilot`;
 }
 
-// ── OpenAI streaming ─────────────────────────────────────────
-async function streamOpenAI(messages, onToken, onDone, onError) {
-  const response = await fetch(CHAT_CONFIG.openaiEndpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${CHAT_CONFIG.apiKey}`,
-    },
-    body: JSON.stringify({
-      model: CHAT_CONFIG.model,
-      messages,
-      stream: true,
-      max_tokens: 600,
-      temperature: 0.7,
-    }),
-  });
+function getGreeting() {
+  const appState = getAppState();
+  const user = appState.authUser;
+  if (!user) return null;
+  const metadata = user.user_metadata || {};
+  const name = (metadata.name || metadata.full_name || user.email || "").split("@")[0].trim();
+  return name || null;
+}
+
+// ── Context payload builder ───────────────────────────────────
+function buildContextPayload() {
+  const appState = getAppState();
+  const methods = appState.methods ?? [];
+  const supplements = appState.supplements ?? [];
+  const safetyNotes = appState.safetyNotes ?? [];
+  const protocols = appState.protocols ?? [];
+  return {
+    topMethods: methods.slice(0, 10).map((m) => {
+      const parts = [`- ${m.name}`];
+      if (m.evidenceGrade) parts.push(`evidence: ${m.evidenceGrade}`);
+      if (m.safetyLevel) parts.push(`caution: ${m.safetyLevel}`);
+      if (m.summary) parts.push(`— ${m.summary}`);
+      return parts.join(" | ");
+    }).join("\n"),
+    topSupplements: supplements.slice(0, 6).map((s) => {
+      const parts = [`- ${s.name}`];
+      if (s.risk) parts.push(`risk: ${s.risk}`);
+      if (s.symptoms) parts.push(`targets: ${s.symptoms}`);
+      if (s.interactions) parts.push(`interactions: ${s.interactions}`);
+      return parts.join(" | ");
+    }).join("\n"),
+    keySafetyNotes: safetyNotes.slice(0, 5)
+      .map((n) => `- ${n.topic || ""}: ${n.guidance || ""}`.trim())
+      .join("\n"),
+    currentTab: appState.tab ?? "dashboard",
+    userName: getGreeting() ?? "",
+    methodCount: methods.length,
+    supplementCount: supplements.length,
+    protocolCount: protocols.length,
+  };
+}
+
+// ── Edge function streaming ───────────────────────────────────
+async function streamViaEdge(history, context, onToken, onDone, onError) {
+  const supabase = window._anxietyApp?.supabaseClient;
+  let accessToken = null;
+
+  if (supabase) {
+    try {
+      const { data } = await supabase.auth.getSession();
+      accessToken = data?.session?.access_token ?? null;
+    } catch {
+      // Session lookup failed — fall through to auth error
+    }
+  }
+
+  if (!accessToken) {
+    onError("Please sign in to use the AI Copilot. Click Sign In in the top navigation.");
+    return;
+  }
+
+  let response;
+  try {
+    response = await fetch(getEdgeFunctionUrl(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        history,
+        context,
+        model: CHAT_CONFIG.geminiModel,
+      }),
+    });
+  } catch (err) {
+    onError(`Could not reach the AI service. Check your connection. (${err.message})`);
+    return;
+  }
 
   if (!response.ok) {
-    const errorText = await response.text().catch(() => response.statusText);
-    onError(`OpenAI API error ${response.status}: ${errorText}`);
+    let detail = response.statusText;
+    try {
+      const body = await response.json();
+      if (body?.error) detail = body.error;
+    } catch { /* non-JSON error body */ }
+    onError(`AI Copilot error (${response.status}): ${detail}`);
     return;
   }
 
@@ -105,76 +143,11 @@ async function streamOpenAI(messages, onToken, onDone, onError) {
       const trimmed = line.trim();
       if (!trimmed || trimmed === "data: [DONE]") continue;
       if (!trimmed.startsWith("data: ")) continue;
-
-      try {
-        const json = JSON.parse(trimmed.slice(6));
-        const token = json.choices?.[0]?.delta?.content;
-        if (token) onToken(token);
-      } catch {
-        // Malformed SSE line — skip
-      }
-    }
-  }
-
-  onDone();
-}
-
-// ── Gemini streaming ─────────────────────────────────────────
-async function streamGemini(messages, onToken, onDone, onError) {
-  // Convert OpenAI-style messages to Gemini format
-  const geminiContents = messages
-    .filter((m) => m.role !== "system")
-    .map((m) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    }));
-
-  const systemInstruction = messages.find((m) => m.role === "system")?.content;
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${CHAT_CONFIG.geminiModel}:streamGenerateContent?alt=sse&key=${CHAT_CONFIG.apiKey}`;
-
-  const body = {
-    contents: geminiContents,
-    generationConfig: { maxOutputTokens: 600, temperature: 0.7 },
-  };
-  if (systemInstruction) {
-    body.systemInstruction = { parts: [{ text: systemInstruction }] };
-  }
-
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => response.statusText);
-    onError(`Gemini API error ${response.status}: ${errorText}`);
-    return;
-  }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split("\n");
-    buffer = lines.pop() ?? "";
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed || !trimmed.startsWith("data: ")) continue;
-
       try {
         const json = JSON.parse(trimmed.slice(6));
         const token = json.candidates?.[0]?.content?.parts?.[0]?.text;
         if (token) onToken(token);
-      } catch {
-        // Malformed SSE line — skip
-      }
+      } catch { /* malformed SSE line */ }
     }
   }
 
@@ -200,11 +173,6 @@ async function sendMessage() {
   const text = inputEl.value.trim();
   if (!text || isStreaming) return;
 
-  if (!CHAT_CONFIG.apiKey) {
-    appendMessage("error", "No API key configured. Set CHAT_CONFIG.apiKey in chat.js to enable the AI Copilot.");
-    return;
-  }
-
   inputEl.value = "";
   inputEl.style.height = "";
   isStreaming = true;
@@ -216,10 +184,7 @@ async function sendMessage() {
   const assistantBubble = appendMessage("assistant", "");
   assistantBubble.classList.add("copilot-cursor");
 
-  const messages = [
-    { role: "system", content: buildSystemPrompt() },
-    ...conversationHistory,
-  ];
+  const context = buildContextPayload();
 
   let accumulated = "";
 
@@ -247,15 +212,7 @@ async function sendMessage() {
     inputEl.focus();
   };
 
-  try {
-    if (CHAT_CONFIG.provider === "gemini") {
-      await streamGemini(messages, onToken, onDone, onError);
-    } else {
-      await streamOpenAI(messages, onToken, onDone, onError);
-    }
-  } catch (err) {
-    onError(`Connection error: ${err.message}`);
-  }
+  await streamViaEdge(conversationHistory, context, onToken, onDone, onError);
 }
 
 // ── Toggle chat window ───────────────────────────────────────
@@ -279,7 +236,7 @@ function createWidgetDOM() {
   fab.setAttribute("aria-label", "Open AI Copilot");
   fab.setAttribute("aria-expanded", "false");
   fab.setAttribute("aria-controls", "chatWidget");
-  fab.textContent = "✦";
+  fab.textContent = "💬";
 
   // Chat window
   const widget = document.createElement("div");
@@ -288,21 +245,18 @@ function createWidgetDOM() {
   widget.setAttribute("aria-label", "AI Copilot");
   widget.classList.add("is-hidden");
 
-  const noApiKey = !CHAT_CONFIG.apiKey;
   const providerLabel = CHAT_CONFIG.provider === "gemini" ? "Gemini" : "OpenAI";
+  const greeting = getGreeting();
+  const greetLine = greeting ? `<span class="copilot-header-greeting">Hi, ${greeting}</span>` : "";
 
   widget.innerHTML = `
     <div class="copilot-header">
       <span class="copilot-header-dot" aria-hidden="true"></span>
       <span class="copilot-header-title">AI Copilot</span>
+      ${greetLine}
       <span class="copilot-header-sub">${providerLabel}</span>
       <button class="copilot-close-btn" type="button" aria-label="Close AI Copilot">✕</button>
     </div>
-    ${noApiKey ? `
-    <div class="copilot-config-notice">
-      To enable: set <code>CHAT_CONFIG.apiKey</code> in <code>chat.js</code> and choose your <code>provider</code> (openai or gemini).
-    </div>
-    ` : ""}
     <div class="copilot-messages" role="log" aria-live="polite" aria-label="Conversation">
       <div class="copilot-msg is-system">Ask anything about anxiety coping methods, supplements, or protocols in this database.</div>
     </div>

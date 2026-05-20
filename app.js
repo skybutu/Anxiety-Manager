@@ -359,7 +359,7 @@ async function handleGoogleAuth() {
   setAuthLoading(true);
   const { error } = await supabaseClient.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: window.location.href.split("#")[0] },
+    options: { redirectTo: window.location.origin },
   });
   setAuthLoading(false);
   if (error) setAuthMessage(error.message || "Google sign-in could not start.", true);
@@ -3108,4 +3108,5 @@ if (VALID_TABS.includes(initialTab)) {
 window._anxietyApp = {
   getState: () => state,
   supabaseClient,
+  supabaseUrl: SUPABASE_URL,
 };
