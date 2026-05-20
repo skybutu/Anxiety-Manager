@@ -41,6 +41,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="copilot.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   </head>
   <body>
     <div
@@ -88,6 +89,9 @@
             aria-label="Open about and methodology panel"
           >
             About
+          </button>
+          <button id="authButton" class="auth-button" type="button" aria-controls="authOverlay">
+            Sign In
           </button>
         </div>
 
@@ -151,6 +155,37 @@
         <div id="settingsContent"></div>
       </div>
     </dialog>
+
+    <div id="authOverlay" class="auth-overlay is-hidden"
+         role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-hidden="true">
+      <form id="authForm" class="auth-panel">
+        <button id="authCloseButton" class="auth-close-button" type="button"
+                aria-label="Close sign in dialog">Close</button>
+        <div class="auth-header">
+          <span class="section-label">Cloud Sync</span>
+          <h2 id="authTitle">Sign in to sync</h2>
+          <p>Save your toolkit, streak, and check-in state across devices.</p>
+        </div>
+        <label class="auth-field" for="authEmail">
+          <span>Email</span>
+          <input id="authEmail" name="email" type="email" autocomplete="email" required />
+        </label>
+        <label class="auth-field" for="authPassword">
+          <span>Password</span>
+          <input id="authPassword" name="password" type="password"
+                 autocomplete="current-password" minlength="6" required />
+        </label>
+        <button id="authSubmitButton" class="site-button auth-submit-button"
+                type="submit">Sign In</button>
+        <button id="googleAuthButton" class="google-auth-button"
+                type="button">Continue with Google</button>
+        <div class="auth-mode-row">
+          <button id="authModeToggle" class="auth-mode-toggle"
+                  type="button">Create Account</button>
+        </div>
+        <p id="authStatus" class="auth-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
 
     <script src="app.js" type="module"></script>
     <script src="chat.js" type="module"></script>

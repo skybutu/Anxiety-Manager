@@ -1,4 +1,7 @@
 const DATA_URL = "data/workbook.json";
+const SUPABASE_URL = "https://jdcjmygysexvvtxxxpvo.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_-qvco9QQ_eMPhChR-aRJuA_V37Q_Sv-";
+const CLOUD_METADATA_KEY = "anxietyflow";
 
 const DISCLAIMER =
   "This app is for educational and self-management support only. It is not medical advice, diagnosis, psychotherapy, crisis support, or a replacement for a licensed clinician.";
@@ -79,6 +82,11 @@ const state = {
   sourceType: "",
   sourceCategory: "",
   filtersOpen: false,
+  authSession: null,
+  authUser: null,
+  authMode: "login",
+  authMessage: "",
+  authLoading: false,
 };
 
 const VALID_TABS = ["dashboard", "methods", "supplements", "protocols", "safety", "sources"];
@@ -98,6 +106,24 @@ let revealSafetyTimers = [];
 let revealCycle = 0;
 const REVEAL_COMPLETE_TIMEOUT = 1150;
 const REVEAL_MIN_COMPLETE_MS = 360;
+
+const supabaseClient = window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_ANON_KEY) || null;
+
+const authButton = document.querySelector("#authButton");
+const authOverlay = document.querySelector("#authOverlay");
+const authForm = document.querySelector("#authForm");
+const authCloseButton = document.querySelector("#authCloseButton");
+const authTitle = document.querySelector("#authTitle");
+const authSubmitButton = document.querySelector("#authSubmitButton");
+const authModeToggle = document.querySelector("#authModeToggle");
+const googleAuthButton = document.querySelector("#googleAuthButton");
+const authStatus = document.querySelector("#authStatus");
+const authEmail = document.querySelector("#authEmail");
+const authPassword = document.querySelector("#authPassword");
+
+let cloudSyncTimer = null;
+let cloudSyncInFlight = false;
+let cloudSyncPending = false;
 
 applyStandaloneClasses();
 registerServiceWorker();
@@ -172,7 +198,252 @@ function bindShell() {
 
   window.addEventListener("hashchange", syncTabFromHash);
   reducedMotionQuery?.addEventListener?.("change", initScrollAnimations);
+
+  initAuth();
+  authButton?.addEventListener("click", () => {
+    if (state.authUser) {
+      handleLogout();
+    } else {
+      openAuthModal("login");
+    }
+  });
+  authForm?.addEventListener("submit", handleAuthSubmit);
+  authCloseButton?.addEventListener("click", closeAuthModal);
+  authModeToggle?.addEventListener("click", () =>
+    setAuthMode(state.authMode === "login" ? "signup" : "login")
+  );
+  googleAuthButton?.addEventListener("click", handleGoogleAuth);
+  authOverlay?.addEventListener("click", (event) => {
+    if (event.target === authOverlay) closeAuthModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && authOverlay && !authOverlay.classList.contains("is-hidden")) {
+      closeAuthModal();
+    }
+  });
 }
+
+// ── Auth functions ────────────────────────────────────────────
+
+async function initAuth() {
+  updateAuthNavbar();
+  if (!supabaseClient) {
+    setAuthMessage("Cloud sign-in is unavailable right now. Local mode is still active.");
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.getSession();
+  if (error) {
+    console.warn("Supabase session lookup failed.", error);
+  }
+  await applyAuthSession(data?.session || null);
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === "USER_UPDATED") {
+      state.authSession = session || null;
+      state.authUser = session?.user || null;
+      updateAuthNavbar();
+      return;
+    }
+    applyAuthSession(session);
+  });
+}
+
+async function applyAuthSession(session) {
+  const previousUserId = state.authUser?.id || "";
+  state.authSession = session || null;
+  state.authUser = session?.user || null;
+  updateAuthNavbar();
+
+  if (!state.authUser) return;
+
+  applyCloudPreferences(state.authUser);
+  if (state.data && previousUserId !== state.authUser.id) {
+    render();
+  }
+  await syncUserPreferencesNow();
+}
+
+function updateAuthNavbar() {
+  if (!authButton) return;
+  if (state.authUser) {
+    const label = profileLabel(state.authUser);
+    authButton.classList.add("is-signed-in");
+    authButton.textContent = `${label} · Log Out`;
+    authButton.setAttribute("aria-label", `Signed in as ${label}. Log out.`);
+    return;
+  }
+  authButton.classList.remove("is-signed-in");
+  authButton.textContent = "Sign In";
+  authButton.setAttribute("aria-label", "Sign in or create an AnxietyFlow account");
+}
+
+function profileLabel(user) {
+  const metadata = user?.user_metadata || {};
+  return text(metadata.name || metadata.full_name || user?.email || "Profile").split("@")[0] || "Profile";
+}
+
+function openAuthModal(mode = "login") {
+  if (!authOverlay) return;
+  setAuthMode(mode);
+  document.body.classList.add("auth-active");
+  authOverlay.classList.remove("is-hidden");
+  authOverlay.setAttribute("aria-hidden", "false");
+  if (!supabaseClient) setAuthMessage("Cloud sign-in is unavailable because the Supabase SDK did not load. Your local toolkit still works.");
+  authEmail?.focus({ preventScroll: true });
+}
+
+function closeAuthModal() {
+  if (!authOverlay) return;
+  document.body.classList.remove("auth-active");
+  authOverlay.classList.add("is-hidden");
+  authOverlay.setAttribute("aria-hidden", "true");
+  authButton?.focus({ preventScroll: true });
+}
+
+function setAuthMode(mode) {
+  state.authMode = mode === "signup" ? "signup" : "login";
+  const isSignup = state.authMode === "signup";
+  if (authTitle) authTitle.textContent = isSignup ? "Create your account" : "Sign in to sync";
+  if (authSubmitButton) authSubmitButton.textContent = isSignup ? "Create Account" : "Sign In";
+  if (authModeToggle) authModeToggle.textContent = isSignup ? "Already have an account? Sign in" : "Create Account";
+  if (authPassword) authPassword.autocomplete = isSignup ? "new-password" : "current-password";
+  setAuthMessage(
+    isSignup
+      ? "Create an account to sync your toolkit, streak, and check-ins across devices."
+      : "Sign in to restore your AnxietyFlow toolkit on this device."
+  );
+}
+
+async function handleAuthSubmit(event) {
+  event.preventDefault();
+  if (!supabaseClient) {
+    setAuthMessage("Cloud sign-in is unavailable because the Supabase SDK did not load.");
+    return;
+  }
+  const email = text(authEmail?.value);
+  const password = String(authPassword?.value || "");
+  if (!email || !password) {
+    setAuthMessage("Enter an email and password to continue.", true);
+    return;
+  }
+  setAuthLoading(true);
+  const authCall =
+    state.authMode === "signup"
+      ? supabaseClient.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: window.location.href.split("#")[0] },
+        })
+      : supabaseClient.auth.signInWithPassword({ email, password });
+
+  const { data, error } = await authCall;
+  setAuthLoading(false);
+  if (error) {
+    setAuthMessage(error.message || "Authentication failed. Please try again.", true);
+    return;
+  }
+  if (state.authMode === "signup" && !data?.session) {
+    setAuthMessage("Account created. Check your email to confirm the sign-in link.");
+    return;
+  }
+  setAuthMessage("Signed in. Syncing your AnxietyFlow toolkit now.");
+  closeAuthModal();
+}
+
+async function handleGoogleAuth() {
+  if (!supabaseClient) {
+    setAuthMessage("Google sign-in is unavailable because the Supabase SDK did not load.", true);
+    return;
+  }
+  setAuthLoading(true);
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: window.location.href.split("#")[0] },
+  });
+  setAuthLoading(false);
+  if (error) setAuthMessage(error.message || "Google sign-in could not start.", true);
+}
+
+async function handleLogout() {
+  if (!supabaseClient) return;
+  await syncUserPreferencesNow();
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    console.warn("Supabase sign-out failed.", error);
+    return;
+  }
+  state.authSession = null;
+  state.authUser = null;
+  updateAuthNavbar();
+  setAuthMessage("Signed out. Local mode is active.");
+}
+
+function setAuthLoading(loading) {
+  state.authLoading = loading;
+  if (authSubmitButton) authSubmitButton.disabled = loading;
+  if (googleAuthButton) googleAuthButton.disabled = loading;
+  if (authModeToggle) authModeToggle.disabled = loading;
+}
+
+function setAuthMessage(message, isError = false) {
+  state.authMessage = message;
+  if (!authStatus) return;
+  authStatus.textContent = message || "";
+  authStatus.classList.toggle("is-error", isError);
+}
+
+// applyCloudPreferences is a no-op in this build — toolkit/streak state not present yet.
+function applyCloudPreferences(_user) {}
+
+function cloudPreferencesFromUser(user) {
+  const metadata = user?.user_metadata || {};
+  return metadata[CLOUD_METADATA_KEY] || {};
+}
+
+function cloudPreferencesPayload() {
+  return { updated_at: new Date().toISOString() };
+}
+
+function scheduleCloudSync(delay = 700) {
+  if (!state.authUser || !supabaseClient) return;
+  window.clearTimeout(cloudSyncTimer);
+  cloudSyncTimer = window.setTimeout(() => {
+    syncUserPreferencesNow();
+  }, delay);
+}
+
+async function syncUserPreferencesNow() {
+  if (!state.authUser || !supabaseClient) return;
+  if (cloudSyncInFlight) {
+    cloudSyncPending = true;
+    return;
+  }
+  window.clearTimeout(cloudSyncTimer);
+  cloudSyncTimer = null;
+  cloudSyncInFlight = true;
+
+  const existingMetadata = state.authUser.user_metadata || {};
+  const { data, error } = await supabaseClient.auth.updateUser({
+    data: { ...existingMetadata, [CLOUD_METADATA_KEY]: cloudPreferencesPayload() },
+  });
+
+  cloudSyncInFlight = false;
+  if (cloudSyncPending) {
+    cloudSyncPending = false;
+    scheduleCloudSync(100);
+  }
+  if (error) {
+    console.warn("Supabase preference sync failed.", error);
+    return;
+  }
+  if (data?.user) {
+    state.authUser = data.user;
+    updateAuthNavbar();
+  }
+}
+
+// ── End auth functions ────────────────────────────────────────
 
 function hydrateState(payload) {
   const sheets = payload.sheets || {};
@@ -2836,4 +3107,5 @@ if (VALID_TABS.includes(initialTab)) {
 
 window._anxietyApp = {
   getState: () => state,
+  supabaseClient,
 };
