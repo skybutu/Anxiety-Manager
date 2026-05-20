@@ -1,4 +1,4 @@
-const CACHE_VERSION = "2026-05-20-supplements-matrix-1";
+const CACHE_VERSION = "2026-05-20-copilot-pacer-1";
 const CACHE_NAME = `anxiety-manager-${CACHE_VERSION}`;
 const CORE_ASSETS = [
   "./",
@@ -12,6 +12,8 @@ const CORE_ASSETS = [
   "./icons/icon-512.png",
   "./icons/maskable-512.png",
   "./icons/apple-touch-icon.png",
+  "./copilot.css",
+  "./chat.js",
 ];
 
 self.addEventListener("install", (event) => {
@@ -58,7 +60,9 @@ function isFreshnessCritical(url) {
     url.pathname.endsWith("/app.js") ||
     url.pathname.endsWith("/styles.css") ||
     url.pathname.endsWith("/data/workbook.json") ||
-    url.pathname.endsWith("/manifest.webmanifest")
+    url.pathname.endsWith("/manifest.webmanifest") ||
+    url.pathname.endsWith("/copilot.css") ||
+    url.pathname.endsWith("/chat.js")
   );
 }
 

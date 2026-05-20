@@ -3665,3 +3665,126 @@ body.legal-consent-open {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Isolated Breath Pacer ──────────────────────────────────────────────────
+   Scoped entirely to .isolated-pacer-* — no global selector pollution.
+   Rendered at the top of the Dashboard section by renderDashboard() in app.js.
+─────────────────────────────────────────────────────────────────────────── */
+.isolated-pacer-container {
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  padding: 2rem 1.5rem 1.75rem;
+  background: rgba(14, 20, 18, 0.72);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(0, 242, 254, 0.12);
+  border-radius: 20px;
+  text-align: center;
+}
+
+.isolated-pacer-header {
+  margin-bottom: 1.5rem;
+}
+
+.isolated-pacer-title {
+  margin: 0.25rem 0 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+.isolated-pacer-desc {
+  font-size: 0.82rem;
+  opacity: 0.58;
+  margin: 0.4rem 0 0;
+  line-height: 1.5;
+}
+
+.isolated-pacer-ring-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.isolated-pacer-ring {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid rgba(0, 242, 254, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: border-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+.isolated-pacer-ring.is-inhale {
+  border-color: #00f2fe;
+  box-shadow: 0 0 24px rgba(0, 242, 254, 0.4);
+}
+
+.isolated-pacer-ring.is-exhale {
+  border-color: #4facfe;
+  box-shadow: 0 0 16px rgba(79, 172, 254, 0.3);
+}
+
+.isolated-pacer-ring.is-hold,
+.isolated-pacer-ring.is-hold2 {
+  border-color: rgba(0, 242, 254, 0.45);
+  box-shadow: none;
+}
+
+.isolated-pacer-phase {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.isolated-pacer-count {
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #00f2fe;
+  min-height: 1.65rem;
+}
+
+.isolated-pacer-controls {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.isolated-pacer-btn {
+  padding: 0.48rem 1.4rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 242, 254, 0.28);
+  background: rgba(0, 242, 254, 0.08);
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.isolated-pacer-btn:hover {
+  background: rgba(0, 242, 254, 0.16);
+}
+
+.isolated-pacer-btn-secondary {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: transparent;
+  opacity: 0.6;
+}
+
+.isolated-pacer-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  opacity: 0.85;
+}
+
+@media (max-width: 520px) {
+  .isolated-pacer-container {
+    padding: 1.5rem 1rem 1.25rem;
+  }
+}

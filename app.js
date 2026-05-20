@@ -463,6 +463,24 @@ function renderDashboard() {
   });
 
   app.innerHTML = `
+    <section class="isolated-pacer-container" aria-label="Box breathing pacer">
+      <div class="isolated-pacer-header">
+        <span class="section-label">Calm tool</span>
+        <h2 class="isolated-pacer-title">Box Breathing</h2>
+        <p class="isolated-pacer-desc">4-count inhale &middot; 4-count hold &middot; 4-count exhale &middot; 4-count hold</p>
+      </div>
+      <div class="isolated-pacer-ring-wrap">
+        <div class="isolated-pacer-ring" id="isolatedPacerRing">
+          <span class="isolated-pacer-phase" id="isolatedPacerPhase">Ready</span>
+          <span class="isolated-pacer-count" id="isolatedPacerCount"></span>
+        </div>
+      </div>
+      <div class="isolated-pacer-controls">
+        <button class="isolated-pacer-btn" id="isolatedPacerStart" type="button">Start</button>
+        <button class="isolated-pacer-btn isolated-pacer-btn-secondary" id="isolatedPacerReset" type="button">Reset</button>
+      </div>
+    </section>
+
     <section class="hero" aria-labelledby="siteHeroTitle">
       <div class="hero-copy">
         <h1 id="siteHeroTitle">Anxiety Manager is an evidence-aware coping methods database</h1>
@@ -975,6 +993,69 @@ function bindDashboardInteractions() {
     button.addEventListener("click", () => {
       document.querySelector(`#${button.dataset.scrollTarget}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+  });
+
+  initIsolatedPacer();
+}
+
+function initIsolatedPacer() {
+  const ring = document.getElementById("isolatedPacerRing");
+  const phaseEl = document.getElementById("isolatedPacerPhase");
+  const countEl = document.getElementById("isolatedPacerCount");
+  const startBtn = document.getElementById("isolatedPacerStart");
+  const resetBtn = document.getElementById("isolatedPacerReset");
+  if (!ring || !startBtn) return;
+
+  const PHASES = [
+    { name: "Inhale", duration: 4, cls: "is-inhale" },
+    { name: "Hold",   duration: 4, cls: "is-hold" },
+    { name: "Exhale", duration: 4, cls: "is-exhale" },
+    { name: "Hold",   duration: 4, cls: "is-hold2" },
+  ];
+  let running = false;
+  let timer = null;
+  let phaseIndex = 0;
+  let countdown = 0;
+
+  function tick() {
+    if (!running) return;
+    const phase = PHASES[phaseIndex];
+    ring.className = `isolated-pacer-ring ${phase.cls}`;
+    phaseEl.textContent = phase.name;
+    countEl.textContent = countdown;
+    countdown--;
+    if (countdown < 0) {
+      phaseIndex = (phaseIndex + 1) % PHASES.length;
+      countdown = PHASES[phaseIndex].duration;
+    }
+    timer = setTimeout(tick, 1000);
+  }
+
+  startBtn.addEventListener("click", () => {
+    if (running) {
+      running = false;
+      clearTimeout(timer);
+      startBtn.textContent = "Resume";
+    } else {
+      running = true;
+      if (countdown === 0) {
+        phaseIndex = 0;
+        countdown = PHASES[0].duration;
+      }
+      tick();
+      startBtn.textContent = "Pause";
+    }
+  });
+
+  resetBtn.addEventListener("click", () => {
+    running = false;
+    clearTimeout(timer);
+    phaseIndex = 0;
+    countdown = 0;
+    ring.className = "isolated-pacer-ring";
+    phaseEl.textContent = "Ready";
+    countEl.textContent = "";
+    startBtn.textContent = "Start";
   });
 }
 
@@ -2752,3 +2833,7 @@ const initialTab = window.location.hash.replace("#", "");
 if (VALID_TABS.includes(initialTab)) {
   state.tab = initialTab;
 }
+
+window._anxietyApp = {
+  getState: () => state,
+};
