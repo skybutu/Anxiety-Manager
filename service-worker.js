@@ -1,21 +1,18 @@
-const CACHE_VERSION = "2026-05-20-copilot-pacer-1";
-const CACHE_NAME = `anxiety-manager-${CACHE_VERSION}`;
-const CORE_ASSETS = [
+const CACHE_NAME = "anxiety-manager-v2";
+const STATIC_ASSETS = [
   "/",
-  "index.html",
-  "styles.css",
-  "copilot.css",
-  "app.js",
-  "manifest.webmanifest",
-  "service-worker.js",
-  "anxietyflow-background.png",
+  "/index.html",
+  "/styles.css",
+  "/copilot.css",
+  "/app.js",
+  "/manifest.webmanifest",
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(CORE_ASSETS))
+      .then((cache) => cache.addAll(STATIC_ASSETS))
       .then(() => self.skipWaiting()),
   );
 });
@@ -24,67 +21,67 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
+      .then((cacheNames) =>
+        Promise.all(
+          cacheNames
+            .filter((cacheName) => cacheName !== CACHE_NAME)
+            .map((cacheName) => caches.delete(cacheName)),
+        ),
+      )
       .then(() => self.clients.claim()),
   );
 });
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
-  if (request.method !== "GET") return;
-
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return;
 
-  if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request, "./index.html"));
+  if (shouldBypassCache(request, url)) {
     return;
   }
 
-  if (isFreshnessCritical(url)) {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-
-  event.respondWith(cacheFirst(request));
+  event.respondWith(networkFirst(request));
 });
 
-function isFreshnessCritical(url) {
+function shouldBypassCache(request, url) {
+  if (url.protocol !== "http:" && url.protocol !== "https:") {
+    return true;
+  }
+
+  if (request.method !== "GET") {
+    return true;
+  }
+
   return (
-    url.pathname.endsWith("/index.html") ||
-    url.pathname.endsWith("/app.js") ||
-    url.pathname.endsWith("/styles.css") ||
-    url.pathname.endsWith("/data/workbook.json") ||
-    url.pathname.endsWith("/manifest.webmanifest") ||
-    url.pathname.endsWith("/copilot.css") ||
-    url.pathname.endsWith("/chat.js")
+    url.href.includes("supabase.co") ||
+    url.pathname === "/api" ||
+    url.pathname.startsWith("/api/") ||
+    url.pathname.includes("/api/")
   );
 }
 
-async function networkFirst(request, fallbackUrl = "") {
+async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
+
   try {
     const response = await fetch(request);
+
     if (response && response.ok) {
-      await cache.put(request, response.clone());
+      try {
+        await cache.put(request, response.clone());
+      } catch {
+        // A cache write failure should never block a valid network response.
+      }
     }
+
     return response;
-  } catch {
-    const cached = await cache.match(request);
-    if (cached) return cached;
-    if (fallbackUrl) return cache.match(fallbackUrl);
-    throw new Error(`No cached response for ${request.url}`);
-  }
-}
+  } catch (error) {
+    const cachedResponse = await cache.match(request);
 
-async function cacheFirst(request) {
-  const cache = await caches.open(CACHE_NAME);
-  const cached = await cache.match(request);
-  if (cached) return cached;
+    if (cachedResponse) {
+      return cachedResponse;
+    }
 
-  const response = await fetch(request);
-  if (response && response.ok) {
-    await cache.put(request, response.clone());
+    throw error;
   }
-  return response;
 }
