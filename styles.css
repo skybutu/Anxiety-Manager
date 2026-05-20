@@ -94,20 +94,32 @@ html {
 }
 
 body {
+  --bg-wave-x: 0%;
+  --bg-wave-y: 0%;
   min-width: 320px;
   min-height: 100vh;
   min-height: 100dvh;
   max-width: 100%;
   margin: 0;
   overflow-x: hidden;
+  background-color: #030812;
   background-image:
-    linear-gradient(rgba(3, 8, 18, 0.30), rgba(3, 8, 18, 0.40)),
+    radial-gradient(circle at calc(16% + var(--bg-wave-x)) calc(14% + var(--bg-wave-y)), rgba(0, 242, 254, 0.11), rgba(0, 242, 254, 0.035) 24%, transparent 48%),
+    radial-gradient(ellipse at calc(84% - var(--bg-wave-x)) calc(10% + var(--bg-wave-y)), rgba(74, 144, 226, 0.10), rgba(74, 144, 226, 0.025) 26%, transparent 52%),
+    radial-gradient(ellipse at 50% calc(112% - var(--bg-wave-y)), rgba(0, 255, 203, 0.08), transparent 54%),
+    linear-gradient(rgba(3, 8, 18, 0.34), rgba(3, 8, 18, 0.46)),
     url("./anxietyflow-background.png") !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
+  background-size: 125% 125%, 145% 120%, 150% 120%, cover, cover !important;
+  background-position:
+    calc(16% + var(--bg-wave-x)) calc(14% + var(--bg-wave-y)),
+    calc(84% - var(--bg-wave-x)) calc(10% + var(--bg-wave-y)),
+    50% calc(112% - var(--bg-wave-y)),
+    center center,
+    center center !important;
+  background-attachment: fixed, fixed, fixed, fixed, fixed !important;
   background-repeat: no-repeat !important;
   background-blend-mode: normal !important;
+  animation: anxietyflow-bg-drift 34s ease-in-out infinite alternate;
   color: var(--text);
   line-height: 1.5;
   font-synthesis-weight: none;
@@ -125,6 +137,25 @@ body::after,
 .hero-panel::after {
   content: none !important;
   display: none !important;
+}
+
+@property --bg-wave-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --bg-wave-y {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@keyframes anxietyflow-bg-drift {
+  to {
+    --bg-wave-x: 4%;
+    --bg-wave-y: 3%;
+  }
 }
 
 body.pwa-standalone,
@@ -2830,6 +2861,7 @@ main {
     left: calc(10px + var(--safe-left));
     z-index: 30;
     display: flex !important;
+    justify-content: space-around !important;
     gap: 12px !important;
     white-space: nowrap !important;
     overflow-x: auto !important;
@@ -2875,10 +2907,13 @@ main {
   .mobile-tab:hover,
   .mobile-tab:focus-visible {
     color: var(--text);
-    border-color: rgba(255, 255, 255, 0.22);
+    border-color: rgba(0, 242, 254, 0.24);
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05)),
-      rgba(255, 255, 255, 0.055);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(0, 242, 254, 0.045)),
+      rgba(0, 242, 254, 0.075);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 0 16px rgba(0, 242, 254, 0.12);
   }
 
   .mobile-tab:active {
@@ -2888,16 +2923,16 @@ main {
   .mobile-tab.is-active {
     color: #fffaf0;
     -webkit-text-fill-color: #fffaf0;
-    border-color: rgba(255, 255, 255, 0.28);
+    border-color: rgba(0, 242, 254, 0.34);
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.09)),
-      linear-gradient(135deg, rgba(215, 178, 74, 0.5), rgba(87, 168, 255, 0.2)),
-      rgba(43, 54, 51, 0.9);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(0, 242, 254, 0.08)),
+      linear-gradient(135deg, rgba(0, 242, 254, 0.16), rgba(87, 168, 255, 0.14)),
+      rgba(18, 18, 20, 0.72);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
       inset 0 -1px 0 rgba(255, 255, 255, 0.08),
       0 8px 22px rgba(0, 0, 0, 0.24),
-      0 0 0 1px rgba(215, 178, 74, 0.08);
+      0 0 18px rgba(0, 242, 254, 0.16);
     transform: translateY(-1px);
   }
 
@@ -3236,12 +3271,21 @@ main,
 }
 
 body {
+  background-color: #030812 !important;
   background-image:
-    linear-gradient(rgba(3, 8, 18, 0.30), rgba(3, 8, 18, 0.40)),
+    radial-gradient(circle at calc(16% + var(--bg-wave-x)) calc(14% + var(--bg-wave-y)), rgba(0, 242, 254, 0.11), rgba(0, 242, 254, 0.035) 24%, transparent 48%),
+    radial-gradient(ellipse at calc(84% - var(--bg-wave-x)) calc(10% + var(--bg-wave-y)), rgba(74, 144, 226, 0.10), rgba(74, 144, 226, 0.025) 26%, transparent 52%),
+    radial-gradient(ellipse at 50% calc(112% - var(--bg-wave-y)), rgba(0, 255, 203, 0.08), transparent 54%),
+    linear-gradient(rgba(3, 8, 18, 0.34), rgba(3, 8, 18, 0.46)),
     url("./anxietyflow-background.png") !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-attachment: fixed !important;
+  background-size: 125% 125%, 145% 120%, 150% 120%, cover, cover !important;
+  background-position:
+    calc(16% + var(--bg-wave-x)) calc(14% + var(--bg-wave-y)),
+    calc(84% - var(--bg-wave-x)) calc(10% + var(--bg-wave-y)),
+    50% calc(112% - var(--bg-wave-y)),
+    center center,
+    center center !important;
+  background-attachment: fixed, fixed, fixed, fixed, fixed !important;
   background-repeat: no-repeat !important;
   background-blend-mode: normal !important;
 }
@@ -3275,6 +3319,22 @@ body::after,
   display: none !important;
   content: none !important;
   background: none !important;
+}
+
+.topbar,
+.tabs,
+.mobile-tabs {
+  background: rgba(18, 18, 20, 0.6) !important;
+  background-color: rgba(18, 18, 20, 0.6) !important;
+  backdrop-filter: blur(15px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none !important;
+  }
 }
 
 /* Legal and medical disclaimer framework */
@@ -3676,6 +3736,115 @@ body.legal-consent-open {
 
   .supplements-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .methods-grid,
+  .supplements-grid,
+  .protocols-grid,
+  .safety-grid,
+  .sources-list,
+  .dashboard-widget-grid,
+  .top-picks-grid {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+  }
+
+  .method-card,
+  .supplement-card,
+  .protocol-card,
+  .safety-card,
+  .source-card,
+  .metric-card,
+  .top-pick-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 18px !important;
+    background: rgba(30, 30, 30, 0.7) !important;
+    background-color: rgba(30, 30, 30, 0.7) !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28) !important;
+    backdrop-filter: blur(14px) saturate(155%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(155%) !important;
+  }
+
+  .methods-grid > .method-card:last-child,
+  .supplements-grid > .supplement-card:last-child,
+  .protocols-grid > .protocol-card:last-child,
+  .safety-grid > .safety-card:last-child,
+  .sources-list > .source-card:last-child {
+    margin-bottom: 0;
+  }
+
+  .method-card .card-title,
+  .supplement-card .card-title,
+  .protocol-card .card-title,
+  .safety-card .card-title,
+  .source-card .card-title {
+    font-size: clamp(1.05rem, 5.2vw, 1.32rem);
+    line-height: 1.18;
+  }
+
+  .method-signal-grid,
+  .supplement-matrix-fields,
+  .card-preview-stack {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .method-signal,
+  .supplement-field,
+  .supplement-safety-alert,
+  .method-use-case,
+  .detail-field.card-preview,
+  .source-role {
+    display: grid;
+    grid-template-columns: minmax(86px, 0.38fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-bottom-color: rgba(255, 255, 255, 0.11);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.035) !important;
+  }
+
+  .method-signal small,
+  .supplement-field .field-label,
+  .supplement-safety-alert .field-label,
+  .method-use-case .field-label,
+  .detail-field.card-preview .field-label,
+  .source-role .field-label {
+    min-width: 0;
+    color: rgba(214, 231, 238, 0.72);
+    font-size: 0.68rem;
+    line-height: 1.25;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .method-signal strong,
+  .method-signal em,
+  .supplement-field .field-value,
+  .supplement-safety-alert .field-value,
+  .method-use-case strong,
+  .detail-field.card-preview .field-value,
+  .source-role .field-value {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .source-card a {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
