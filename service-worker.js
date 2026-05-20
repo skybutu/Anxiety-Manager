@@ -1,19 +1,14 @@
 const CACHE_VERSION = "2026-05-20-copilot-pacer-1";
 const CACHE_NAME = `anxiety-manager-${CACHE_VERSION}`;
 const CORE_ASSETS = [
-  "./",
-  "./index.html",
-  "./styles.css",
-  "./app.js",
-  "./anxietyflow-background.png",
-  "./data/workbook.json",
-  "./manifest.webmanifest",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/maskable-512.png",
-  "./icons/apple-touch-icon.png",
-  "./copilot.css",
-  "./chat.js",
+  "/",
+  "index.html",
+  "styles.css",
+  "copilot.css",
+  "app.js",
+  "manifest.webmanifest",
+  "service-worker.js",
+  "anxietyflow-background.png",
 ];
 
 self.addEventListener("install", (event) => {
