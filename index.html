@@ -53,10 +53,10 @@
       aria-describedby="legalConsentDescription"
     >
       <div class="legal-consent-panel">
-        <span class="legal-consent-kicker">Important medical notice</span>
-        <h1 id="legalConsentTitle">Medical Disclaimer</h1>
+        <span class="legal-consent-kicker">Important notice before you continue</span>
+        <h1 id="legalConsentTitle">Educational Use Only</h1>
         <p id="legalConsentDescription">
-          Medical Disclaimer: AnxietyFlow is an educational, crowd-sourced database derived from public statistical summaries (reddit_anxiety_methods_database.xlsx). It does not provide medical advice, diagnosis, or treatment. Always seek the advice of your physician or qualified mental health provider with any questions you may have regarding a medical condition. By clicking 'I Understand & Accept', you agree that you use this information at your own risk.
+          AnxietyFlow is an educational, crowd-sourced database derived from public statistical summaries. It does not provide medical advice, diagnosis, treatment, psychotherapy, crisis support, or medication/supplement guidance. Information may be incomplete, inaccurate, or outdated. For urgent or emergency mental health needs, contact local emergency services or a licensed crisis provider. Always consult a licensed clinician or pharmacist before making personal health decisions. By clicking 'I Understand &amp; Accept', you agree that you use this information at your own risk and for educational purposes only.
         </p>
         <button id="legalConsentAccept" class="legal-consent-button" type="button">
           I Understand &amp; Accept
@@ -65,7 +65,7 @@
     </div>
 
     <div class="global-medical-warning app-warning-banner" role="note">
-      Educational Database Only &mdash; Not Medical Advice.
+      Educational database only. This site does not provide medical advice, diagnosis, treatment, psychotherapy, crisis support, or medication/supplement guidance.
     </div>
 
     <div class="app-shell">
@@ -123,11 +123,16 @@
           <span class="section-label">About</span>
           <h2 id="aboutAnxietyFlowTitle">About AnxietyFlow</h2>
           <div class="about-footer-copy">
-            <p>AnxietyFlow is an evidence-informed anxiety management website designed to organize coping methods by priority, category, safety, and practical usefulness.</p>
+            <p>AnxietyFlow is an evidence-informed educational database that organizes coping methods by priority, category, safety, and practical usefulness.</p>
             <p>The app is not a replacement for professional diagnosis, psychotherapy, emergency care, or medication management. It is intended as a structured self-support tool for education, reflection, and day-to-day coping.</p>
             <p>Created by Guy Greenberg, an independent learner focused on psychology, technology, fitness, and practical mental health tools.</p>
             <p class="footer-copyright">&copy; 2026 AnxietyFlow. All rights reserved.</p>
             <p class="footer-legal-notice"><strong>Limitation of Liability:</strong> The creators of AnxietyFlow assume no responsibility or liability for any errors or omissions in the content of this site.</p>
+            <p class="footer-legal-links">
+              <button class="footer-link-btn" type="button" onclick="openSettings()">Terms of Use</button>
+              &nbsp;&middot;&nbsp;
+              <button class="footer-link-btn" type="button" onclick="openSettings()">Privacy Policy</button>
+            </p>
           </div>
         </div>
       </footer>

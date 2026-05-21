@@ -1398,6 +1398,7 @@ function renderSupplements() {
         <span class="section-label">Supplements Matrix</span>
         <h1 class="section-title">Supplement signals separated from coping methods</h1>
         <p>This matrix is parsed from the dedicated Supplements workbook sheet. It is educational database content only and is not medical advice, diagnosis, treatment, supplement recommendation, or medication guidance.</p>
+        <p class="legal-notice-inline">Supplement information is general educational content only and is not a recommendation to use, stop, combine, or dose any supplement. Discuss supplement decisions with a licensed clinician or pharmacist, especially when using medication or managing a health condition.</p>
       </div>
       <div class="supplements-summary-grid" aria-label="Supplements matrix summary">
         ${smallFact("Supplements", total)}
@@ -1407,8 +1408,8 @@ function renderSupplements() {
     </section>
 
     <section class="supplements-warning panel" role="note">
-      <span class="section-label">Medication safety boundary</span>
-      <p>Do not combine supplements with psychiatric medication, sedatives, thyroid medication, blood thinners, blood pressure medication, nitroglycerin, SSRIs, SNRIs, or MAOIs without a physician or pharmacist. High-risk entries require clinician review.</p>
+      <span class="section-label">Educational Note: Medication Interactions</span>
+      <p>The workbook notes that combining supplements with psychiatric medication, sedatives, thyroid medication, blood thinners, blood pressure medication, nitroglycerin, SSRIs, SNRIs, or MAOIs without consulting a physician or licensed pharmacist may carry significant risks. This is general educational information only. Discuss all supplement and medication decisions with a licensed clinician or pharmacist.</p>
     </section>
 
     ${
@@ -1468,7 +1469,7 @@ function supplementCard(supplement) {
       <div class="card-main">
         <div class="badge-row card-badges">
           ${badge(supplement.risk, supplementRiskClass(supplement.risk))}
-          ${supplement.clinicalEvidence ? badge(`Clinical ${supplement.clinicalEvidence}`, clinicalEvidenceClass(supplement.clinicalEvidence)) : ""}
+          ${supplement.clinicalEvidence ? badge(`Evidence Notes: ${supplement.clinicalEvidence}`, clinicalEvidenceClass(supplement.clinicalEvidence)) : ""}
         </div>
         <h3 class="card-title">${escapeHtml(supplement.name)}</h3>
       </div>
@@ -1496,7 +1497,7 @@ function supplementInteractionBlock(value, isHighRisk = false) {
   if (!text(value)) return "";
   return `
     <div class="supplement-safety-alert ${isHighRisk ? "is-critical" : ""}">
-      <span class="field-label">${isHighRisk ? "CRITICAL CONTRAINDICATION" : "Psych med interactions"}</span>
+      <span class="field-label">${isHighRisk ? "High-Risk Interaction Warning" : "Psych med interactions"}</span>
       <div class="field-value">${escapeHtml(value)}</div>
     </div>
   `;
@@ -2175,6 +2176,55 @@ function openSettings() {
         ),
       ])}
     </div>
+
+    <div class="dialog-legal-accordions">
+
+      <details class="legal-accordion">
+        <summary class="legal-accordion-summary">Legal &amp; Safety Notice</summary>
+        <div class="legal-accordion-body">
+          <p><strong>Educational use only.</strong> AnxietyFlow is a general information database. No clinician-patient relationship is formed by using this site.</p>
+          <p><strong>No diagnosis or treatment.</strong> This site does not provide medical advice, diagnosis, clinical assessment, or treatment of any kind.</p>
+          <p><strong>No psychotherapy.</strong> Content on this site is not a substitute for psychotherapy, counselling, or any licensed mental health service.</p>
+          <p><strong>No crisis or emergency support.</strong> This site cannot assess risk or provide crisis intervention. If you need urgent or immediate help, contact local emergency services or a licensed crisis support provider.</p>
+          <p><strong>No medication or supplement decisions.</strong> Information related to supplements or medications is general educational content only. It must not be used to start, stop, combine, or adjust any medication or supplement. Consult a licensed clinician or pharmacist for all personal health decisions.</p>
+          <p><strong>Information may be incomplete, inaccurate, or outdated.</strong> Workbook-derived and Reddit-derived content reflects publicly available summaries at the time of compilation. It may contain errors or omissions.</p>
+          <p><strong>Do not rely on this site for urgent or personal medical decisions.</strong> Always consult a licensed clinician or pharmacist before acting on any health-related information found here.</p>
+        </div>
+      </details>
+
+      <details class="legal-accordion">
+        <summary class="legal-accordion-summary">Terms of Use</summary>
+        <div class="legal-accordion-body">
+          <p><em>Draft terms — not attorney-reviewed. Subject to change.</em></p>
+          <p><strong>1. Educational use only.</strong> By using AnxietyFlow, you agree that the site is an educational information database only. It is not a medical service, clinical tool, or licensed mental health resource.</p>
+          <p><strong>2. No medical advice.</strong> Nothing on this site constitutes medical advice, diagnosis, clinical assessment, or treatment recommendation of any kind.</p>
+          <p><strong>3. No psychotherapy.</strong> No use of this site creates a therapeutic or counselling relationship of any kind.</p>
+          <p><strong>4. No crisis support.</strong> This site is not a crisis service and cannot provide emergency assistance. Do not use it for urgent mental health situations.</p>
+          <p><strong>5. No clinician-patient relationship.</strong> Use of this site does not create any clinician-patient, therapist-client, or provider-user relationship.</p>
+          <p><strong>6. User responsibility.</strong> You are solely responsible for how you use the information on this site. You agree not to rely on it for personal medical, psychiatric, or medication decisions.</p>
+          <p><strong>7. Information may be incomplete or outdated.</strong> Content is derived from public workbook summaries and community-reported patterns. It may contain errors, omissions, or outdated references.</p>
+          <p><strong>8. No reliance for urgent decisions.</strong> You agree not to use information from this site for urgent, emergency, or time-sensitive health decisions.</p>
+          <p><strong>9. Prohibited misuse.</strong> You agree not to use this site as a substitute for professional care, not to share content as medical advice to others, and not to misrepresent the nature of this site.</p>
+          <p><strong>10. Limitation of liability.</strong> To the fullest extent permitted by applicable law, the creators and operators of AnxietyFlow disclaim all liability for any harm, loss, or damages arising from use of or reliance on this site, including indirect, incidental, or consequential damages. This disclaimer applies even if the creators have been advised of the possibility of such damages. This site is provided "as is" without warranties of any kind.</p>
+        </div>
+      </details>
+
+      <details class="legal-accordion">
+        <summary class="legal-accordion-summary">Privacy Policy</summary>
+        <div class="legal-accordion-body">
+          <p><em>Draft policy — not attorney-reviewed. Subject to change.</em></p>
+          <p><strong>1. What data may be collected.</strong> If you create an account or sign in, your email address is stored by Supabase, our backend provider, in order to support authentication and cloud sync. If you do not sign in, no personal account data is collected.</p>
+          <p><strong>2. Browser and local storage.</strong> AnxietyFlow uses your browser's localStorage to remember your consent acknowledgement, toolkit selections, check-in state, and usage streak. This data is stored locally on your device and is not transmitted to any server unless you are signed in to a synced account.</p>
+          <p><strong>3. Chat and user inputs.</strong> This site does not store or transmit the content of any notes, reflections, or text you enter in session-only fields beyond your current browser session, unless explicitly noted in a future feature.</p>
+          <p><strong>4. Third-party processors.</strong> Authentication and cloud sync are provided by Supabase. If you sign in with Google, Google OAuth is used for authentication. These services have their own privacy policies. AnxietyFlow does not sell or share your data with advertisers or unrelated third parties.</p>
+          <p><strong>5. Security limitations.</strong> While reasonable precautions are taken, no internet-based service can guarantee complete security. Do not enter sensitive health information unless you consider the risks and accept them.</p>
+          <p><strong>6. Sensitive health information.</strong> You are advised to avoid entering sensitive personal health information into this site unless necessary. The site is a general educational tool and is not designed as a confidential health record system.</p>
+          <p><strong>7. Data retention and deletion.</strong> To request deletion of your account data, contact us at the address listed below. Requests will be processed in a reasonable timeframe subject to applicable law.</p>
+          <p><strong>8. Contact.</strong> For privacy, deletion, or data-access requests, contact: <a href="mailto:skybutuguy@gmail.com">skybutuguy@gmail.com</a>.</p>
+        </div>
+      </details>
+
+    </div>
   `;
 
   if (typeof settingsDialog.showModal === "function") {
@@ -2468,6 +2518,10 @@ function renderSafety() {
         <div>
           <h2>Not a crisis or clinical care tool</h2>
           <p>This app cannot assess urgent symptoms or personal risk. For urgent medical concerns, dangerous impulses, or inability to stay safe, seek local emergency, crisis, or licensed medical support immediately.</p>
+        </div>
+        <div class="legal-notice-panel" role="note">
+          <p><strong>This site is not a crisis service.</strong> If urgent or immediate help is needed, contact local emergency services or a licensed crisis support provider.</p>
+          <p class="legal-notice-inline">This section is not medication guidance and must not be used to start, stop, combine, or adjust medications. Medication decisions should be made with a licensed clinician.</p>
         </div>
       </div>
     </section>

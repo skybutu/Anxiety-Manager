@@ -4204,3 +4204,109 @@ body.legal-consent-open {
 .auth-status.is-error {
   color: rgba(255, 100, 100, 0.9);
 }
+
+/* ─── Legal content hardening additions ───────────────────────────────── */
+
+.legal-notice-inline {
+  margin-top: var(--space-3, 0.75rem);
+  padding: 0.6rem 0.9rem;
+  border-left: 2px solid rgba(255, 173, 75, 0.4);
+  border-radius: 0 6px 6px 0;
+  background: rgba(255, 173, 75, 0.06);
+  color: rgba(242, 238, 231, 0.78);
+  font-size: 0.83rem;
+  line-height: 1.55;
+}
+
+.legal-notice-panel {
+  display: grid;
+  gap: var(--space-2, 0.5rem);
+  margin-top: var(--space-3, 0.75rem);
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  border: 1px solid rgba(255, 173, 75, 0.18);
+  border-radius: var(--radius, 12px);
+  background: rgba(255, 173, 75, 0.05);
+}
+
+.legal-notice-panel p {
+  margin: 0;
+  color: rgba(242, 238, 231, 0.78);
+  font-size: 0.83rem;
+  line-height: 1.55;
+}
+
+.dialog-legal-accordions {
+  display: grid;
+  gap: var(--space-3, 0.75rem);
+  margin-top: var(--space-5, 1.5rem);
+  padding-top: var(--space-4, 1rem);
+  border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+}
+
+.legal-accordion {
+  border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+  border-radius: var(--radius, 12px);
+  background: rgba(255, 255, 255, 0.026);
+}
+
+.legal-accordion-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  cursor: pointer;
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: var(--muted, rgba(242, 238, 231, 0.55));
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  list-style: none;
+  user-select: none;
+}
+
+.legal-accordion-summary::-webkit-details-marker { display: none; }
+
+.legal-accordion-summary::before {
+  content: "▸";
+  font-size: 0.7rem;
+  transition: transform 0.15s;
+}
+
+.legal-accordion[open] .legal-accordion-summary::before {
+  transform: rotate(90deg);
+}
+
+.legal-accordion-body {
+  display: grid;
+  gap: var(--space-3, 0.75rem);
+  padding: 0 var(--space-4, 1rem) var(--space-4, 1rem);
+}
+
+.legal-accordion-body p {
+  margin: 0;
+  color: rgba(242, 238, 231, 0.75);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.footer-legal-links {
+  margin-top: var(--space-2, 0.5rem);
+  font-size: 0.8rem;
+}
+
+.footer-link-btn {
+  display: inline;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--muted, rgba(242, 238, 231, 0.55));
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.footer-link-btn:hover {
+  color: var(--text, rgba(242, 238, 231, 0.95));
+}

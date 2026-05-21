@@ -386,7 +386,7 @@
           "Time horizon": "Immediate",
           "Best used for": "Overwhelm, dissociation-like anxiety, rumination loops",
           "Practical protocol": "Name 5 things seen, 4 felt, 3 heard, 2 smelled, 1 tasted; speak or write them if possible.",
-          "Avoid / cautions": "Not a cure; use as a bridge to action or recovery routine.",
+          "Avoid / cautions": "Not a clinical intervention; use as a bridge to calming action or a self-care routine.",
           "Source IDs": "R16;C9",
           "Priority score": 4.35
         },
@@ -461,9 +461,9 @@
         {
           "Category": "Cognitive skills",
           "Method": "Radical acceptance / response change",
-          "Reddit pattern summary": "Reddit recovery stories often emphasize accepting anxiety sensations and reducing the fight against them.",
+          "Reddit pattern summary": "Reddit posts on this topic often emphasize accepting anxiety sensations and reducing resistance to them.",
           "Reddit support": "High",
-          "Upvote/visibility notes": "Mentioned in recovery-oriented r/Anxiety threads.",
+          "Upvote/visibility notes": "Mentioned in r/Anxiety experience and discussion threads.",
           "Clinical evidence grade": "Moderate",
           "Evidence score (1-5)": 4,
           "Safety score (1-5)": 5,
@@ -478,9 +478,9 @@
         {
           "Category": "Behavioral",
           "Method": "Graded exposure",
-          "Reddit pattern summary": "One of the strongest Reddit themes in recovery posts: stop avoiding in small planned steps.",
+          "Reddit pattern summary": "One of the strongest Reddit themes: stop avoiding in small planned steps.",
           "Reddit support": "High",
-          "Upvote/visibility notes": "Commonly reported in positive recovery threads; aligns strongly with clinical evidence.",
+          "Upvote/visibility notes": "Commonly reported in positive experience threads; aligns with clinical evidence for gradual exposure approaches.",
           "Clinical evidence grade": "High",
           "Evidence score (1-5)": 5,
           "Safety score (1-5)": 4,
@@ -665,9 +665,9 @@
         {
           "Category": "Clinical care",
           "Method": "Therapy, especially CBT or exposure-based therapy",
-          "Reddit pattern summary": "Across Reddit recovery threads, therapy is repeatedly described as a major lever when anxiety is persistent.",
+          "Reddit pattern summary": "Across Reddit discussion threads, therapy is repeatedly mentioned as a major factor when anxiety is persistent.",
           "Reddit support": "Very High",
-          "Upvote/visibility notes": "Appears in many r/Anxiety recovery and advice threads.",
+          "Upvote/visibility notes": "Appears in many r/Anxiety experience and advice threads.",
           "Clinical evidence grade": "High",
           "Evidence score (1-5)": 5,
           "Safety score (1-5)": 5,
@@ -682,9 +682,9 @@
         {
           "Category": "Clinical care",
           "Method": "Medication review with prescriber",
-          "Reddit pattern summary": "Reddit recovery stories often mention medication as helpful for some people, but it should be individualized.",
+          "Reddit pattern summary": "Reddit posts on this topic often mention that medication may be helpful for some individuals; always discuss with a prescriber.",
           "Reddit support": "Medium–High",
-          "Upvote/visibility notes": "Mentioned in recovery threads; not a DIY intervention.",
+          "Upvote/visibility notes": "Mentioned in experience threads; not a DIY intervention.",
           "Clinical evidence grade": "High",
           "Evidence score (1-5)": 5,
           "Safety score (1-5)": 5,
@@ -1920,7 +1920,7 @@
           "Supplement_Name": "L-Theanine",
           "Target_Symptoms": "Acute anxiety, Caffeine jitters, Panic onset",
           "Clinical_Evidence": "High",
-          "Reddit_Popularity": "Extremely High (Highly recommended for rapid onset relaxation and caffeine jitters)",
+          "Reddit_Popularity": "Extremely High (Commonly reported for rapid onset relaxation and caffeine jitters; not a recommendation)",
           "Psych_Med_Interactions": "Benzodiazepines (amplifies sedation), Blood pressure meds",
           "Risk_Level": "Low"
         },
@@ -1944,7 +1944,7 @@
           "Supplement_Name": "NAC",
           "Target_Symptoms": "Intrusive thoughts, Rumination, OCD loops",
           "Clinical_Evidence": "Medium-High",
-          "Reddit_Popularity": "High (Frequently suggested for intrusive thoughts, rumination, and OCD-like anxiety patterns)",
+          "Reddit_Popularity": "High (Frequently mentioned in discussions of intrusive thoughts, rumination, and OCD-like patterns; not a recommendation)",
           "Psych_Med_Interactions": "Blood thinners, Nitroglycerin",
           "Risk_Level": "Low"
         },
@@ -1952,7 +1952,7 @@
           "Supplement_Name": "Saffron",
           "Target_Symptoms": "Depressive anxiety, Low mood, Burnout",
           "Clinical_Evidence": "Medium-High",
-          "Reddit_Popularity": "Rising Trend (Gaining popularity as a natural alternative with mild SSRI-like properties)",
+          "Reddit_Popularity": "Rising Trend (Gaining visibility in discussions; reported to have serotonin-related properties — see interaction warnings before considering)",
           "Psych_Med_Interactions": "SSRIs / SNRIs / MAOIs (High risk of Serotonin Syndrome)",
           "Risk_Level": "High"
         }
@@ -1970,7 +1970,7 @@
           "L-Theanine",
           "Acute anxiety, Caffeine jitters, Panic onset",
           "High",
-          "Extremely High (Highly recommended for rapid onset relaxation and caffeine jitters)",
+          "Extremely High (Commonly reported for rapid onset relaxation and caffeine jitters; not a recommendation)",
           "Benzodiazepines (amplifies sedation), Blood pressure meds",
           "Low"
         ],
@@ -1994,7 +1994,7 @@
           "NAC",
           "Intrusive thoughts, Rumination, OCD loops",
           "Medium-High",
-          "High (Frequently suggested for intrusive thoughts, rumination, and OCD-like anxiety patterns)",
+          "High (Frequently mentioned in discussions of intrusive thoughts, rumination, and OCD-like patterns; not a recommendation)",
           "Blood thinners, Nitroglycerin",
           "Low"
         ],
@@ -2002,7 +2002,7 @@
           "Saffron",
           "Depressive anxiety, Low mood, Burnout",
           "Medium-High",
-          "Rising Trend (Gaining popularity as a natural alternative with mild SSRI-like properties)",
+          "Rising Trend (Gaining visibility in discussions; reported to have serotonin-related properties — see interaction warnings before considering)",
           "SSRIs / SNRIs / MAOIs (High risk of Serotonin Syndrome)",
           "High"
         ]
