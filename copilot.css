@@ -311,7 +311,7 @@
 .copilot-input-notice {
   text-align: center;
   font-size: 0.67rem;
-  color: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.28);
   padding: 0 12px 2px;
   flex-shrink: 0;
 }
