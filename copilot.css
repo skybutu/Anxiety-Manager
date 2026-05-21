@@ -7,7 +7,7 @@
 /* ── FAB toggle button ─────────────────────────────────────── */
 #chatToggle {
   position: fixed !important;
-  bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+  bottom: calc(env(safe-area-inset-bottom) + 95px) !important;
   right: 20px !important;
   z-index: 9999999;
   width: 56px;
@@ -310,7 +310,7 @@
 /* ── Mobile adjustments ────────────────────────────────────── */
 @media (max-width: 768px) {
   #chatToggle {
-    bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(env(safe-area-inset-bottom) + 95px) !important;
     right: 20px !important;
     width: 50px;
     height: 50px;
@@ -328,7 +328,82 @@
 
 @media (display-mode: standalone) and (max-width: 768px) {
   #chatToggle {
-    bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(env(safe-area-inset-bottom) + 95px) !important;
     right: 20px !important;
+  }
+}
+
+/* FINAL iOS STANDALONE TOP NAV TEXT FIT FIX */
+.ios-pwa-standalone .app-shell {
+  padding-top: 8px !important;
+}
+
+.ios-pwa-standalone .app-warning-banner {
+  position: relative !important;
+  z-index: 1000 !important;
+  box-sizing: border-box !important;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 10px) !important;
+  padding-bottom: 8px !important;
+  height: auto !important;
+  min-height: unset !important;
+  overflow: visible !important;
+}
+
+.ios-pwa-standalone .app-header-card {
+  position: relative !important;
+  top: auto !important;
+  z-index: 900 !important;
+  min-height: unset !important;
+  height: auto !important;
+  box-sizing: border-box !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: visible !important;
+}
+
+.ios-pwa-standalone .app-header-row {
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  min-height: 44px !important;
+  height: auto !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  gap: 8px !important;
+}
+
+.ios-pwa-standalone .app-header-title,
+body.ios-pwa-standalone .topbar-start .brand .app-header-title {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+  transform: translateY(-2px) !important;
+  will-change: transform !important;
+  white-space: nowrap !important;
+}
+
+.ios-pwa-standalone .app-header-action {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  box-sizing: border-box !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .ios-pwa-standalone .app-header-title,
+  body.ios-pwa-standalone .topbar-start .brand .app-header-title {
+    transform: translateY(-2px) !important;
   }
 }

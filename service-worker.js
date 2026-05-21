@@ -1,23 +1,16 @@
-const CACHE_NAME = "anxiety-manager-v2";
-const STATIC_ASSETS = [
-  "/",
-  "/index.html",
-  "/styles.css",
-  "/copilot.css",
-  "/app.js",
-  "/manifest.webmanifest",
-];
+const CACHE_NAME = 'anxiety-manager-v5';
+const CORE_STATIC_ASSETS = ['/', '/index.html', '/styles.css', '/copilot.css', '/app.js', '/manifest.webmanifest'];
 
-self.addEventListener("install", (event) => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
+      .then((cache) => cache.addAll(CORE_STATIC_ASSETS))
       .then(() => self.skipWaiting()),
   );
 });
 
-self.addEventListener("activate", (event) => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
@@ -32,32 +25,42 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-self.addEventListener("fetch", (event) => {
+self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  if (shouldBypassCache(request, url)) {
+  if (request.method !== 'GET' || !isHttpRequest(url)) {
+    return;
+  }
+
+  if (shouldBypassCache(url)) {
+    event.respondWith(fetch(request));
     return;
   }
 
   event.respondWith(networkFirst(request));
 });
 
-function shouldBypassCache(request, url) {
-  if (url.protocol !== "http:" && url.protocol !== "https:") {
+function isHttpRequest(url) {
+  return url.protocol === 'http:' || url.protocol === 'https:';
+}
+
+function shouldBypassCache(url) {
+  if (url.href.includes('supabase.co')) {
     return true;
   }
 
-  if (request.method !== "GET") {
+  if (url.origin !== self.location.origin) {
     return true;
   }
 
-  return (
-    url.href.includes("supabase.co") ||
-    url.pathname === "/api" ||
-    url.pathname.startsWith("/api/") ||
-    url.pathname.includes("/api/")
-  );
+  const path = url.pathname;
+
+  return path.endsWith('/service-worker.js') ||
+    path.endsWith('/chat.js') ||
+    path === '/api' ||
+    path.startsWith('/api/') ||
+    path.includes('/api/');
 }
 
 async function networkFirst(request) {
@@ -66,11 +69,11 @@ async function networkFirst(request) {
   try {
     const response = await fetch(request);
 
-    if (response && response.ok) {
+    if (response && response.ok && response.type === 'basic') {
       try {
         await cache.put(request, response.clone());
       } catch {
-        // A cache write failure should never block a valid network response.
+        // Cache write failures should never block a valid network response.
       }
     }
 
@@ -80,6 +83,14 @@ async function networkFirst(request) {
 
     if (cachedResponse) {
       return cachedResponse;
+    }
+
+    if (request.mode === 'navigate') {
+      const appShell = await cache.match('/index.html');
+
+      if (appShell) {
+        return appShell;
+      }
     }
 
     throw error;

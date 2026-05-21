@@ -134,8 +134,16 @@ function applyStandaloneClasses() {
   const update = () => {
     const isIosStandalone = window.navigator.standalone === true;
     const isStandalone = isIosStandalone || standaloneQuery?.matches === true;
+    document.documentElement.classList.toggle("ios-pwa-standalone", isStandalone);
+    document.body.classList.toggle("ios-pwa-standalone", isStandalone);
     document.body.classList.toggle("ios-standalone", isIosStandalone);
     document.body.classList.toggle("pwa-standalone", isStandalone);
+    console.log("IOS_PWA_TOP_NAV_TEXT_FIX_ACTIVE_v1", {
+      standalone: isStandalone,
+      innerWidth: window.innerWidth,
+      innerHeight: window.innerHeight,
+      dpr: window.devicePixelRatio,
+    });
   };
 
   update();
@@ -1677,7 +1685,12 @@ function scoreDisplay(value) {
 }
 
 function smallFact(label, value) {
-  return `<div><small>${escapeHtml(label)}</small><strong>${escapeHtml(value || "Unspecified")}</strong></div>`;
+  return `
+    <div>
+      <span class="stat-label">${escapeHtml(label)}</span>
+      <span class="stat-value">${escapeHtml(value || "Unspecified")}</span>
+    </div>
+  `;
 }
 
 function chipRow(items, label) {

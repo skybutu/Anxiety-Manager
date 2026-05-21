@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta
       name="description"
       content="An educational, workbook-derived database of anxiety coping methods, protocols, safety notes, and sources, comparing Reddit-derived patterns with evidence and caution fields."
@@ -64,25 +64,25 @@
       </div>
     </div>
 
-    <div class="global-medical-warning" role="note">
+    <div class="global-medical-warning app-warning-banner" role="note">
       Educational Database Only &mdash; Not Medical Advice.
     </div>
 
     <div class="app-shell">
-      <header class="topbar">
-        <div class="topbar-start">
+      <header class="topbar app-header-card">
+        <div class="topbar-start app-header-row">
           <a class="brand" href="#dashboard" aria-label="Anxiety Manager home">
             <span class="brand-mark" aria-hidden="true">
               <span></span>
             </span>
             <span>
-              <strong>Anxiety Manager</strong>
+              <strong class="app-header-title">Anxiety Manager</strong>
               <small>Evidence-aware coping methods database</small>
             </span>
           </a>
           <button
             id="settingsButton"
-            class="settings-button"
+            class="settings-button app-header-action"
             type="button"
             aria-haspopup="dialog"
             aria-controls="settingsDialog"
@@ -90,7 +90,7 @@
           >
             About
           </button>
-          <button id="authButton" class="auth-button" type="button" aria-controls="authOverlay">
+          <button id="authButton" class="auth-button app-header-action" type="button" aria-controls="authOverlay">
             Sign In
           </button>
         </div>
@@ -110,7 +110,7 @@
         psychotherapy, crisis support, or a replacement for a licensed clinician.
       </aside>
 
-      <main id="app">
+      <main id="app" class="app-main-content">
         <section class="state-card" aria-live="polite">
           <div class="loader" aria-hidden="true"></div>
           <h1>Loading workbook data</h1>
