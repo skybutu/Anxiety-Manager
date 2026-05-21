@@ -258,7 +258,7 @@ function createWidgetDOM() {
       <button class="copilot-close-btn" type="button" aria-label="Close AI Copilot">✕</button>
     </div>
     <div class="copilot-messages" role="log" aria-live="polite" aria-label="Conversation">
-      <div class="copilot-msg is-system">Ask anything about anxiety coping methods, supplements, or protocols in this database.</div>
+      <div class="copilot-msg is-system">Ask about anxiety coping methods, supplements, or protocols in this database. Avoid entering personal or medical information.</div>
     </div>
     <div class="copilot-input-row">
       <textarea
@@ -271,7 +271,7 @@ function createWidgetDOM() {
       ></textarea>
       <button class="copilot-send-btn" type="button" aria-label="Send message">➤</button>
     </div>
-    <div class="copilot-provider-badge">Educational info only · Not medical advice</div>
+    <div class="copilot-provider-badge">Educational info only · Not medical advice · Messages sent to AI service · Avoid entering personal or health details</div>
   `;
 
   return { fab, widget };
