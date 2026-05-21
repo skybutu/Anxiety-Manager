@@ -69,8 +69,8 @@ serve(async (req: Request): Promise<Response> => {
 
   try {
     return await proxyGemini(currentMessage, history, context, apiKey, model);
-  } catch (err) {
-    return jsonError(`Upstream LLM error: ${(err as Error).message}`, 502);
+  } catch {
+    return jsonError("Upstream service error. Please try again.", 502);
   }
 });
 
