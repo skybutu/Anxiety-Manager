@@ -19,6 +19,7 @@ const CHAT_CONFIG = {
 let chatOpen = false;
 let isStreaming = false;
 const conversationHistory = [];
+const CHAT_CONSENT_KEY = "anxietyflow_chat_privacy_notice_ack_v1";
 
 // ── DOM references (populated in init) ──────────────────────
 let fabEl = null;
@@ -72,11 +73,32 @@ function buildContextPayload() {
       .map((n) => `- ${n.topic || ""}: ${n.guidance || ""}`.trim())
       .join("\n"),
     currentTab: appState.tab ?? "dashboard",
-    userName: getGreeting() ?? "",
     methodCount: methods.length,
     supplementCount: supplements.length,
     protocolCount: protocols.length,
   };
+}
+
+// ── Chat consent gate ─────────────────────────────────────────
+function showConsentGate(pendingText) {
+  inputEl.disabled = true;
+  sendBtn.disabled = true;
+
+  const notice = document.createElement("div");
+  notice.className = "copilot-msg copilot-consent-notice";
+  notice.innerHTML = `<p>Chat messages may be processed by an external AI provider to generate responses. Do not enter sensitive personal, medical, medication, supplement, or crisis information. This chat is educational only and is not medical advice, psychotherapy, crisis support, or medication/supplement guidance.</p>
+    <button class="copilot-consent-btn" type="button">I understand</button>`;
+  messagesEl.appendChild(notice);
+  scrollToBottom();
+
+  notice.querySelector(".copilot-consent-btn").addEventListener("click", () => {
+    localStorage.setItem(CHAT_CONSENT_KEY, "true");
+    inputEl.disabled = false;
+    sendBtn.disabled = false;
+    notice.remove();
+    inputEl.value = pendingText;
+    sendMessage();
+  });
 }
 
 // ── Edge function streaming ───────────────────────────────────
@@ -172,6 +194,11 @@ function scrollToBottom() {
 async function sendMessage() {
   const text = inputEl.value.trim();
   if (!text || isStreaming) return;
+
+  if (!localStorage.getItem(CHAT_CONSENT_KEY)) {
+    showConsentGate(text);
+    return;
+  }
 
   inputEl.value = "";
   inputEl.style.height = "";
@@ -271,6 +298,7 @@ function createWidgetDOM() {
       ></textarea>
       <button class="copilot-send-btn" type="button" aria-label="Send message">➤</button>
     </div>
+    <div class="copilot-input-notice">Educational chat only. Avoid entering sensitive medical or personal information.</div>
     <div class="copilot-provider-badge">Educational info only · Not medical advice · Messages sent to AI service · Avoid entering personal or health details</div>
   `;
 

@@ -18,7 +18,6 @@ interface ContextPayload {
   topSupplements?: string;
   keySafetyNotes?: string;
   currentTab?: string;
-  userName?: string;
   methodCount?: number;
   supplementCount?: number;
   protocolCount?: number;
@@ -82,11 +81,7 @@ async function proxyGemini(
   apiKey: string,
   model: string,
 ): Promise<Response> {
-  const userLine = context.userName
-    ? `\nThe signed-in user is ${context.userName}. Address them by name when appropriate.`
-    : "";
-
-  const systemText = `${CLINICAL_SYSTEM_PROMPT}${userLine}
+  const systemText = `${CLINICAL_SYSTEM_PROMPT}
 
 The user is currently viewing the "${context.currentTab ?? "dashboard"}" section of the AnxietyFlow database (${context.methodCount ?? 0} methods, ${context.supplementCount ?? 0} supplements, ${context.protocolCount ?? 0} protocols).
 

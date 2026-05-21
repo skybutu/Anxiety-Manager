@@ -307,6 +307,47 @@
   flex-shrink: 0;
 }
 
+/* ── Input notice (privacy reminder above badge) ─────────── */
+.copilot-input-notice {
+  text-align: center;
+  font-size: 0.67rem;
+  color: rgba(255, 255, 255, 0.18);
+  padding: 0 12px 2px;
+  flex-shrink: 0;
+}
+
+/* ── Chat consent notice ──────────────────────────────────── */
+.copilot-consent-notice {
+  align-self: stretch;
+  max-width: 100%;
+  background: rgba(0, 242, 254, 0.06);
+  border: 1px solid rgba(0, 242, 254, 0.2);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.80rem;
+  line-height: 1.55;
+  padding: 12px 14px;
+}
+
+.copilot-consent-btn {
+  display: block;
+  margin-top: 10px;
+  width: 100%;
+  background: rgba(0, 242, 254, 0.12);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  border-radius: 7px;
+  color: #00f2fe;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.copilot-consent-btn:hover {
+  background: rgba(0, 242, 254, 0.22);
+}
+
 /* ── Mobile adjustments ────────────────────────────────────── */
 @media (max-width: 768px) {
   #chatToggle {
