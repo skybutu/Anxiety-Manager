@@ -529,7 +529,7 @@
         {
           "Category": "Behavioral",
           "Method": "Regular exercise routine",
-          "Reddit pattern summary": "Common Reddit consensus: exercise is not a magic cure, but consistently lowers baseline anxiety for many users.",
+          "Reddit pattern summary": "Common Reddit consensus: exercise does not cure anxiety, but consistently lowers baseline anxiety for many users.",
           "Reddit support": "Very High",
           "Upvote/visibility notes": "Repeated across threads as one of the most reliable non-medication tools.",
           "Clinical evidence grade": "High",
@@ -563,7 +563,7 @@
         {
           "Category": "Mindfulness",
           "Method": "Mindfulness meditation",
-          "Reddit pattern summary": "Frequent Reddit recommendation, usually framed as gradual training rather than immediate cure.",
+          "Reddit pattern summary": "Frequent Reddit recommendation, usually framed as gradual skill-building, not a cure for anxiety.",
           "Reddit support": "High",
           "Upvote/visibility notes": "Appears across threads on habits and long-term management.",
           "Clinical evidence grade": "Moderate–High",
@@ -915,7 +915,7 @@
           "Immediate",
           "Overwhelm, dissociation-like anxiety, rumination loops",
           "Name 5 things seen, 4 felt, 3 heard, 2 smelled, 1 tasted; speak or write them if possible.",
-          "Not a cure; use as a bridge to action or recovery routine.",
+          "Not a clinical intervention; use as a bridge to calming action or a self-care routine.",
           "R16;C9",
           4.35
         ],
@@ -990,7 +990,7 @@
         [
           "Cognitive skills",
           "Radical acceptance / response change",
-          "Reddit recovery stories often emphasize accepting anxiety sensations and reducing the fight against them.",
+          "Reddit posts on this topic often emphasize accepting anxiety sensations and reducing resistance to them.",
           "High",
           "Mentioned in recovery-oriented r/Anxiety threads.",
           "Moderate",
@@ -1007,9 +1007,9 @@
         [
           "Behavioral",
           "Graded exposure",
-          "One of the strongest Reddit themes in recovery posts: stop avoiding in small planned steps.",
+          "One of the strongest Reddit themes: stop avoiding in small planned steps.",
           "High",
-          "Commonly reported in positive recovery threads; aligns strongly with clinical evidence.",
+          "Commonly reported in positive experience threads; aligns with clinical evidence for gradual exposure approaches.",
           "High",
           5,
           4,
@@ -1058,7 +1058,7 @@
         [
           "Behavioral",
           "Regular exercise routine",
-          "Common Reddit consensus: exercise is not a magic cure, but consistently lowers baseline anxiety for many users.",
+          "Common Reddit consensus: exercise does not cure anxiety, but consistently lowers baseline anxiety for many users.",
           "Very High",
           "Repeated across threads as one of the most reliable non-medication tools.",
           "High",
@@ -1092,7 +1092,7 @@
         [
           "Mindfulness",
           "Mindfulness meditation",
-          "Frequent Reddit recommendation, usually framed as gradual training rather than immediate cure.",
+          "Frequent Reddit recommendation, usually framed as gradual skill-building, not a cure for anxiety.",
           "High",
           "Appears across threads on habits and long-term management.",
           "Moderate–High",
@@ -1194,7 +1194,7 @@
         [
           "Clinical care",
           "Therapy, especially CBT or exposure-based therapy",
-          "Across Reddit recovery threads, therapy is repeatedly described as a major lever when anxiety is persistent.",
+          "Across Reddit discussion threads, therapy is repeatedly mentioned as a major factor when anxiety is persistent.",
           "Very High",
           "Appears in many r/Anxiety recovery and advice threads.",
           "High",
@@ -1211,9 +1211,9 @@
         [
           "Clinical care",
           "Medication review with prescriber",
-          "Reddit recovery stories often mention medication as helpful for some people, but it should be individualized.",
+          "Reddit posts on this topic often mention that medication may be helpful for some individuals; always discuss with a prescriber.",
           "Medium–High",
-          "Mentioned in recovery threads; not a DIY intervention.",
+          "Mentioned in experience threads; not a DIY intervention.",
           "High",
           5,
           5,
@@ -1617,7 +1617,7 @@
         {
           "ID": "R18",
           "Source type": "Reddit r/Anxiety",
-          "What it supports": "Recovery stories: medication, exposure therapy, radical acceptance",
+          "What it supports": "Experience themes: medication, exposure therapy, radical acceptance",
           "URL": "https://www.reddit.com/r/Anxiety/comments/1gmtlzy/people_who_healed_from_anxiety_please_share_your/"
         },
         {
@@ -1799,7 +1799,7 @@
         [
           "R18",
           "Reddit r/Anxiety",
-          "Recovery stories: medication, exposure therapy, radical acceptance",
+          "Experience themes: medication, exposure therapy, radical acceptance",
           "https://www.reddit.com/r/Anxiety/comments/1gmtlzy/people_who_healed_from_anxiety_please_share_your/"
         ],
         [
