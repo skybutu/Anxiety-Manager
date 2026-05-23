@@ -37,7 +37,6 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   let body: {
-    prompt?: string;
     message?: string;
     history?: unknown[];
     context?: ContextPayload;
@@ -50,16 +49,15 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   const {
-    prompt,
     message,
     history = [],
     context = {},
     model = "gemini-2.5-flash",
   } = body;
 
-  const currentMessage = message ?? prompt;
+  const currentMessage = typeof message === "string" ? message.trim() : "";
 
-  if (typeof currentMessage !== "string" || currentMessage.trim().length === 0) {
+  if (!currentMessage) {
     return jsonError("message is required.", 400);
   }
 

@@ -80,7 +80,7 @@ function buildContextPayload() {
 }
 
 // ── Chat consent gate ─────────────────────────────────────────
-function showConsentGate(pendingText) {
+function showConsentGate(pendingMessage) {
   inputEl.disabled = true;
   sendBtn.disabled = true;
 
@@ -96,13 +96,13 @@ function showConsentGate(pendingText) {
     inputEl.disabled = false;
     sendBtn.disabled = false;
     notice.remove();
-    inputEl.value = pendingText;
+    inputEl.value = pendingMessage;
     sendMessage();
   });
 }
 
 // ── Edge function streaming ───────────────────────────────────
-async function streamViaEdge(history, context, onToken, onDone, onError) {
+async function streamViaEdge(message, history, context, onToken, onDone, onError) {
   const supabase = window._anxietyApp?.supabaseClient;
   let accessToken = null;
 
@@ -129,6 +129,7 @@ async function streamViaEdge(history, context, onToken, onDone, onError) {
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
+        message,
         history,
         context,
         model: CHAT_CONFIG.geminiModel,
@@ -192,11 +193,15 @@ function scrollToBottom() {
 
 // ── Send message ─────────────────────────────────────────────
 async function sendMessage() {
-  const text = inputEl.value.trim();
-  if (!text || isStreaming) return;
+  const message = inputEl.value.trim();
+  if (!message) {
+    appendMessage("error", "Enter a message before sending.");
+    return;
+  }
+  if (isStreaming) return;
 
   if (!localStorage.getItem(CHAT_CONSENT_KEY)) {
-    showConsentGate(text);
+    showConsentGate(message);
     return;
   }
 
@@ -205,8 +210,8 @@ async function sendMessage() {
   isStreaming = true;
   sendBtn.disabled = true;
 
-  appendMessage("user", text);
-  conversationHistory.push({ role: "user", content: text });
+  appendMessage("user", message);
+  conversationHistory.push({ role: "user", content: message });
 
   const assistantBubble = appendMessage("assistant", "");
   assistantBubble.classList.add("copilot-cursor");
@@ -239,7 +244,8 @@ async function sendMessage() {
     inputEl.focus();
   };
 
-  await streamViaEdge(conversationHistory, context, onToken, onDone, onError);
+  const priorHistory = conversationHistory.slice(0, -1);
+  await streamViaEdge(message, priorHistory, context, onToken, onDone, onError);
 }
 
 // ── Toggle chat window ───────────────────────────────────────

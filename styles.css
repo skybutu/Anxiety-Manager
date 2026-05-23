@@ -4310,3 +4310,342 @@ body.legal-consent-open {
 .footer-link-btn:hover {
   color: var(--text, rgba(242, 238, 231, 0.95));
 }
+
+/* Phase 1 visual refresh: scoped to approved educational content surfaces. */
+.disclaimer {
+  position: relative;
+  overflow: hidden;
+  padding: 15px 18px 15px 22px;
+  border-color: rgba(239, 195, 96, 0.4);
+  border-radius: 16px 22px 22px 16px;
+  background:
+    linear-gradient(105deg, rgba(239, 195, 96, 0.16), rgba(77, 159, 192, 0.07) 68%),
+    rgba(10, 16, 25, 0.78);
+  color: #f3e7c8;
+  line-height: 1.6;
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.disclaimer::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, #f4c96f, #e09745);
+  content: "";
+}
+
+.dashboard-explainer,
+.methodology-panel,
+.top-picks-panel,
+.protocols-note,
+.protocol-summary-strip,
+.sources-note,
+.sources-summary-strip,
+.safety-map {
+  border-color: rgba(124, 185, 211, 0.18) !important;
+  border-radius: 24px 18px 26px 18px !important;
+  background:
+    radial-gradient(circle at 4% 8%, rgba(75, 185, 201, 0.1), transparent 37%),
+    linear-gradient(140deg, rgba(15, 27, 42, 0.75), rgba(9, 14, 25, 0.7)) !important;
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.17),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055) !important;
+}
+
+.dashboard-explainer p,
+.methodology-panel p,
+.top-picks-panel .panel-header p,
+.protocols-note p,
+.sources-note p,
+.safety-map p {
+  color: #d5d4cd;
+}
+
+.methodology-panel .panel-header h2,
+.top-picks-panel .panel-header h2,
+.safety-section-header h2 {
+  color: #fbfaf3;
+  letter-spacing: -0.025em;
+}
+
+.methods-toolbar,
+.sources-tools {
+  border-color: rgba(94, 188, 209, 0.24);
+  border-radius: 22px 16px 24px 16px;
+  background:
+    linear-gradient(130deg, rgba(32, 65, 83, 0.34), rgba(10, 16, 27, 0.86)),
+    rgba(9, 15, 25, 0.82);
+  box-shadow:
+    0 17px 38px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.methods-toolbar .search-row input,
+.methods-toolbar .sort-control,
+.methods-layout .filters select,
+.sources-tools .control {
+  border-color: rgba(148, 200, 220, 0.28);
+  border-radius: 14px;
+  background: rgba(7, 15, 27, 0.64);
+  color: #f5f5ee;
+}
+
+.methods-toolbar .search-row input::placeholder,
+.sources-tools .control::placeholder {
+  color: rgba(220, 218, 209, 0.7);
+}
+
+.methods-toolbar .search-row input:focus,
+.methods-toolbar .sort-control:focus-within,
+.methods-layout .filters select:focus,
+.sources-tools .control:focus {
+  border-color: rgba(89, 207, 218, 0.68);
+  background: rgba(10, 21, 34, 0.92);
+  box-shadow:
+    0 0 0 4px rgba(64, 179, 204, 0.18),
+    0 12px 25px rgba(0, 0, 0, 0.16);
+}
+
+.methods-layout .filters {
+  border-color: rgba(118, 189, 211, 0.2) !important;
+  border-radius: 18px 24px 20px 26px !important;
+  background:
+    linear-gradient(155deg, rgba(25, 48, 65, 0.42), rgba(10, 16, 27, 0.72)),
+    rgba(8, 14, 24, 0.72) !important;
+}
+
+.methods-toolbar .filter-toggle,
+.methods-toolbar .reset-button,
+.sources-tools .source-reset {
+  border: 1px solid rgba(109, 185, 207, 0.23);
+  border-radius: 13px;
+  color: #e8ebe7;
+  background: rgba(78, 145, 171, 0.1);
+}
+
+.methods-toolbar .filter-toggle:hover,
+.methods-toolbar .filter-toggle:focus-visible,
+.methods-toolbar .reset-button:hover,
+.methods-toolbar .reset-button:focus-visible,
+.sources-tools .source-reset:hover,
+.sources-tools .source-reset:focus-visible {
+  border-color: rgba(93, 208, 218, 0.52);
+  background: rgba(73, 167, 190, 0.17);
+  box-shadow: 0 0 0 3px rgba(64, 179, 204, 0.15);
+}
+
+.methods-toolbar .preset-chip {
+  border-radius: 15px 21px 15px 21px;
+  border-color: rgba(130, 185, 211, 0.17);
+  background: rgba(45, 83, 103, 0.12);
+}
+
+.methods-toolbar .preset-chip small {
+  color: #bfc9c7;
+}
+
+.methods-toolbar .active-filter-chip {
+  border-color: rgba(96, 196, 208, 0.25);
+  background: rgba(62, 150, 175, 0.15);
+  color: #eef5ef;
+}
+
+.methods-grid > .method-card,
+.protocols-grid > .protocol-card,
+.safety-grid > .safety-card,
+.sources-list > .source-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-width: 1px;
+  box-shadow:
+    0 15px 36px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.065) !important;
+}
+
+.methods-grid > .method-card::before,
+.protocols-grid > .protocol-card::before,
+.safety-grid > .safety-card::before,
+.sources-list > .source-card::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  pointer-events: none;
+  content: "";
+}
+
+.methods-grid > .method-card {
+  border-color: rgba(78, 197, 211, 0.24) !important;
+  border-radius: 25px 17px 29px 14px !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(59, 187, 205, 0.13), transparent 37%),
+    linear-gradient(145deg, rgba(13, 27, 42, 0.88), rgba(7, 14, 25, 0.82)) !important;
+}
+
+.methods-grid > .method-card::before {
+  background: linear-gradient(180deg, #55d4d1, #4a83df);
+}
+
+.protocols-grid > .protocol-card {
+  border-color: rgba(99, 182, 223, 0.23) !important;
+  border-radius: 17px 28px 17px 28px !important;
+  background:
+    radial-gradient(circle at 94% 4%, rgba(92, 161, 233, 0.14), transparent 38%),
+    linear-gradient(145deg, rgba(14, 25, 42, 0.88), rgba(8, 15, 27, 0.84)) !important;
+}
+
+.protocols-grid > .protocol-card::before {
+  background: linear-gradient(180deg, #70b8ff, #8d75eb);
+}
+
+.safety-grid > .safety-card {
+  border-radius: 27px 16px 24px 16px !important;
+  background:
+    radial-gradient(circle at 98% 0%, rgba(245, 180, 89, 0.11), transparent 38%),
+    linear-gradient(150deg, rgba(29, 26, 30, 0.9), rgba(12, 17, 26, 0.86)) !important;
+}
+
+.safety-grid > .safety-card::before {
+  background: linear-gradient(180deg, #f2c05d, #e2894b);
+}
+
+.safety-grid > .safety-card.is-urgent::before {
+  background: linear-gradient(180deg, #ff8b78, #e34f53);
+}
+
+.safety-grid > .safety-card.is-urgent {
+  border-color: rgba(255, 124, 107, 0.44) !important;
+  background:
+    radial-gradient(circle at 98% 0%, rgba(255, 119, 97, 0.14), transparent 39%),
+    linear-gradient(150deg, rgba(48, 27, 30, 0.92), rgba(13, 17, 26, 0.88)) !important;
+}
+
+.safety-grid > .safety-card.is-clinician,
+.safety-grid > .safety-card.is-boundary {
+  border-color: rgba(239, 195, 96, 0.34) !important;
+}
+
+.sources-list > .source-card {
+  border-color: rgba(98, 202, 157, 0.2) !important;
+  border-radius: 16px 27px 22px 27px !important;
+  background:
+    radial-gradient(circle at 94% 5%, rgba(73, 194, 137, 0.13), transparent 38%),
+    linear-gradient(150deg, rgba(12, 29, 31, 0.86), rgba(7, 15, 25, 0.84)) !important;
+}
+
+.sources-list > .source-card::before {
+  background: linear-gradient(180deg, #6dd59e, #43a9c1);
+}
+
+.sources-list > .source-card.is-reddit-source::before {
+  background: linear-gradient(180deg, #edc96b, #cf8e55);
+}
+
+.sources-list > .source-card.is-clinical-source::before {
+  background: linear-gradient(180deg, #74dbac, #48a67f);
+}
+
+.sources-list > .source-card.is-reddit-source {
+  border-color: rgba(239, 195, 96, 0.3) !important;
+}
+
+.sources-list > .source-card.is-clinical-source {
+  border-color: rgba(109, 213, 160, 0.3) !important;
+}
+
+.methods-grid > .method-card .card-title,
+.protocols-grid > .protocol-card .card-title,
+.safety-grid > .safety-card .card-title,
+.sources-list > .source-card .card-title {
+  color: #fcfbf5;
+  letter-spacing: -0.014em;
+}
+
+.methods-grid > .method-card p,
+.protocols-grid > .protocol-card p,
+.safety-grid > .safety-card p,
+.sources-list > .source-card p {
+  color: #d2d5d0;
+}
+
+.methods-grid > .method-card .method-signal,
+.methods-grid > .method-card .method-use-case,
+.protocols-grid > .protocol-card .protocol-fact-row div,
+.protocols-grid > .protocol-card .protocol-steps li,
+.safety-grid > .safety-card .safety-guidance,
+.sources-list > .source-card .source-role {
+  border-color: rgba(147, 202, 219, 0.18) !important;
+  border-radius: 13px 18px 13px 18px !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+}
+
+.methods-grid > .method-card .badge,
+.protocols-grid > .protocol-card .badge,
+.safety-grid > .safety-card .badge,
+.sources-list > .source-card .badge {
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.methods-grid > .method-card:hover,
+.methods-grid > .method-card:focus-visible,
+.protocols-grid > .protocol-card:hover,
+.protocols-grid > .protocol-card:focus-visible,
+.safety-grid > .safety-card:hover,
+.safety-grid > .safety-card:focus-visible,
+.sources-list > .source-card:hover,
+.sources-list > .source-card:focus-within {
+  border-color: rgba(98, 210, 218, 0.46) !important;
+  box-shadow:
+    0 21px 46px rgba(0, 0, 0, 0.24),
+    0 0 0 1px rgba(102, 206, 215, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09) !important;
+  transform: translateY(-2px);
+}
+
+.protocols-grid > .protocol-card .protocol-details summary,
+.sources-list > .source-card a {
+  border-color: rgba(97, 194, 214, 0.22);
+  border-radius: 999px;
+  color: #e9f2f2;
+  background: rgba(68, 152, 175, 0.12);
+}
+
+.protocols-grid > .protocol-card .protocol-details summary:hover,
+.protocols-grid > .protocol-card .protocol-details summary:focus-visible,
+.sources-list > .source-card a:hover,
+.sources-list > .source-card a:focus-visible {
+  border-color: rgba(91, 208, 217, 0.52);
+  background: rgba(68, 171, 191, 0.2);
+}
+
+@media (max-width: 820px) {
+  .disclaimer {
+    padding: 13px 14px 13px 18px;
+    border-radius: 14px 19px 19px 14px;
+    line-height: 1.55;
+  }
+
+  .dashboard-explainer,
+  .methodology-panel,
+  .top-picks-panel,
+  .protocols-note,
+  .protocol-summary-strip,
+  .sources-note,
+  .sources-summary-strip,
+  .safety-map,
+  .methods-toolbar,
+  .sources-tools,
+  .methods-layout .filters {
+    border-radius: 18px !important;
+  }
+
+  .methods-grid > .method-card,
+  .protocols-grid > .protocol-card,
+  .safety-grid > .safety-card,
+  .sources-list > .source-card {
+    border-radius: 20px 14px 22px 14px !important;
+  }
+}
