@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk --version)",
+      "Bash(rtk grep *)",
+      "Bash(awk -F: '$1>5850 && $1<6070')",
+      "Bash(awk -F: '$1>5300 && $1<5500')",
+      "Bash(awk -F: '$1>5400 && $1<6730')",
+      "Bash(awk -F: '$1>6080 && $1<6730')",
+      "Bash(awk -F: '$1>5300')"
+    ]
+  }
+}

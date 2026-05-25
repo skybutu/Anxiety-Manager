@@ -742,29 +742,13 @@ function renderDashboard() {
   });
 
   app.innerHTML = `
-    <section class="isolated-pacer-container" aria-label="Box breathing pacer">
-      <div class="isolated-pacer-header">
-        <span class="section-label">Calm tool</span>
-        <h2 class="isolated-pacer-title">Box Breathing</h2>
-        <p class="isolated-pacer-desc">4-count inhale &middot; 4-count hold &middot; 4-count exhale &middot; 4-count hold</p>
-      </div>
-      <div class="isolated-pacer-ring-wrap">
-        <div class="isolated-pacer-ring" id="isolatedPacerRing">
-          <span class="isolated-pacer-phase" id="isolatedPacerPhase">Ready</span>
-          <span class="isolated-pacer-count" id="isolatedPacerCount"></span>
-        </div>
-      </div>
-      <div class="isolated-pacer-controls">
-        <button class="isolated-pacer-btn" id="isolatedPacerStart" type="button">Start</button>
-        <button class="isolated-pacer-btn isolated-pacer-btn-secondary" id="isolatedPacerReset" type="button">Reset</button>
-      </div>
-    </section>
-
-    <section class="hero" aria-labelledby="siteHeroTitle">
-      <div class="hero-copy">
+    <section class="dashboard-showcase" aria-label="Educational dashboard overview">
+    <section class="dashboard-lead-stage" aria-labelledby="siteHeroTitle">
+    <section class="dashboard-lead-content">
+      <div class="dashboard-lead-copy">
         <h1 id="siteHeroTitle">Anxiety Manager is an evidence-aware coping methods database</h1>
-        <p>Explore workbook-derived anxiety coping methods, protocols, safety notes, and sources in one structured research resource. Reddit-derived patterns are presented as commonly reported observations, not clinical proof, and every method should be read as educational self-management support rather than medical advice.</p>
-        <div class="hero-actions" aria-label="Primary website sections">
+        <p class="dashboard-lead-summary">Explore workbook-derived anxiety coping methods, protocols, safety notes, and sources in one structured research resource. Reddit-derived patterns are presented as commonly reported observations, not clinical proof, <span class="dashboard-lead-boundary">and every method should be read as educational self-management support rather than medical advice.</span></p>
+        <div class="dashboard-lead-actions" aria-label="Primary website sections">
           <button class="site-button" type="button" data-scroll-target="dashboardMetrics">View dashboard</button>
           <button class="site-button" type="button" data-jump-tab="methods">Explore methods</button>
           <button class="site-button site-button-secondary" type="button" data-jump-tab="supplements">Supplements Matrix</button>
@@ -772,119 +756,146 @@ function renderDashboard() {
           <button class="site-button site-button-secondary" type="button" data-jump-tab="sources">Inspect sources</button>
         </div>
       </div>
-      <div class="hero-panel">
+      <aside class="dashboard-tool-zone" aria-label="Box breathing pacer">
+        <section class="isolated-pacer-container" aria-label="Box breathing pacer">
+          <div class="isolated-pacer-header">
+            <span class="section-label">Calm tool</span>
+            <h2 class="isolated-pacer-title">Box Breathing</h2>
+            <p class="isolated-pacer-desc">4-count inhale &middot; 4-count hold &middot; 4-count exhale &middot; 4-count hold</p>
+          </div>
+          <div class="isolated-pacer-ring-wrap">
+            <div class="isolated-pacer-ring" id="isolatedPacerRing">
+              <span class="isolated-pacer-phase" id="isolatedPacerPhase">Ready</span>
+              <span class="isolated-pacer-count" id="isolatedPacerCount"></span>
+            </div>
+          </div>
+          <div class="isolated-pacer-controls">
+            <button class="isolated-pacer-btn" id="isolatedPacerStart" type="button">Start</button>
+            <button class="isolated-pacer-btn isolated-pacer-btn-secondary" id="isolatedPacerReset" type="button">Reset</button>
+          </div>
+        </section>
+      </aside>
+      <section class="dashboard-metadata-runway">
         <div>
           <h2>Built from a structured workbook</h2>
           <p>The source of truth is <strong>${escapeHtml(state.data.sourceWorkbook || "reddit_anxiety_methods_database.xlsx")}</strong>. Rankings, source references, protocols, evidence fields, and caution fields are derived from workbook data when available.</p>
         </div>
-        <div class="mini-stack">
+        <div class="mini-stack dashboard-workbook-rows">
           ${miniRow("Source workbook", state.data.sourceWorkbook || "Workbook JSON")}
           ${miniRow("Methods available", state.methods.length)}
           ${miniRow("Supplements matrix", state.supplements.length)}
           ${miniRow("Protocols listed", state.protocols.length)}
           ${miniRow("Sources indexed", state.sources.length)}
         </div>
-      </div>
+      </section>
+    </section>
     </section>
 
-    <section class="public-value-section panel" aria-labelledby="publicValueTitle">
-      <div class="panel-header">
-        <div>
-          <span class="section-label">Website guide</span>
-          <h2 id="publicValueTitle">What this site does</h2>
-          <p>Use the website to inspect coping-method data, compare workbook fields, and move between Dashboard, Methods, Protocols, Safety, and Sources without turning community-derived advice into clinical proof.</p>
-        </div>
-      </div>
-      <div class="grid public-value-grid">
-        ${publicValueCard("How the data is organized", "Methods are grouped and compared by workbook rank, priority score, category, evidence grade, caution level, ease, time horizon, use-case, and source references.")}
-        ${publicValueCard("Explore evidence-aware methods", "Search, filter, and sort coping methods while keeping Reddit-derived observations separate from evidence and caution fields.")}
-        ${publicValueCard("Why Safety Notes matter", "Safety notes highlight workbook boundaries around urgent symptoms, medications, exposure, substances, breathing, overuse, and clinician involvement.")}
-        ${publicValueCard("Source transparency", "The Sources tab exposes workbook references and labels Reddit-derived, clinical, and public-guidance sources for context.")}
-        ${publicValueCard("Limitations", "The site does not diagnose, treat, determine personal safety, or recommend a best method for every person.")}
-      </div>
-    </section>
-
-    <section class="grid metrics-grid" id="dashboardMetrics" aria-label="Dashboard metrics">
-      ${metricCards.join("")}
-    </section>
-
-    ${summaryWidgets.length ? `<section class="grid dashboard-widget-grid" aria-label="Dashboard method summaries">${summaryWidgets.join("")}</section>` : ""}
-
-    <section class="dashboard-explainer panel">
-      <div>
-        <span class="section-label">How to read this dashboard</span>
-        <p>Rankings, chart groupings, and top insight cards are workbook-derived summaries. Reddit-derived patterns describe what users commonly reported; they are not clinical proof. Evidence and caution fields should be interpreted conservatively as educational self-management support, not medical advice.</p>
-      </div>
-    </section>
-
-    <section class="methodology-panel panel" id="methodology" aria-labelledby="methodologyTitle">
-      <div class="panel-header">
-        <div>
-          <span class="section-label">Methodology</span>
-          <h2 id="methodologyTitle">How this website interprets the workbook</h2>
-          <p>The website presents the workbook as an interactive database. It does not diagnose, treat, determine personal safety, or replace a licensed clinician.</p>
-        </div>
-      </div>
-      <div class="grid methodology-grid">
-        ${methodologyCard("Spreadsheet source of truth", "Method names, summaries, protocols, scores, cautions, and sources are parsed from the workbook-derived data file.")}
-        ${methodologyCard("Community-derived observations", "Reddit-derived patterns describe commonly reported user experience and visibility. They are observational and should not be read as treatment evidence.")}
-        ${methodologyCard("Workbook-derived rankings", "Dashboard ranks, priority scores, insight groups, and charts use workbook fields such as evidence score, caution score, ease score, time horizon, category, and use-case.")}
-        ${methodologyCard("Conservative interpretation", "Evidence and caution fields should be read carefully. Lower-caution rows do not mean suitable for everyone, and higher-evidence rows are not individualized recommendations.")}
-        ${methodologyCard("Source transparency", "The Sources tab exposes workbook references and labels source categories so readers can inspect the context behind the database.")}
-      </div>
-      <div class="methodology-actions" aria-label="Methodology links">
-        <button class="site-button site-button-secondary" type="button" data-jump-tab="sources">Inspect sources</button>
-        <button class="site-button site-button-secondary" type="button" data-jump-tab="protocols">View protocols</button>
-      </div>
-    </section>
-
-    ${topPicks.length ? `<section class="panel top-picks-panel">
-      <div class="panel-header">
-        <div>
-          <h2>Workbook-derived insight groups</h2>
-          <p>Each group uses only workbook fields such as evidence score, caution score, ease score, time horizon, category, use-case, and method text. Groups are for comparison and triage, not individualized recommendations.</p>
-        </div>
-      </div>
-      <div class="grid top-picks-grid">
-        ${topPicks.map((group) => topPickCard(group)).join("")}
-      </div>
-    </section>` : ""}
-
-    <section class="grid dashboard-grid">
-      <div class="panel">
-        <div class="panel-header">
+    <section class="dashboard-guide-stage" aria-label="Website guide and methodology">
+      <section class="public-value-section dashboard-guide-section" aria-labelledby="publicValueTitle">
+        <div class="dashboard-band-header">
           <div>
-            <span class="section-label">Ranked workbook view</span>
-            <h2>Highest workbook-ranked methods</h2>
-            <p>${escapeHtml(rankedSource)} Select a row to inspect workbook-derived details.</p>
+            <span class="section-label">Website guide</span>
+            <h2 id="publicValueTitle">What this site does</h2>
+            <p>Use the website to inspect coping-method data, compare workbook fields, and move between Dashboard, Methods, Protocols, Safety, and Sources without turning community-derived advice into clinical proof.</p>
           </div>
         </div>
-        <div class="rank-list">
-          ${topByScore.map((method, index) => rankRow(method, index + 1)).join("")}
+        <div class="dashboard-feature-rows">
+          ${publicValueCard("How the data is organized", "Methods are grouped and compared by workbook rank, priority score, category, evidence grade, caution level, ease, time horizon, use-case, and source references.")}
+          ${publicValueCard("Explore evidence-aware methods", "Search, filter, and sort coping methods while keeping Reddit-derived observations separate from evidence and caution fields.")}
+          ${publicValueCard("Why Safety Notes matter", "Safety notes highlight workbook boundaries around urgent symptoms, medications, exposure, substances, breathing, overuse, and clinician involvement.")}
+          ${publicValueCard("Source transparency", "The Sources tab exposes workbook references and labels Reddit-derived, clinical, and public-guidance sources for context.")}
+          ${publicValueCard("Limitations", "The site does not diagnose, treat, determine personal safety, or recommend a best method for every person.")}
         </div>
-      </div>
+      </section>
 
-      <div class="grid dashboard-chart-stack">
-        ${chartPanels.slice(0, 4).join("")}
-      </div>
+      <section class="dashboard-explainer dashboard-boundary-band">
+        <div>
+          <span class="section-label">How to read this dashboard</span>
+          <p>Rankings, chart groupings, and top insight cards are workbook-derived summaries. Reddit-derived patterns describe what users commonly reported; they are not clinical proof. Evidence and caution fields should be interpreted conservatively as educational self-management support, not medical advice.</p>
+        </div>
+      </section>
 
-      <div class="panel">
-        <div class="panel-header">
+      <section class="dashboard-guide-section dashboard-methodology-section" id="methodology" aria-labelledby="methodologyTitle">
+        <div class="dashboard-band-header">
           <div>
-            <span class="section-label">Priority score</span>
-            <h2>Top 10 score chart</h2>
-            <p>Interactive method rows sorted by workbook priority score when available. Longer bars mean higher workbook priority score.</p>
+            <span class="section-label">Methodology</span>
+            <h2 id="methodologyTitle">How this website interprets the workbook</h2>
+            <p>The website presents the workbook as an interactive database. It does not diagnose, treat, determine personal safety, or replace a licensed clinician.</p>
           </div>
         </div>
-        ${scoreChart(topByScore)}
-      </div>
-
-      ${chartPanels.slice(4).join("")}
+        <div class="dashboard-methodology-rows">
+          ${methodologyCard("Spreadsheet source of truth", "Method names, summaries, protocols, scores, cautions, and sources are parsed from the workbook-derived data file.")}
+          ${methodologyCard("Community-derived observations", "Reddit-derived patterns describe commonly reported user experience and visibility. They are observational and should not be read as treatment evidence.")}
+          ${methodologyCard("Workbook-derived rankings", "Dashboard ranks, priority scores, insight groups, and charts use workbook fields such as evidence score, caution score, ease score, time horizon, category, and use-case.")}
+          ${methodologyCard("Conservative interpretation", "Evidence and caution fields should be read carefully. Lower-caution rows do not mean suitable for everyone, and higher-evidence rows are not individualized recommendations.")}
+          ${methodologyCard("Source transparency", "The Sources tab exposes workbook references and labels source categories so readers can inspect the context behind the database.")}
+        </div>
+        <div class="methodology-actions" aria-label="Methodology links">
+          <button class="site-button site-button-secondary" type="button" data-jump-tab="sources">Inspect sources</button>
+          <button class="site-button site-button-secondary" type="button" data-jump-tab="protocols">View protocols</button>
+        </div>
+      </section>
     </section>
 
-    <section class="about-scoring">
-      <span class="section-label">About scoring</span>
-      <p>${escapeHtml(state.dashboard.interpretation || "The dashboard uses workbook priority score, dashboard rank, evidence score, caution score, ease score, and time horizon fields when available. Practical difficulty is derived from workbook ease score only for filtering and display. These summaries are educational comparisons, not medical advice or a replacement for professional care.")}</p>
+    <section class="dashboard-discovery-stage" aria-label="Workbook facts and method summaries">
+      <section class="dashboard-facts-band" id="dashboardMetrics" aria-label="Dashboard metrics">
+        <div class="dashboard-facts-rows">${metricCards.join("")}</div>
+      </section>
+
+      ${summaryWidgets.length ? `<section class="dashboard-signal-stage" aria-label="Dashboard method summaries"><div class="dashboard-signal-rows">${summaryWidgets.join("")}</div></section>` : ""}
+    </section>
+
+    <section class="dashboard-research-stage" aria-label="Workbook comparisons and distributions">
+      ${topPicks.length ? `<section class="dashboard-insight-stage">
+        <div class="dashboard-band-header">
+          <div>
+            <h2>Workbook-derived insight groups</h2>
+            <p>Each group uses only workbook fields such as evidence score, caution score, ease score, time horizon, category, use-case, and method text. Groups are for comparison and triage, not individualized recommendations.</p>
+          </div>
+        </div>
+        <div class="dashboard-insight-rows">
+          ${topPicks.map((group) => topPickCard(group)).join("")}
+        </div>
+      </section>` : ""}
+
+      <section class="dashboard-analysis-stage">
+        <div class="dashboard-analysis-segment dashboard-ranking-segment">
+          <div class="dashboard-band-header">
+            <div>
+              <span class="section-label">Ranked workbook view</span>
+              <h2>Highest workbook-ranked methods</h2>
+              <p>${escapeHtml(rankedSource)} Select a row to inspect workbook-derived details.</p>
+            </div>
+          </div>
+          <div class="rank-list">
+            ${topByScore.map((method, index) => rankRow(method, index + 1)).join("")}
+          </div>
+        </div>
+
+        <div class="dashboard-chart-stack">
+          ${chartPanels.slice(0, 4).join("")}
+        </div>
+
+        <div class="dashboard-analysis-segment dashboard-score-segment">
+          <div class="dashboard-band-header">
+            <div>
+              <span class="section-label">Priority score</span>
+              <h2>Top 10 score chart</h2>
+              <p>Interactive method rows sorted by workbook priority score when available. Longer bars mean higher workbook priority score.</p>
+            </div>
+          </div>
+          ${scoreChart(topByScore)}
+        </div>
+
+        ${chartPanels.slice(4).join("")}
+      </section>
+
+      <section class="about-scoring dashboard-boundary-band">
+        <span class="section-label">About scoring</span>
+        <p>${escapeHtml(state.dashboard.interpretation || "The dashboard uses workbook priority score, dashboard rank, evidence score, caution score, ease score, and time horizon fields when available. Practical difficulty is derived from workbook ease score only for filtering and display. These summaries are educational comparisons, not medical advice or a replacement for professional care.")}</p>
+      </section>
+    </section>
     </section>
   `;
 
@@ -1066,7 +1077,7 @@ function miniRow(label, value) {
 
 function publicValueCard(title, body) {
   return `
-    <article class="public-value-card">
+    <article class="dashboard-feature-row">
       <h3>${escapeHtml(title)}</h3>
       <p>${escapeHtml(body)}</p>
     </article>
@@ -1075,7 +1086,7 @@ function publicValueCard(title, body) {
 
 function methodologyCard(title, body) {
   return `
-    <article class="methodology-card">
+    <article class="dashboard-methodology-row">
       <h3>${escapeHtml(title)}</h3>
       <p>${escapeHtml(body)}</p>
     </article>
@@ -1084,7 +1095,7 @@ function methodologyCard(title, body) {
 
 function metricCard(label, value, note, kicker = "Workbook") {
   return `
-    <article class="metric-card dashboard-metric-card">
+    <article class="dashboard-fact-row">
       <small>${escapeHtml(label)}</small>
       <strong>${escapeHtml(value)}</strong>
       <span>${escapeHtml(kicker)}</span>
@@ -1098,7 +1109,7 @@ function methodSummaryWidget(label, methods, scoreLabel) {
     return "";
   }
   return `
-    <article class="metric-card method-summary-card">
+    <article class="dashboard-signal-group">
       <small>${escapeHtml(label)}</small>
       <strong>${escapeHtml(methods.length)}</strong>
       <p>Top workbook rows for this signal. Select a row for details.</p>
@@ -1120,14 +1131,14 @@ function methodSummaryWidget(label, methods, scoreLabel) {
 
 function topPickCard(group) {
   return `
-    <article class="top-pick-card dashboard-insight-card app-card">
-      <div class="card-main">
-        <div class="badge-row card-badges">
+    <article class="dashboard-insight-group">
+      <div class="dashboard-insight-header">
+        <div class="badge-row">
           ${badge("Insight group", "")}
           ${badge(group.scoreLabel, "")}
         </div>
-        <h3 class="card-title">${escapeHtml(group.title)}</h3>
-        <p class="card-summary">${escapeHtml(group.note)}</p>
+        <h3>${escapeHtml(group.title)}</h3>
+        <p>${escapeHtml(group.note)}</p>
       </div>
       ${
         group.methods.length
@@ -1174,8 +1185,8 @@ function chartPanel(title, subtitle, data, filterType, eyebrow = "Workbook chart
   const total = data.reduce((sum, item) => sum + item.count, 0);
   const hasData = data.length > 0;
   return `
-    <div class="panel dashboard-chart-panel">
-      <div class="panel-header">
+    <div class="dashboard-analysis-segment dashboard-chart-segment">
+      <div class="dashboard-band-header">
         <div>
           <span class="section-label">${escapeHtml(eyebrow)}</span>
           <h2>${escapeHtml(title)}</h2>
@@ -1345,42 +1356,49 @@ function renderMethods() {
   const preset = activeMethodPreset();
 
   app.innerHTML = `
-    <section class="methods-toolbar">
-      <div class="search-row">
-        <input id="methodSearch" type="search" value="${escapeAttr(state.query)}" placeholder="Search methods" aria-label="Search methods, summaries, steps, use-cases, and cautions" />
-        ${sortControlMarkup()}
-        <button class="filter-toggle" id="filterToggle" type="button">${state.filtersOpen ? "Hide filters" : "Filters"}</button>
-        <button class="reset-button" id="resetFilters" type="button">Reset view</button>
-      </div>
-      ${methodPresetBar()}
-      ${activeFilterChips()}
-      ${preset ? presetExplanation(preset, filtered.length) : ""}
-    </section>
-
-    <section class="methods-layout">
-      <aside class="panel filters ${state.filtersOpen ? "is-open" : ""}" id="filtersPanel">
-        ${selectFilter("Anxiety target / use-case", "useCase", unique(state.methods.map((method) => method.useCase)).sort())}
-        ${selectFilter("Evidence grade", "evidence", unique(state.methods.map((method) => method.evidenceGrade)).sort())}
-        ${selectFilter("Caution level", "safety", unique(state.methods.map((method) => method.safetyLevel)).sort())}
-        ${selectFilter("Reported time horizon", "speed", unique(state.methods.map((method) => method.timeHorizon)).sort())}
-        ${selectFilter("Practical difficulty", "difficulty", unique(state.methods.map((method) => method.difficulty)).sort())}
-        ${hasTags ? selectFilter("Tags", "tags", tags) : ""}
-      </aside>
-
-      <section>
-        <div class="results-meta">
-          <span>${filtered.length} of ${state.methods.length} methods</span>
-          <span>${escapeHtml(activeFilterSummary())}</span>
+    <section class="methods-stage">
+      <header class="methods-stage-header">
+        <span class="section-label">Educational methods directory</span>
+        <h1 class="section-title">Browse workbook methods by learning context</h1>
+        <p>Use search and workbook-derived signals to scan educational self-management information. Open a row for full workbook detail and cautions.</p>
+      </header>
+      <section class="methods-toolbar">
+        <div class="search-row">
+          <input id="methodSearch" type="search" value="${escapeAttr(state.query)}" placeholder="Search methods" aria-label="Search methods, summaries, steps, use-cases, and cautions" />
+          ${sortControlMarkup()}
+          <button class="filter-toggle" id="filterToggle" type="button">${state.filtersOpen ? "Hide filters" : "Filters"}</button>
+          <button class="reset-button" id="resetFilters" type="button">Reset view</button>
         </div>
-        ${
-          filtered.length
-            ? `<div class="grid methods-grid">${filtered.map(methodCard).join("")}</div>`
-            : emptyState("No methods match these filters", "Try a broader search, remove a filter, or reset the view.")
-        }
+        ${methodPresetBar()}
+        ${activeFilterChips()}
+        ${preset ? presetExplanation(preset, filtered.length) : ""}
       </section>
-    </section>
 
-    ${methodRankingNote()}
+      <section class="methods-layout">
+        <aside class="filters method-directory-filters ${state.filtersOpen ? "is-open" : ""}" id="filtersPanel">
+          ${selectFilter("Anxiety target / use-case", "useCase", unique(state.methods.map((method) => method.useCase)).sort())}
+          ${selectFilter("Evidence grade", "evidence", unique(state.methods.map((method) => method.evidenceGrade)).sort())}
+          ${selectFilter("Caution level", "safety", unique(state.methods.map((method) => method.safetyLevel)).sort())}
+          ${selectFilter("Reported time horizon", "speed", unique(state.methods.map((method) => method.timeHorizon)).sort())}
+          ${selectFilter("Practical difficulty", "difficulty", unique(state.methods.map((method) => method.difficulty)).sort())}
+          ${hasTags ? selectFilter("Tags", "tags", tags) : ""}
+        </aside>
+
+        <section class="method-directory-results">
+          <div class="results-meta">
+            <span>${filtered.length} of ${state.methods.length} methods</span>
+            <span>${escapeHtml(activeFilterSummary())}</span>
+          </div>
+          ${
+            filtered.length
+              ? `<div class="method-directory">${methodDirectoryGroups(filtered).map(methodDirectoryGroup).join("")}</div>`
+              : emptyState("No methods match these filters", "Try a broader search, remove a filter, or reset the view.")
+          }
+        </section>
+      </section>
+
+      ${methodRankingNote()}
+    </section>
   `;
 
   bindMethodControls();
@@ -1393,30 +1411,32 @@ function renderSupplements() {
   const highRiskCount = state.supplements.filter((supplement) => normalizeKey(supplement.risk) === "high").length;
 
   app.innerHTML = `
-    <section class="supplements-hero panel">
-      <div>
-        <span class="section-label">Supplements Matrix</span>
-        <h1 class="section-title">Supplement signals separated from coping methods</h1>
-        <p>This matrix is parsed from the dedicated Supplements workbook sheet. It is educational database content only and is not medical advice, diagnosis, treatment, supplement recommendation, or medication guidance.</p>
-        <p class="legal-notice-inline">Supplement information is general educational content only and is not a recommendation to use, stop, combine, or dose any supplement. Discuss supplement decisions with a licensed clinician or pharmacist, especially when using medication or managing a health condition.</p>
-      </div>
-      <div class="supplements-summary-grid" aria-label="Supplements matrix summary">
-        ${smallFact("Supplements", total)}
-        ${smallFact("High-risk flags", highRiskCount)}
-        ${smallFact("Sort", "Risk level")}
-      </div>
-    </section>
+    <section class="supplements-stage">
+      <section class="supplements-intro-band">
+        <div>
+          <span class="section-label">Supplements Matrix</span>
+          <h1 class="section-title">Supplement signals separated from coping methods</h1>
+          <p>This matrix is parsed from the dedicated Supplements workbook sheet. It is educational database content only and is not medical advice, diagnosis, treatment, supplement recommendation, or medication guidance.</p>
+          <p class="legal-notice-inline">Supplement information is general educational content only and is not a recommendation to use, stop, combine, or dose any supplement. Discuss supplement decisions with a licensed clinician or pharmacist, especially when using medication or managing a health condition.</p>
+        </div>
+        <div class="supplements-summary-grid" aria-label="Supplements matrix summary">
+          ${smallFact("Supplements", total)}
+          ${smallFact("High-risk flags", highRiskCount)}
+          ${smallFact("Sort", "Risk level")}
+        </div>
+      </section>
 
-    <section class="supplements-warning panel" role="note">
-      <span class="section-label">Educational Note: Medication Interactions</span>
-      <p>The workbook notes that combining supplements with psychiatric medication, sedatives, thyroid medication, blood thinners, blood pressure medication, nitroglycerin, SSRIs, SNRIs, or MAOIs without consulting a physician or licensed pharmacist may carry significant risks. This is general educational information only. Discuss all supplement and medication decisions with a licensed clinician or pharmacist.</p>
-    </section>
+      <section class="supplements-warning" role="note">
+        <span class="section-label">Educational Note: Medication Interactions</span>
+        <p>The workbook notes that combining supplements with psychiatric medication, sedatives, thyroid medication, blood thinners, blood pressure medication, nitroglycerin, SSRIs, SNRIs, or MAOIs without consulting a physician or licensed pharmacist may carry significant risks. This is general educational information only. Discuss all supplement and medication decisions with a licensed clinician or pharmacist.</p>
+      </section>
 
-    ${
-      groups.length
-        ? groups.map(supplementRiskSection).join("")
-        : emptyState("No supplement matrix found", "The workbook did not include a Supplements sheet.")
-    }
+      ${
+        groups.length
+          ? `<div class="supplement-risk-directory">${groups.map(supplementRiskSection).join("")}</div>`
+          : emptyState("No supplement matrix found", "The workbook did not include a Supplements sheet.")
+      }
+    </section>
   `;
 
   initScrollAnimations();
@@ -1447,7 +1467,7 @@ function sortedSupplements() {
 
 function supplementRiskSection(group) {
   return `
-    <section class="supplement-risk-section ${supplementRiskClass(group.risk)}">
+    <section class="supplement-risk-band ${supplementRiskClass(group.risk)}">
       <div class="supplement-risk-heading">
         <div>
           <span class="section-label">Risk level</span>
@@ -1455,29 +1475,28 @@ function supplementRiskSection(group) {
         </div>
         <span>${group.supplements.length} entr${group.supplements.length === 1 ? "y" : "ies"}</span>
       </div>
-      <div class="grid supplements-grid">
-        ${group.supplements.map(supplementCard).join("")}
+      <div class="supplement-risk-rows">
+        ${group.supplements.map(supplementRow).join("")}
       </div>
     </section>
   `;
 }
 
-function supplementCard(supplement) {
+function supplementRow(supplement) {
   const isHighRisk = normalizeKey(supplement.risk) === "high";
   return `
-    <article class="supplement-card ${supplementRiskClass(supplement.risk)} app-card">
-      <div class="card-main">
-        <div class="badge-row card-badges">
+    <article class="supplement-risk-row ${supplementRiskClass(supplement.risk)}">
+      <header class="supplement-row-header">
+        <div class="badge-row">
           ${badge(supplement.risk, supplementRiskClass(supplement.risk))}
           ${supplement.clinicalEvidence ? badge(`Evidence Notes: ${supplement.clinicalEvidence}`, clinicalEvidenceClass(supplement.clinicalEvidence)) : ""}
         </div>
-        <h3 class="card-title">${escapeHtml(supplement.name)}</h3>
-      </div>
-
-      <div class="supplement-matrix-fields">
+        <h3>${escapeHtml(supplement.name)}</h3>
+      </header>
+      ${supplementInteractionBlock(supplement.interactions, isHighRisk)}
+      <div class="supplement-row-meta">
         ${supplementMatrixField("Target symptoms", supplement.symptoms)}
         ${supplementMatrixField("Reddit popularity", supplement.redditPopularity)}
-        ${supplementInteractionBlock(supplement.interactions, isHighRisk)}
       </div>
     </article>
   `;
@@ -1496,7 +1515,7 @@ function supplementMatrixField(label, value) {
 function supplementInteractionBlock(value, isHighRisk = false) {
   if (!text(value)) return "";
   return `
-    <div class="supplement-safety-alert ${isHighRisk ? "is-critical" : ""}">
+    <div class="supplement-row-alert ${isHighRisk ? "is-critical" : ""}">
       <span class="field-label">${isHighRisk ? "High-Risk Interaction Warning" : "Psych med interactions"}</span>
       <div class="field-value">${escapeHtml(value)}</div>
     </div>
@@ -1632,36 +1651,59 @@ function sortOption(value, label) {
   return `<option value="${value}" ${state.sort === value ? "selected" : ""}>${escapeHtml(label)}</option>`;
 }
 
-function methodCard(method) {
+function methodDirectoryGroups(methods) {
+  const groups = new Map();
+  methods.forEach((method) => {
+    const category = method.category || "Uncategorized";
+    if (!groups.has(category)) groups.set(category, []);
+    groups.get(category).push(method);
+  });
+  return [...groups.entries()].map(([category, items]) => ({ category, items }));
+}
+
+function methodDirectoryGroup(group) {
+  return `
+    <section class="method-directory-group">
+      <header class="method-directory-heading">
+        <div>
+          <span class="section-label">Workbook category</span>
+          <h2>${escapeHtml(group.category)}</h2>
+        </div>
+        <span>${group.items.length} method${group.items.length === 1 ? "" : "s"}</span>
+      </header>
+      <div class="method-directory-rows">
+        ${group.items.map(methodDirectoryRow).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function methodDirectoryRow(method) {
   const preset = activeMethodPreset();
   const presetReason = preset?.matches(method) ? preset.reason(method) : "";
   const derivedChips = methodDerivedChips(method, preset).slice(0, 3);
   const tags = method.tags.length ? chipRow(method.tags.slice(0, 3), "Tags") : "";
-  const practicalPreview = text(method.protocol);
   return `
-    <button class="method-card app-card" type="button" data-method-id="${method.id}">
-      <div class="card-main">
-        <div class="badge-row card-badges">
+    <button class="method-directory-row" type="button" data-method-id="${method.id}">
+      <div class="method-row-copy">
+        <div class="badge-row">
           ${badge(method.evidenceGrade, evidenceClass(method.evidenceGrade))}
           ${badge(method.safetyLevel, safetyClass(method.safetyScore))}
-          ${badge(method.category || "Uncategorized", "")}
         </div>
-        <h3 class="card-title">${escapeHtml(method.name)}</h3>
-        <p class="card-summary">${escapeHtml(method.summary || "No summary provided in the workbook.")}</p>
+        <h3>${escapeHtml(method.name)}</h3>
+        <p>${escapeHtml(method.summary || "No summary provided in the workbook.")}</p>
+        ${method.useCase ? `<span class="method-row-context"><strong>Workbook use-case:</strong> ${escapeHtml(method.useCase)}</span>` : ""}
       </div>
-
-      <div class="method-signal-grid" aria-label="Workbook-derived signals">
+      <div class="method-row-signals" aria-label="Workbook-derived signals">
         ${methodSignal("Evidence", scoreDisplay(method.evidenceScore), method.evidenceGrade)}
         ${methodSignal("Caution", scoreDisplay(method.safetyScore), method.safetyLevel)}
         ${methodSignal("Time", method.timeHorizon, "")}
         ${methodSignal("Ease", scoreDisplay(method.easeScore), method.difficulty)}
       </div>
-
-      <div class="card-preview-stack method-card-detail">
-        ${method.useCase ? `<div class="method-use-case"><span class="field-label">May be useful for</span><strong>${escapeHtml(method.useCase)}</strong></div>` : ""}
-        ${presetReason ? `<div class="detail-field card-preview preset-reason"><span class="field-label">Why shown here</span><div class="field-value">${escapeHtml(shorten(presetReason, 135))}</div></div>` : ""}
-        ${practicalPreview ? `<div class="detail-field card-preview method-practical-preview"><span class="field-label">Practical preview</span><div class="field-value">${escapeHtml(shorten(practicalPreview, 130))}</div></div>` : ""}
-        ${derivedChips.length ? `<div class="card-chips">${chipRow(derivedChips, "Workbook-derived fit markers")}</div>` : tags ? `<div class="card-chips">${tags}</div>` : ""}
+      <div class="method-row-tail">
+        ${presetReason ? `<span class="method-row-reason">${escapeHtml(shorten(presetReason, 135))}</span>` : ""}
+        ${derivedChips.length ? chipRow(derivedChips, "Workbook-derived fit markers") : tags}
+        <span class="method-row-action">Open details</span>
       </div>
     </button>
   `;
@@ -2288,79 +2330,78 @@ function evidenceNotes(method) {
 function renderProtocols() {
   const stats = protocolSummaryStats();
   app.innerHTML = `
-    <section class="panel-header">
-      <div>
+    <section class="protocol-stage">
+      <header class="protocol-stage-header">
+        <span class="section-label">Learning sequences</span>
         <h1 class="section-title">Protocols</h1>
         <p>Protocol cards are drawn from the workbook Protocols sheet. They are educational self-management sequences, not treatment plans or a substitute for professional care.</p>
-      </div>
+      </header>
+      <section class="protocols-note" role="note">
+        <span class="section-label">How to read protocols</span>
+        <p>Each card uses only workbook fields. Where related methods appear, they are labeled as potentially related because they are matched from workbook method names, use-cases, categories, and protocol text.</p>
+      </section>
+      <section class="protocol-summary-band" aria-label="Protocol workbook summary">
+        ${smallFact("Workbook sequences", stats.count)}
+        ${stats.stepCount ? smallFact("Listed steps", stats.stepCount) : ""}
+        ${stats.durationCount ? smallFact("With duration", stats.durationCount) : ""}
+      </section>
+      ${
+        state.protocols.length
+          ? `<section class="protocol-timeline" aria-label="Workbook sequences">${state.protocols.map(protocolTimelineItem).join("")}</section>`
+          : emptyState("No protocols found", "The Protocols sheet did not contain usable rows.")
+      }
     </section>
-    <section class="protocols-note panel">
-      <span class="section-label">How to read protocols</span>
-      <p>Each card uses only workbook fields. Where related methods appear, they are labeled as potentially related because they are matched from workbook method names, use-cases, categories, and protocol text.</p>
-    </section>
-    <section class="protocol-summary-strip panel" aria-label="Protocol workbook summary">
-      ${smallFact("Workbook sequences", stats.count)}
-      ${stats.stepCount ? smallFact("Listed steps", stats.stepCount) : ""}
-      ${stats.durationCount ? smallFact("With duration", stats.durationCount) : ""}
-    </section>
-    ${
-      state.protocols.length
-        ? `<section class="grid protocols-grid">${state.protocols.map(protocolCard).join("")}</section>`
-        : emptyState("No protocols found", "The Protocols sheet did not contain usable rows.")
-    }
   `;
 
   bindProtocolControls();
   initScrollAnimations();
 }
 
-function protocolCard(protocol, index) {
+function protocolTimelineItem(protocol, index) {
   const steps = protocolStepItems(protocol.steps);
   const previewSteps = steps.slice(0, 3);
   const related = protocolRelatedMethods(protocol);
   const detailId = `protocol-detail-${index}`;
   const hasDetails = steps.length > previewSteps.length || protocol.goal || protocol.notes || related.methods.length;
   return `
-    <article class="protocol-card protocol-sequence-card app-card">
-      <div class="card-main">
-        <div class="badge-row card-badges">
-          ${badge("Workbook sequence", "")}
-          ${protocol.duration ? badge(protocol.duration, "") : ""}
-          ${steps.length ? badge(`${steps.length} steps`, "") : ""}
+    <article class="protocol-timeline-item">
+      <div class="protocol-timeline-marker" aria-hidden="true">${index + 1}</div>
+      <div class="protocol-timeline-content">
+        <header class="protocol-item-header">
+          <div class="badge-row">
+            ${badge("Workbook sequence", "")}
+            ${protocol.duration ? badge(protocol.duration, "") : ""}
+            ${steps.length ? badge(`${steps.length} steps`, "") : ""}
+          </div>
+          <h2>${escapeHtml(protocol.name)}</h2>
+          ${protocol.goal ? `<p><strong>Workbook use-case:</strong> ${escapeHtml(protocol.goal)}</p>` : ""}
+        </header>
+        <div class="protocol-fact-row">
+          ${protocolMetaFact("Duration", protocol.duration)}
+          ${protocolMetaFact("Use-case", protocol.goal)}
+          ${steps.length ? protocolMetaFact("Steps", `${steps.length}`) : ""}
         </div>
-        <h3 class="card-title">${escapeHtml(protocol.name)}</h3>
-        ${protocol.goal ? `<p class="card-summary"><strong>Workbook use-case:</strong> ${escapeHtml(protocol.goal)}</p>` : ""}
-      </div>
-
-      <div class="protocol-fact-row">
-        ${protocolMetaFact("Duration", protocol.duration)}
-        ${protocolMetaFact("Use-case", protocol.goal)}
-        ${steps.length ? protocolMetaFact("Steps", `${steps.length}`) : ""}
-      </div>
-
-      <div class="card-preview-stack">
         ${
           previewSteps.length
-            ? `<div class="detail-field card-preview protocol-step-preview"><span class="field-label">${steps.length > previewSteps.length ? "First workbook steps" : "Workbook steps"}</span>${protocolStepList(previewSteps)}</div>`
+            ? `<div class="protocol-step-preview"><span class="field-label">${steps.length > previewSteps.length ? "First workbook steps" : "Workbook steps"}</span>${protocolStepList(previewSteps)}</div>`
             : ""
         }
-        ${protocol.notes ? `<div class="detail-field card-preview protocol-caution"><span class="field-label">Workbook context / caution</span><p class="field-value">${escapeHtml(protocol.notes)}</p></div>` : ""}
+        ${protocol.notes ? `<div class="protocol-caution-band"><span class="field-label">Workbook context / caution</span><p class="field-value">${escapeHtml(protocol.notes)}</p></div>` : ""}
         ${related.methods.length ? protocolRelatedBlock(related) : ""}
+        ${
+          hasDetails
+            ? `<details class="protocol-details" id="${detailId}">
+          <summary>View workbook sequence</summary>
+          <div class="protocol-detail-content">
+            ${protocol.goal ? detailField("When this workbook sequence is used", protocol.goal, true) : ""}
+            ${steps.length ? `<section class="detail-field is-wide protocol-step-detail"><span class="field-label">Full workbook steps</span>${protocolStepList(steps)}</section>` : ""}
+            ${protocol.notes ? detailField("Workbook notes / caution", protocol.notes, true) : ""}
+            ${related.methods.length ? protocolRelatedBlock(related, true) : ""}
+          </div>
+        </details>`
+            : ""
+        }
       </div>
-
-      ${
-        hasDetails
-          ? `<details class="protocol-details" id="${detailId}">
-        <summary>View workbook sequence</summary>
-        <div class="protocol-detail-content">
-          ${protocol.goal ? detailField("When this workbook sequence is used", protocol.goal, true) : ""}
-          ${steps.length ? `<section class="detail-field is-wide protocol-step-detail"><span class="field-label">Full workbook steps</span>${protocolStepList(steps)}</section>` : ""}
-          ${protocol.notes ? detailField("Workbook notes / caution", protocol.notes, true) : ""}
-          ${related.methods.length ? protocolRelatedBlock(related, true) : ""}
-        </div>
-      </details>`
-          : ""
-      }
     </article>
   `;
 }
@@ -2488,7 +2529,7 @@ function tokenOverlap(left, right) {
 function protocolRelatedBlock(related, isDetail = false) {
   const methods = isDetail ? related.methods : related.methods.slice(0, 3);
   return `
-    <section class="${isDetail ? "detail-field is-wide protocol-related-detail" : "detail-field card-preview protocol-related"}">
+    <section class="${isDetail ? "detail-field is-wide protocol-related-detail" : "protocol-related"}">
       <span class="field-label">${escapeHtml(related.label)}</span>
       <div class="protocol-related-list">
         ${methods
@@ -2509,36 +2550,37 @@ function protocolRelatedBlock(related, isDetail = false) {
 function renderSafety() {
   const sections = safetySections();
   app.innerHTML = `
-    <section class="hero">
-      <div class="hero-copy">
-        <h1>Safety boundaries first</h1>
-        <p>The safety notes preserve workbook cautions about clinical boundaries, medication, breathing, exposure, substances, tracking, and urgent symptoms. They are educational prompts for caution, not individualized safety advice.</p>
-      </div>
-      <div class="hero-panel">
-        <div>
+    <section class="safety-stage">
+      <section class="safety-boundary-band">
+        <div class="safety-stage-intro">
+          <span class="section-label">Safety boundaries</span>
+          <h1>Safety boundaries first</h1>
+          <p>The safety notes preserve workbook cautions about clinical boundaries, medication, breathing, exposure, substances, tracking, and urgent symptoms. They are educational prompts for caution, not individualized safety advice.</p>
+        </div>
+        <div class="safety-boundary-alert">
           <h2>Not a crisis or clinical care tool</h2>
           <p>This app cannot assess urgent symptoms or personal risk. For urgent medical concerns, dangerous impulses, or inability to stay safe, seek local emergency, crisis, or licensed medical support immediately.</p>
+          <div class="safety-critical-notice" role="note">
+            <p><strong>This site is not a crisis service.</strong> If urgent or immediate help is needed, contact local emergency services or a licensed crisis support provider.</p>
+            <p class="legal-notice-inline">This section is not medication guidance and must not be used to start, stop, combine, or adjust medications. Medication decisions should be made with a licensed clinician.</p>
+          </div>
         </div>
-        <div class="legal-notice-panel" role="note">
-          <p><strong>This site is not a crisis service.</strong> If urgent or immediate help is needed, contact local emergency services or a licensed crisis support provider.</p>
-          <p class="legal-notice-inline">This section is not medication guidance and must not be used to start, stop, combine, or adjust medications. Medication decisions should be made with a licensed clinician.</p>
+      </section>
+      ${sections.length ? `<section class="safety-map-band">
+        <div>
+          <span class="section-label">Workbook safety map</span>
+          <p>Grouped from the Safety Notes sheet by topic and guidance text. These notes are caution boundaries for educational self-management information, not a substitute for clinical care.</p>
         </div>
-      </div>
+        <div class="safety-map-grid">
+          ${sections.map((section) => `<span>${escapeHtml(section.title)} <strong>${section.notes.length}</strong></span>`).join("")}
+        </div>
+      </section>` : ""}
+      ${
+        state.safetyNotes.length
+          ? `<div class="safety-topic-directory">${sections.map(safetySection).join("")}</div>`
+          : emptyState("No safety notes found", "The Safety Notes sheet did not contain usable rows.")
+      }
     </section>
-    ${sections.length ? `<section class="safety-map panel">
-      <div>
-        <span class="section-label">Workbook safety map</span>
-        <p>Grouped from the Safety Notes sheet by topic and guidance text. These notes are caution boundaries for educational self-management information, not a substitute for clinical care.</p>
-      </div>
-      <div class="safety-map-grid">
-        ${sections.map((section) => `<span>${escapeHtml(section.title)} <strong>${section.notes.length}</strong></span>`).join("")}
-      </div>
-    </section>` : ""}
-    ${
-      state.safetyNotes.length
-        ? sections.map(safetySection).join("")
-        : emptyState("No safety notes found", "The Safety Notes sheet did not contain usable rows.")
-    }
   `;
 
   initScrollAnimations();
@@ -2640,36 +2682,33 @@ function safetyNoteMatches(note, terms) {
 
 function safetySection(section) {
   return `
-    <section class="safety-section">
-      <div class="panel-header safety-section-header">
+    <section class="safety-topic-band ${section.tone || ""}">
+      <header class="safety-section-header">
         <div>
           <span class="section-label">Workbook caution group</span>
           <h2>${escapeHtml(section.title)}</h2>
           <p>${escapeHtml(section.description)}</p>
         </div>
         <span class="safety-section-count">${section.notes.length} note${section.notes.length === 1 ? "" : "s"}</span>
-      </div>
-      <div class="grid safety-grid">
-        ${section.notes.map((note) => safetyCard(note, section)).join("")}
+      </header>
+      <div class="safety-guidance-rows">
+        ${section.notes.map((note) => safetyGuidanceRow(note, section)).join("")}
       </div>
     </section>
   `;
 }
 
-function safetyCard(note, section) {
+function safetyGuidanceRow(note, section) {
   const paragraphs = safetyParagraphs(note.guidance);
   return `
-    <article class="safety-card app-card ${section.tone || ""}">
-      <div class="card-main">
-        <div class="badge-row card-badges">
-          ${badge("Workbook note", "")}
-          ${badge(section.title, "")}
-        </div>
-        <h3 class="card-title">${escapeHtml(note.topic)}</h3>
-      </div>
+    <article class="safety-guidance-row ${section.tone || ""}">
+      <header>
+        <span class="badge">Workbook note</span>
+        <h3>${escapeHtml(note.topic)}</h3>
+      </header>
       ${
         paragraphs.length
-          ? `<div class="detail-field card-preview safety-guidance"><span class="field-label">Workbook guidance</span>${paragraphs.map((paragraph) => `<p class="field-value">${escapeHtml(paragraph)}</p>`).join("")}</div>`
+          ? `<div class="safety-guidance"><span class="field-label">Workbook guidance</span>${paragraphs.map((paragraph) => `<p class="field-value">${escapeHtml(paragraph)}</p>`).join("")}</div>`
           : ""
       }
     </article>
@@ -2698,48 +2737,49 @@ function renderSources() {
   const sourceStats = sourceSummaryStats();
 
   app.innerHTML = `
-    <section class="panel-header">
-      <div>
+    <section class="sources-stage">
+      <header class="sources-stage-header">
+        <span class="section-label">Research directory</span>
         <h1 class="section-title">Sources</h1>
         <p>References are displayed from the workbook Sources sheet. Reddit-derived sources and clinical or public guidance sources are labeled separately so reported experience is not treated as clinical proof.</p>
+      </header>
+
+      <section class="sources-note">
+        <span class="section-label">Source interpretation</span>
+        <p>Sources are workbook references used for context and evidence comparison. Reddit-derived discussion sources are not clinical proof, and the workbook should not be read as an exhaustive evidence review.</p>
+      </section>
+
+      <section class="sources-summary-band" aria-label="Source workbook summary">
+        ${smallFact("Workbook sources", state.sources.length)}
+        ${smallFact("Valid links", sourceStats.validLinks)}
+        ${smallFact("Source categories", categories.length)}
+        ${sourceStats.redditCount ? smallFact("Reddit-derived", sourceStats.redditCount) : ""}
+      </section>
+
+      <section class="sources-tools" aria-label="Source search and filters">
+        <input class="control" id="sourceSearch" type="search" value="${escapeAttr(state.sourceQuery)}" placeholder="Search sources, relevance, URLs" aria-label="Search sources" />
+        <select class="control" id="sourceCategory" aria-label="Filter source category">
+          <option value="">All categories</option>
+          ${categories.map((category) => `<option value="${escapeAttr(category)}" ${state.sourceCategory === category ? "selected" : ""}>${escapeHtml(category)}</option>`).join("")}
+        </select>
+        <select class="control" id="sourceType" aria-label="Filter source type">
+          <option value="">All source types</option>
+          ${types.map((type) => `<option value="${escapeAttr(type)}" ${state.sourceType === type ? "selected" : ""}>${escapeHtml(type)}</option>`).join("")}
+        </select>
+        <button class="reset-button source-reset" id="sourceReset" type="button">Reset</button>
+      </section>
+
+      <div class="results-meta sources-meta">
+        <span>${filtered.length} of ${state.sources.length} workbook sources</span>
+        <span>${escapeHtml(sourceFilterSummary())}</span>
       </div>
+
+      ${
+        filtered.length
+          ? `<section class="source-directory">${sourceDirectoryGroups(filtered).map(sourceDirectoryGroup).join("")}</section>`
+          : emptyState("No sources match", "Try removing the search term or source type filter.")
+      }
     </section>
-
-    <section class="sources-note panel">
-      <span class="section-label">Source interpretation</span>
-      <p>Sources are workbook references used for context and evidence comparison. Reddit-derived discussion sources are not clinical proof, and the workbook should not be read as an exhaustive evidence review.</p>
-    </section>
-
-    <section class="sources-summary-strip panel" aria-label="Source workbook summary">
-      ${smallFact("Workbook sources", state.sources.length)}
-      ${smallFact("Valid links", sourceStats.validLinks)}
-      ${smallFact("Source categories", categories.length)}
-      ${sourceStats.redditCount ? smallFact("Reddit-derived", sourceStats.redditCount) : ""}
-    </section>
-
-    <section class="sources-tools" aria-label="Source search and filters">
-      <input class="control" id="sourceSearch" type="search" value="${escapeAttr(state.sourceQuery)}" placeholder="Search sources, relevance, URLs" aria-label="Search sources" />
-      <select class="control" id="sourceCategory" aria-label="Filter source category">
-        <option value="">All categories</option>
-        ${categories.map((category) => `<option value="${escapeAttr(category)}" ${state.sourceCategory === category ? "selected" : ""}>${escapeHtml(category)}</option>`).join("")}
-      </select>
-      <select class="control" id="sourceType" aria-label="Filter source type">
-        <option value="">All source types</option>
-        ${types.map((type) => `<option value="${escapeAttr(type)}" ${state.sourceType === type ? "selected" : ""}>${escapeHtml(type)}</option>`).join("")}
-      </select>
-      <button class="reset-button source-reset" id="sourceReset" type="button">Reset</button>
-    </section>
-
-    <div class="results-meta sources-meta">
-      <span>${filtered.length} of ${state.sources.length} workbook sources</span>
-      <span>${escapeHtml(sourceFilterSummary())}</span>
-    </div>
-
-    ${
-      filtered.length
-        ? `<section class="sources-list">${filtered.map(sourceCard).join("")}</section>`
-        : emptyState("No sources match", "Try removing the search term or source type filter.")
-    }
   `;
 
   document.querySelector("#sourceSearch")?.addEventListener("input", (event) => {
@@ -2827,26 +2867,21 @@ function applyMotionClasses(root) {
   });
 
   root
-    .querySelectorAll(".hero, .panel-header, .methods-toolbar, .sources-tools, .results-meta")
+    .querySelectorAll(".dashboard-lead-content, .dashboard-band-header, .dashboard-guide-stage, .dashboard-discovery-stage, .dashboard-research-stage, .methods-toolbar, .sources-tools, .results-meta, .methods-stage-header, .protocol-stage-header, .sources-stage-header, .safety-stage-intro")
     .forEach((item) => item.classList.add("scroll-reveal", "motion-soft"));
 
   root
-    .querySelectorAll(".grid, .rank-list, .chart-list, .summary-method-list, .sources-list, .safety-map-grid")
+    .querySelectorAll(".grid, .rank-list, .chart-list, .summary-method-list, .safety-map-grid, .method-directory-rows, .supplement-risk-rows, .protocol-timeline, .safety-guidance-rows, .source-rows")
     .forEach((group) => group.classList.add("stagger-group"));
 
   root
     .querySelectorAll(
       [
-        ".metric-card",
-        ".public-value-card",
-        ".methodology-card",
-        ".dashboard-chart-panel",
-        ".top-pick-card",
-        ".method-card",
-        ".supplement-card",
-        ".protocol-card",
-        ".safety-card",
-        ".source-card",
+        ".dashboard-feature-row",
+        ".dashboard-methodology-row",
+        ".dashboard-fact-row",
+        ".dashboard-insight-group",
+        ".dashboard-analysis-segment",
         ".rank-row",
         ".summary-method",
         ".dashboard-pick",
@@ -3005,36 +3040,53 @@ function isInRevealSafetyRange(item) {
   return rect.bottom >= -120 && rect.top <= viewportHeight + 160;
 }
 
-function sourceCard(source) {
+function sourceDirectoryGroups(sources) {
+  const groups = new Map();
+  sources.forEach((source) => {
+    const category = sourceCategory(source);
+    if (!groups.has(category)) groups.set(category, []);
+    groups.get(category).push(source);
+  });
+  return [...groups.entries()].map(([category, items]) => ({ category, items }));
+}
+
+function sourceDirectoryGroup(group) {
+  return `
+    <section class="source-group ${sourceCategoryClass(group.category)}">
+      <header class="source-group-header">
+        <h2>${escapeHtml(group.category)}</h2>
+        <span>${group.items.length} source${group.items.length === 1 ? "" : "s"}</span>
+      </header>
+      <div class="source-rows">
+        ${group.items.map(sourceRow).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function sourceRow(source) {
   const category = sourceCategory(source);
   const url = validSourceUrl(source.url);
   const title = sourceDisplayTitle(source);
   const titleUsesRelevance = !source.title && source.relevance;
   const host = sourceHost(source.url);
   return `
-    <article class="source-card ${sourceCategoryClass(category)} app-card">
-      <div class="card-main">
-        <div class="badge-row card-badges">
+    <article class="source-row ${sourceCategoryClass(category)}">
+      <div class="source-row-copy">
+        <div class="badge-row">
           ${source.id ? badge(source.id, "") : ""}
-          ${badge(category, "")}
           ${source.type ? badge(source.type, "") : ""}
         </div>
-        <h3 class="card-title">${escapeHtml(title)}</h3>
+        <h3>${escapeHtml(title)}</h3>
+        ${source.relevance && !titleUsesRelevance ? `<p class="source-row-preview"><strong>Workbook role:</strong> ${escapeHtml(source.relevance)}</p>` : ""}
+        ${source.notes ? `<p class="source-row-notes"><strong>Workbook notes:</strong> ${escapeHtml(source.notes)}</p>` : ""}
       </div>
-      <div class="card-preview-stack">
-        ${source.relevance && !titleUsesRelevance ? `<div class="detail-field card-preview source-role"><span class="field-label">Workbook role</span><p class="field-value">${escapeHtml(source.relevance)}</p></div>` : ""}
-        ${source.notes ? `<div class="detail-field card-preview"><span class="field-label">Workbook notes</span><p class="field-value">${escapeHtml(source.notes)}</p></div>` : ""}
-      </div>
-      <div class="card-footer card-meta">
+      <div class="source-row-meta">
         ${sourceMetaFact("Category", category)}
         ${sourceMetaFact("Source type", source.type)}
         ${host ? sourceMetaFact("Host", host) : ""}
       </div>
-      ${
-        url
-          ? `<div class="card-actions source-actions"><a href="${escapeAttr(url)}" target="_blank" rel="noreferrer" aria-label="Open ${escapeAttr(title)}">Open source<span>${escapeHtml(host)}</span></a></div>`
-          : ""
-      }
+      ${url ? `<a class="source-row-action" href="${escapeAttr(url)}" target="_blank" rel="noreferrer" aria-label="Open ${escapeAttr(title)}">Open source<span>${escapeHtml(host)}</span></a>` : ""}
     </article>
   `;
 }
